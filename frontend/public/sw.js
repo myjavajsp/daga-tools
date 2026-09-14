@@ -1,4 +1,4 @@
-var CACHE = 'daga-v28';
+var CACHE = 'daga-v29';
 
 self.addEventListener('install', function(e) {
   self.skipWaiting();
