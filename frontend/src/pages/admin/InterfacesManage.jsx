@@ -1,0 +1,139 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Box, Typography, Button, Table, TableHead, TableBody, TableRow, TableCell,
+  IconButton, Switch, Dialog, DialogTitle, DialogContent, DialogActions, TextField,
+  Paper, Alert,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import { getInterfaces, createInterface, updateInterface, deleteInterface } from '../../api/admin';
+
+/** 空白表单 */
+const EMPTY_FORM = { name: '', url: '', sort_order: 0 };
+
+/**
+ * InterfacesManage — 解析接口管理
+ */
+export default function InterfacesManage() {
+  const [rows, setRows] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [delId, setDelId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const load = useCallback(async () => {
+    try {
+      const res = await getInterfaces();
+      if (res.success) setRows(res.data || []);
+    } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const openCreate = () => { setEditId(null); setForm(EMPTY_FORM); setError(''); setOpen(true); };
+  const openEdit = (row) => { setEditId(row.id); setForm({ name: row.name, url: row.url, sort_order: row.sort_order }); setError(''); setOpen(true); };
+  const closeDialog = () => setOpen(false);
+
+  const handleSave = async () => {
+    if (!form.name.trim() || !form.url.trim()) { setError('名称和URL不能为空'); return; }
+    setLoading(true); setError('');
+    try {
+      if (editId) {
+        await updateInterface(editId, form);
+      } else {
+        await createInterface(form);
+      }
+      closeDialog();
+      load();
+    } catch (err) {
+      setError(err.response?.data?.error || '操作失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!delId) return;
+    try {
+      await deleteInterface(delId);
+      setDelId(null);
+      load();
+    } catch { /* ignore */ }
+  };
+
+  const handleToggle = async (row) => {
+    try {
+      await updateInterface(row.id, { is_active: row.is_active ? 0 : 1 });
+      load();
+    } catch { /* ignore */ }
+  };
+
+  return (
+    <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>解析接口管理</Typography>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={openCreate}>新增接口</Button>
+      </Box>
+
+      <Paper elevation={0} sx={{ borderRadius: 3, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
+        <Table>
+          <TableHead>
+            <TableRow sx={{ bgcolor: '#f8f9ff' }}>
+              <TableCell sx={{ fontWeight: 600 }}>名称</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>URL</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>排序</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>状态</TableCell>
+              <TableCell sx={{ fontWeight: 600, width: 120 }}>操作</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.length === 0 ? (
+              <TableRow><TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>暂无数据</TableCell></TableRow>
+            ) : rows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.name}</TableCell>
+                <TableCell sx={{ maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.url}</TableCell>
+                <TableCell>{row.sort_order}</TableCell>
+                <TableCell>
+                  <Switch checked={!!row.is_active} onChange={() => handleToggle(row)} size="small" />
+                </TableCell>
+                <TableCell>
+                  <IconButton size="small" color="primary" onClick={() => openEdit(row)}><EditIcon fontSize="small" /></IconButton>
+                  <IconButton size="small" color="error" onClick={() => setDelId(row.id)}><DeleteIcon fontSize="small" /></IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+
+      {/* Create/Edit Dialog */}
+      <Dialog open={open} onClose={closeDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>{editId ? '编辑接口' : '新增接口'}</DialogTitle>
+        <DialogContent>
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          <TextField label="名称" fullWidth size="small" sx={{ mt: 1, mb: 2 }} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <TextField label="URL" fullWidth size="small" sx={{ mb: 2 }} value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
+          <TextField label="排序" type="number" fullWidth size="small" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: Number(e.target.value) })} />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={closeDialog}>取消</Button>
+          <Button variant="contained" onClick={handleSave} disabled={loading}>{loading ? '保存中...' : '保存'}</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirm */}
+      <Dialog open={!!delId} onClose={() => setDelId(null)}>
+        <DialogTitle>确认删除</DialogTitle>
+        <DialogContent><Typography>确定要删除这个解析接口吗？此操作不可撤销。</Typography></DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setDelId(null)}>取消</Button>
+          <Button variant="contained" color="error" onClick={handleDelete}>确认删除</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+}
