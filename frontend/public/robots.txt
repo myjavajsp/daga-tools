@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# 百度爬虫
+User-agent: Baiduspider
+Allow: /
+Disallow: /6n1x5ltwujr5/
+
+# 搜狗爬虫
+User-agent: Sogou web spider
+Allow: /
+
+# 360爬虫
+User-agent: 360Spider
+Allow: /
+
+# Sitemap 地址（上线后替换为真实域名）
+Sitemap: https://YOUR_DOMAIN.com/sitemap.xml
