@@ -1,0 +1,98 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: 
+      - heading "我爱云VIP视频解析器" [level=1] [ref=e6]
+    - paragraph [ref=e7]: 多接口智能解析，支持腾讯、爱奇艺、优酷等主流平台VIP视频
+  - generic [ref=e8]:
+    - strong [ref=e9]:
+      - generic [ref=e10]: 
+      - text: 重要公告
+    - paragraph [ref=e11]: 本工具仅用于学习交流，请勿用于商业用途。所有解析内容版权归原平台所有，请在24小时内删除观看内容。
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - iframe [ref=e15]:
+          
+        - generic [ref=e16]:
+          - generic [ref=e17]: 
+          - heading "VIP视频播放器" [level=3] [ref=e18]
+          - paragraph [ref=e19]: 输入视频链接并选择解析接口后开始播放
+          - paragraph [ref=e20]: 支持腾讯视频、爱奇艺、优酷、芒果TV等平台
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]: 
+            - text: 视频地址
+          - generic [ref=e25]: 
+          - textbox " 视频地址" [ref=e26]:
+            - /placeholder: 请粘贴优酷、爱奇艺、腾讯视频等VIP视频链接...
+            - text: https://v.qq.com/x/cover/mzc00200qd0wy4c/n4101575xn2.html
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: 
+            - text: 解析接口
+          - generic [ref=e30]:
+            - generic [ref=e31]: 
+            - combobox " 解析接口" [ref=e32]:
+              - option "-- 请选择解析接口 --"
+              - option "虾米解析 (推荐)" [selected]
+              - option "极速云解析"
+              - option "七哥解析"
+              - option "七七解析"
+              - option "jy解析"
+              - option "1907解析"
+              - option "咸鱼解析"
+              - option "全民解析"
+              - option "智能云解析"
+            - text: 
+        - button " 解析播放" [ref=e33] [cursor=pointer]:
+          - generic [ref=e34]: 
+          - text: 解析播放
+    - generic [ref=e35]:
+      - heading " 使用说明" [level=2] [ref=e36]:
+        - generic [ref=e37]: 
+        - text: 使用说明
+      - list [ref=e38]:
+        - listitem [ref=e39]:
+          - generic [ref=e40]: 
+          - generic [ref=e41]: 在输入框粘贴VIP视频链接
+        - listitem [ref=e42]:
+          - generic [ref=e43]: 
+          - generic [ref=e44]: 从下拉菜单中选择合适的解析接口
+        - listitem [ref=e45]:
+          - generic [ref=e46]: 
+          - generic [ref=e47]: 点击"解析播放"按钮开始播放
+        - listitem [ref=e48]:
+          - generic [ref=e49]: 
+          - generic [ref=e50]: 可全屏观看，享受高清体验
+        - listitem [ref=e51]:
+          - generic [ref=e52]: 
+          - generic [ref=e53]: 多个接口备选，确保稳定解析
+      - heading " 支持平台" [level=2] [ref=e54]:
+        - generic [ref=e55]: 
+        - text: 支持平台
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - generic [ref=e58]: 
+          - text: 腾讯视频
+        - generic [ref=e59]:
+          - generic [ref=e60]: 
+          - text: 爱奇艺
+        - generic [ref=e61]: 优酷
+        - generic [ref=e62]:
+          - generic [ref=e63]: 
+          - text: 芒果TV
+        - generic [ref=e64]:
+          - generic [ref=e65]: 
+          - text: 哔哩哔哩
+        - generic [ref=e66]:
+          - generic [ref=e67]: 
+          - text: 搜狐视频
+      - generic [ref=e68]:
+        - strong [ref=e69]:
+          - generic [ref=e70]: 
+          - text: 免责声明
+        - paragraph [ref=e71]: 本工具仅用于技术研究和学习交流，所有解析内容版权归原平台所有。请勿用于商业用途，并在24小时内删除观看内容。
+  - contentinfo [ref=e72]:
+    - paragraph [ref=e73]: VIP视频解析器 © 2026我爱云解析
