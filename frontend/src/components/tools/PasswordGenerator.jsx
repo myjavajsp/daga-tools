@@ -1,12 +1,33 @@
-﻿import { useState } from 'react';
+﻿import { useState, useMemo } from 'react';
 export default function PasswordGenerator() {
   const [length, setLength] = useState(16);
   const [uppercase, setUppercase] = useState(true);
   const [lowercase, setLowercase] = useState(true);
   const [numbers, setNumbers] = useState(true);
   const [symbols, setSymbols] = useState(true);
+  const [excludeAmbiguous, setExcludeAmbiguous] = useState(false);
   const [password, setPassword] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const strength = useMemo(() => {
+    if (!password) return 0;
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    if (password.length >= 16) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^a-zA-Z0-9]/.test(password)) score++;
+    return Math.min(7, score);
+  }, [password]);
+
+  const strengthLabel = useMemo(() => {
+    if (strength <= 2) return { label: '弱', color: 'text-red-500', bg: 'bg-red-500' };
+    if (strength <= 4) return { label: '中', color: 'text-yellow-500', bg: 'bg-yellow-500' };
+    if (strength <= 5) return { label: '强', color: 'text-blue-500', bg: 'bg-blue-500' };
+    return { label: '极强', color: 'text-green-500', bg: 'bg-green-500' };
+  }, [strength]);
 
   const generate = () => {
     let chars = '';
@@ -14,10 +35,16 @@ export default function PasswordGenerator() {
     if (lowercase) chars += 'abcdefghijklmnopqrstuvwxyz';
     if (numbers) chars += '0123456789';
     if (symbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    if (excludeAmbiguous) {
+      chars = chars.replace(/[0OIl1|]/g, '');
+    }
     if (!chars) chars = 'abcdefghijklmnopqrstuvwxyz';
+    
     let pwd = '';
+    const array = new Uint32Array(length);
+    crypto.getRandomValues(array);
     for (let i = 0; i < length; i++) {
-      pwd += chars[Math.floor(Math.random() * chars.length)];
+      pwd += chars[array[i] % chars.length];
     }
     setPassword(pwd);
   };
@@ -33,7 +60,13 @@ export default function PasswordGenerator() {
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 text-center">
-        <div className="text-2xl font-mono font-bold text-gray-900 dark:text-white break-all">{password || '点击生成'}</div>
+        <div className="text-2xl font-mono font-bold text-gray-900 dark:text-white break-all min-h-[2rem]">{password || '点击生成'}</div>
+        {password && (
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <div className={`w-2 h-2 rounded-full ${strengthLabel.bg}`}></div>
+            <span className={`text-sm font-medium ${strengthLabel.color}`}>{strengthLabel.label}</span>
+          </div>
+        )}
       </div>
 
       <div>
@@ -42,6 +75,10 @@ export default function PasswordGenerator() {
           <span className="font-medium text-blue-600 dark:text-blue-400">{length}</span>
         </div>
         <input type="range" min="4" max="64" value={length} onChange={(e) => setLength(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+        <div className="flex justify-between text-xs text-gray-400 mt-1">
+          <span>4</span>
+          <span>64</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -68,6 +105,16 @@ export default function PasswordGenerator() {
           </button>
         ))}
       </div>
+
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={excludeAmbiguous}
+          onChange={(e) => setExcludeAmbiguous(e.target.checked)}
+          className="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+        />
+        <span className="text-sm text-gray-600 dark:text-gray-400">排除易混淆字符 (0OIl1)</span>
+      </label>
 
       <div className="flex gap-3">
         <button
