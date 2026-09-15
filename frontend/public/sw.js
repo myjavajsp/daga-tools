@@ -1,4 +1,4 @@
-var CACHE = 'daga-v29';
+var CACHE = 'daga-v30';
 
 self.addEventListener('install', function(e) {
   self.skipWaiting();
@@ -23,7 +23,7 @@ self.addEventListener('fetch', function(e) {
     return;
   }
 
-  // 静态资源: 不缓存，直接请求网络
+  // 静态资�? 不缓存，直接请求网络
   if (url.pathname.startsWith('/assets/') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
     e.respondWith(fetch(e.request, { cache: 'no-store' }));
     return;
@@ -39,6 +39,5 @@ self.addEventListener('fetch', function(e) {
     return;
   }
 
-  // 其他: 不缓存
-  e.respondWith(fetch(e.request, { cache: 'no-store' }));
+  // 其他: 不缓�?  e.respondWith(fetch(e.request, { cache: 'no-store' }));
 });
