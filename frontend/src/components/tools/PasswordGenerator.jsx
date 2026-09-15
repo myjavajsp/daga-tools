@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 export default function PasswordGenerator() {
   const [length, setLength] = useState(16);
   const [uppercase, setUppercase] = useState(true);
