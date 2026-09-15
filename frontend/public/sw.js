@@ -17,19 +17,19 @@ self.addEventListener('activate', function(e) {
 self.addEventListener('fetch', function(e) {
   var url = new URL(e.request.url);
 
-  // API 请求: 网络优先
+  // API 璇锋眰: 缃戠粶浼樺厛
   if (url.pathname.startsWith('/api/')) {
     e.respondWith(fetch(e.request, { cache: 'no-store' }));
     return;
   }
 
-  // 静态资�? 不缓存，直接请求网络
+  // 闈欐€佽祫婧? 涓嶇紦瀛橈紝鐩存帴璇锋眰缃戠粶
   if (url.pathname.startsWith('/assets/') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
     e.respondWith(fetch(e.request, { cache: 'no-store' }));
     return;
   }
 
-  // HTML 页面: network-first
+  // HTML 椤甸潰: network-first
   if (e.request.mode === 'navigate' || e.request.destination === 'document') {
     e.respondWith(
       fetch(e.request).catch(function() {
@@ -39,5 +39,5 @@ self.addEventListener('fetch', function(e) {
     return;
   }
 
-  // 其他: 不缓�?  e.respondWith(fetch(e.request, { cache: 'no-store' }));
+  // 鍏朵粬: 涓嶇紦瀛?  e.respondWith(fetch(e.request, { cache: 'no-store' }));
 });
