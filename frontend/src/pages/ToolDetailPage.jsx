@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useEffect } from 'react';
 
 const lazyImport = (name) => lazy(() => import('../components/tools/' + name));
 
@@ -296,11 +297,53 @@ function LoadingFallback() {
   );
 }
 
+function RecentTools() {
+  const [recent, setRecent] = React.useState([]);
+
+  React.useEffect(() => {
+    try {
+      const data = JSON.parse(localStorage.getItem('recentTools') || '[]');
+      setRecent(data.filter(t => t.id !== toolKey).slice(0, 5));
+    } catch (e) {}
+  }, [toolKey]);
+
+  if (recent.length === 0) return null;
+
+  return (
+    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+      <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">最近使用</div>
+      <div className="flex flex-wrap gap-2">
+        {recent.map(t => (
+          <Link
+            key={t.id}
+            to={`/tools/${t.id}`}
+            className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            {t.name}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function ToolDetailPage() {
   const { toolKey } = useParams();
   const navigate = useNavigate();
   const ToolComponent = toolComponents[toolKey];
   const metadata = toolMetadata[toolKey] || { name: toolKey, desc: '' };
+
+  // 记录最近使用的工具
+  useEffect(() => {
+    if (toolKey) {
+      try {
+        const recent = JSON.parse(localStorage.getItem('recentTools') || '[]');
+        const filtered = recent.filter(t => t.id !== toolKey);
+        filtered.unshift({ id: toolKey, name: metadata.name, time: Date.now() });
+        localStorage.setItem('recentTools', JSON.stringify(filtered.slice(0, 10)));
+      } catch (e) {}
+    }
+  }, [toolKey, metadata.name]);
 
   if (!ToolComponent) {
     return (
@@ -333,6 +376,8 @@ export default function ToolDetailPage() {
               <p className="text-gray-500 dark:text-gray-400">{metadata.desc}</p>
             </div>
           </div>
+          {/* 最近使用 */}
+          <RecentTools />
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 md:p-8">
           <Suspense fallback={<LoadingFallback />}>
