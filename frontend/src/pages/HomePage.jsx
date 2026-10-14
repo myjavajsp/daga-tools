@@ -173,39 +173,41 @@ export default function HomePage() {
                 <div className="max-w-2xl mx-auto">
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
-                      <div className="flex items-center p-1.5">
-                        <div className="flex-1 flex items-center px-3 py-1">
-                          <svg className="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 p-1.5">
+                        <div className="flex-1 flex items-center px-3 py-1 min-w-0">
+                          <svg className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                           </svg>
                           <input
                             type="text"
                             placeholder="粘贴视频链接（支持腾讯/优酷/爱奇艺等）"
-                            className="flex-1 py-2.5 bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 text-sm md:text-base focus:outline-none"
+                            className="flex-1 min-w-0 py-2.5 bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 text-sm md:text-base focus:outline-none"
                           />
                         </div>
-                        <select className="px-3 py-2 mx-1 text-sm rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer min-w-[120px]">
-                          <option value="1">搜影片名称专用</option>
-                          <option value="3">备用解析2</option>
-                          <option value="7">备用解析4</option>
-                          <option value="8">备用解析5</option>
-                          <option value="11">极速云解析</option>
-                          <option value="13">七七解析</option>
-                          <option value="14">咸鱼解析</option>
-                        </select>
-                        <button
-                          type="submit"
-                          className="px-5 md:px-6 py-2.5 md:py-3 text-sm md:text-base font-semibold rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 flex-shrink-0"
-                        >
-                          <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                          </svg>
-                          <span className="hidden sm:inline">解析播放</span>
-                        </button>
+                        <div className="flex items-center gap-1.5 px-1 pb-1 sm:px-0 sm:pb-0">
+                          <select className="flex-1 sm:flex-initial sm:min-w-[120px] min-w-0 px-3 py-2 text-sm rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer truncate">
+                            <option value="1">搜影片名称专用</option>
+                            <option value="3">备用解析2</option>
+                            <option value="7">备用解析4</option>
+                            <option value="8">备用解析5</option>
+                            <option value="11">极速云解析</option>
+                            <option value="13">七七解析</option>
+                            <option value="14">咸鱼解析</option>
+                          </select>
+                          <button
+                            type="submit"
+                            className="flex-1 sm:flex-initial justify-center px-5 md:px-6 py-2.5 md:py-3 text-sm md:text-base font-semibold rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 flex-shrink-0"
+                          >
+                            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            </svg>
+                            <span>解析播放</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-400 dark:text-gray-500">
-                      <span>试试：</span>
+                    <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-400 dark:text-gray-500 flex-wrap">
+                      <span className="flex-shrink-0">试试：</span>
                       <button type="button" className="px-2.5 py-1 rounded-full bg-white/60 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 hover:bg-white hover:border-blue-300 hover:text-blue-600 transition-all truncate max-w-[160px]">
                         www.iqiyi.com
                       </button>
