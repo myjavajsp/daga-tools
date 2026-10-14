@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from 'react';
+﻿import { useState, useEffect } from 'react';
 
 export default function WordCounter() {
   const [text, setText] = useState('');
@@ -11,9 +11,9 @@ export default function WordCounter() {
     paragraphs: 0,
   });
 
-  useState(() => {
+  useEffect(() => {
     updateStats('');
-  });
+  }, []);
 
   const updateStats = (value) => {
     const chars = value.length;
