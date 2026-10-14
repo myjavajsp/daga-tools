@@ -21,7 +21,7 @@ export default function AiWriter() {
       const demos = {
         article: `关于"${topic}"的深度分析\n\n在当今社会，${topic}已经成为一个备受关注的话题。本文将从多个角度探讨这一主题...\n\n一、背景介绍\n${topic}起源于早期的研究，近年来受到广泛关注。\n\n二、核心观点\n1. ${topic}具有重要的现实意义\n2. 需要从多角度进行分析\n3. 未来发展充满机遇与挑战\n\n三、结论\n综上所述，${topic}值得深入研究，建议持续关注。`,
         email: `主题：关于${topic}的沟通\n\n尊敬的领导：\n\n您好！关于${topic}一事，特此向您汇报...\n\n此致\n敬礼`,
-        story: `《${topic}》\n\n在一个遥远的地方，存在着一个关于${topic}的传说...\n\n第一章：开端\n故事从这里开始...',
+        story: `《${topic}》\n\n在一个遥远的地方，存在着一个关于${topic}的传说...\n\n第一章：开端\n故事从这里开始...`,
       };
       setOutput(demos[type] || demos.article);
     }

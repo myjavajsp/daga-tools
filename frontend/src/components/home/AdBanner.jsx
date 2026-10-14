@@ -6,20 +6,37 @@ import { Box, Paper, Typography } from '@mui/material';
  *
  * @param {Array} ads — 广告列表 [{ id, position, name, code }]
  */
-export default function AdBanner({ ads = [] }) {
+export default function AdBanner({ ads = [], row = false }) {
   if (ads.length === 0) return null;
 
+  const containerSx = row
+    ? {
+        mb: 3,
+        display: 'grid',
+        gridTemplateColumns: {
+          xs: 'repeat(2, 1fr)',
+          sm: 'repeat(3, 1fr)',
+          md: 'repeat(5, 1fr)',
+        },
+        gap: 2,
+        '& > *': { minWidth: 0 },
+      }
+    : { mb: 3 };
+
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={containerSx}>
       {ads.map((ad) => (
         <Paper
           key={ad.id}
           elevation={0}
           sx={{
-            mb: 2,
+            mb: row ? 0 : 2,
             borderRadius: 3,
             border: '1px solid #e0e0e0',
             overflow: 'hidden',
+            height: row ? '100%' : 'auto',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           {/* 广告标签 */}

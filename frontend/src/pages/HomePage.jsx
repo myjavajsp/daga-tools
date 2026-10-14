@@ -380,11 +380,11 @@ export default function HomePage() {
                 </div>
 
                 {/* Ads */}
-                {ads.map((ad, idx) => (
-                  <div key={idx} className="mb-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
-                    <AdBanner ads={[ad]} />
+                {ads.length > 0 && (
+                  <div className="mb-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
+                    <AdBanner ads={ads} row />
                   </div>
-                ))}
+                )}
               </>
             )}
           </div>

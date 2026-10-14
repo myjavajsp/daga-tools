@@ -4,7 +4,15 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useEffect } from 'react';
 
-const lazyImport = (name) => lazy(() => import('../components/tools/' + name));
+// 使用 Vite glob 静态分析每个工具组件，生成正确的代码分割；
+// 旧写法 import('../components/tools/' + name) 无法被静态分析、且缺少 .jsx 后缀，
+// 导致生产构建后运行时请求 404（/components/tools/PdfMerge）。
+const toolModules = import.meta.glob('../components/tools/*.jsx');
+const lazyImport = (name) => lazy(() => {
+  const loader = toolModules[`../components/tools/${name}.jsx`];
+  if (!loader) return Promise.reject(new Error('未找到工具模块: ' + name));
+  return loader();
+});
 
 // 懒加载所有工具组件
 const ImageCompress = lazyImport('ImageCompress');
@@ -297,7 +305,7 @@ function LoadingFallback() {
   );
 }
 
-function RecentTools() {
+function RecentTools({ toolKey }) {
   const [recent, setRecent] = React.useState([]);
 
   React.useEffect(() => {
@@ -377,7 +385,7 @@ export default function ToolDetailPage() {
             </div>
           </div>
           {/* 最近使用 */}
-          <RecentTools />
+          <RecentTools toolKey={toolKey} />
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 md:p-8">
           <Suspense fallback={<LoadingFallback />}>

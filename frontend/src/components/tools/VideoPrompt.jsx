@@ -10,7 +10,7 @@ export default function VideoPrompt() {
     realistic: 'photorealistic, cinematic lighting, 8k, highly detailed',
     anime: 'anime style, studio ghibli, vibrant colors, beautiful animation',
     fantasy: 'fantasy art, magical atmosphere, ethereal lighting, dreamy',
-    sci-fi: 'sci-fi concept art, futuristic, neon lights, cyberpunk style',
+    'sci-fi': 'sci-fi concept art, futuristic, neon lights, cyberpunk style',
   };
 
   const motions = { slow: 'slow motion, smooth movement', fast: 'fast paced, dynamic movement', normal: 'natural movement' };
