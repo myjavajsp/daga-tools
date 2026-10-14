@@ -1,0 +1,16 @@
+node_modules/
+frontend/node_modules/
+frontend/dist/
+data/
+.env
+*.log
+.DS_Store
+start-server.bat
+start-server.vbs
+captcha.json
+
+# deploy artifacts / sensitive (added 2026-10-14)
+*.zip
+*.b64
+password.sh
+test.txt
