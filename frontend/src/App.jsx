@@ -46,6 +46,7 @@ import LinksManage from './pages/admin/LinksManage';
 import SettingsManage from './pages/admin/SettingsManage';
 import GuideManage from './pages/admin/GuideManage';
 import FaqManage from './pages/admin/FaqManage';
+import UsersManagePage from './pages/admin/UsersManagePage';
 
 export default function App() {
   return (
@@ -87,7 +88,7 @@ export default function App() {
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/monitor" element={<MonitorPage />} />
       <Route path="/articles-manage" element={<ArticlesManagePage />} />
-      
+
       {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />
 
@@ -103,6 +104,7 @@ export default function App() {
         <Route path="settings" element={<SettingsManage />} />
         <Route path="guide" element={<GuideManage />} />
         <Route path="faq" element={<FaqManage />} />
+        <Route path="users" element={<UsersManagePage />} />
         <Route path="visitors" element={<VisitorsPage />} />
         <Route path="submissions" element={<SubmissionsPage />} />
         <Route path="click-events" element={<ClickEventsPage />} />

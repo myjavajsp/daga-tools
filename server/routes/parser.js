@@ -1,11 +1,15 @@
 const express = require('express');
 const axios = require('axios');
 const { MemoryCache } = require('../cache');
+const { optional: userOptional } = require('../middleware/user-auth');
+const { createMiddleware: createQuotaMiddleware } = require('../middleware/quota');
 
 module.exports = function (db) {
   const router = express.Router();
   const cache = new MemoryCache(600);
   const { isAllowedUrl, getClientIp, UA } = require('../utils');
+  // 解析配额守卫：已登录按用户等级配额，游客按 IP 配额
+  const quotaGuard = createQuotaMiddleware(db);
 
   function logParse(inputUrl, platform, success, ip) {
     if (!db) return;
@@ -44,7 +48,7 @@ module.exports = function (db) {
     return current;
   }
 
-  router.get('/parse', async (req, res) => {
+  router.get('/parse', userOptional, quotaGuard, async (req, res) => {
     const raw = req.query.url;
     if (!raw) {
       return res.json({ success: false, error: '请提供视频链接' });

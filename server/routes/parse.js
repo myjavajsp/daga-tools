@@ -18,6 +18,8 @@
 const express = require('express');
 const { Readable } = require('stream');
 const dns = require('dns').promises;
+const { optional: userOptional } = require('../middleware/user-auth');
+const { createMiddleware: createQuotaMiddleware } = require('../middleware/quota');
 
 /**
  * 内置「短视频去水印」上游（GET ?url= 形式）。
@@ -275,8 +277,10 @@ function safeFileName(name, ext) {
 
 module.exports = function (db) {
   const router = express.Router();
+  // 解析配额守卫：已登录按用户等级配额，游客按 IP 配额；/video/download 不消耗配额
+  const quotaGuard = createQuotaMiddleware(db);
 
-  router.post('/video/parse', async (req, res) => {
+  router.post('/video/parse', userOptional, quotaGuard, async (req, res) => {
     const { url } = req.body || {};
     if (!url || !/^https?:\/\//i.test(url)) {
       return res.status(400).json({ success: false, error: '请输入有效的视频链接' });

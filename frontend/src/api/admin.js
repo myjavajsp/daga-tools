@@ -153,3 +153,27 @@ export async function getStats(days = 7) {
   const res = await client.get(`/admin/stats?days=${days}`);
   return res.data;
 }
+
+/* ── 用户管理 ─────────────────────────────────── */
+
+/** 用户列表（分页 + 筛选） */
+export async function getUsers(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== '' && v != null) query.set(k, v);
+  });
+  const res = await client.get(`/admin/users?${query.toString()}`);
+  return res.data;
+}
+
+/** 更新用户属性（level / vip_expires_at / daily_quota / status / nickname） */
+export async function updateUser(id, data) {
+  const res = await client.put(`/admin/users/${id}`, data);
+  return res.data;
+}
+
+/** 软删除用户（status=0） */
+export async function deleteUser(id) {
+  const res = await client.delete(`/admin/users/${id}`);
+  return res.data;
+}

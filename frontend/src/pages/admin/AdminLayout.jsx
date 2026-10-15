@@ -22,6 +22,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import PeopleIcon from '@mui/icons-material/People';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { getMe } from '../../api/admin';
 
@@ -35,6 +36,7 @@ const NAV_ITEMS = [
   { label: '系统设置',  path: '/6n1x5ltwujr5/settings',    icon: <SettingsIcon /> },
   { label: '使用说明',  path: '/6n1x5ltwujr5/guide',       icon: <MenuBookIcon /> },
   { label: 'FAQ管理',   path: '/6n1x5ltwujr5/faq',         icon: <QuestionAnswerIcon /> },
+  { label: '用户管理',  path: '/6n1x5ltwujr5/users',       icon: <PeopleIcon /> },
 ];
 
 /**

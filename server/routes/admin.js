@@ -53,6 +53,8 @@ module.exports = function (db) {
 
   require('./admin/content')(router, db, authMiddleware, getFields);
 
+  require('./admin/users')(router, db, authMiddleware, getFields);
+
   /* ── 访问统计 ─────────────────────────────── */
 
   router.get('/stats', authMiddleware, async (req, res) => {
