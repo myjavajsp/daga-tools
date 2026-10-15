@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Loading from '../components/Loading';
@@ -20,6 +20,11 @@ import {
   fetchAds,
 } from '../api/public';
 
+/** 兜底线路：后端暂无数据时，保证首页解析按钮不会永久禁用 */
+const FALLBACK_INTERFACES = [
+  { id: 0, name: '默认线路', url: 'https://im1907.top/?jx=', type: 'video', sort_order: 0 },
+];
+
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,6 +37,9 @@ export default function HomePage() {
   const [videoUrl, setVideoUrl] = useState('');
   const [currentInterface, setCurrentInterface] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+  // 首页 Hero 表单：输入框内容与当前选中的线路 id
+  const [heroUrl, setHeroUrl] = useState('');
+  const [heroIfaceId, setHeroIfaceId] = useState('');
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -88,6 +96,64 @@ export default function HomePage() {
     setCurrentInterface(iface);
   }, []);
 
+  /**
+   * 首页 Hero 可用的线路：后端 /api/public/interfaces 返回的是「全部启用线路」，
+   * 其中混有 type='short' 的短视频去水印接口，这里只保留长视频 VIP 解析线路。
+   * 若后端暂无数据，用兜底线路兜住，避免按钮被永久禁用。
+   */
+  const heroInterfaces = useMemo(() => {
+    const list = Array.isArray(interfaces)
+      ? interfaces.filter((i) => (i.type || 'video') === 'video')
+      : [];
+    return list.length ? list : FALLBACK_INTERFACES;
+  }, [interfaces]);
+
+  // 线路数据到位后默认选中第一条
+  useEffect(() => {
+    if (!heroIfaceId && heroInterfaces.length > 0) {
+      setHeroIfaceId(String(heroInterfaces[0].id));
+    }
+  }, [heroInterfaces, heroIfaceId]);
+
+  // 首页内联导航：按 toggles 过滤（toggles 缺失/解析失败 → 全显示，向后兼容）
+  const navItems = useMemo(() => {
+    let toggles = null;
+    try {
+      const obj = JSON.parse(settings.toggles || 'null');
+      if (obj && typeof obj === 'object') toggles = obj;
+    } catch { /* 兼容：解析失败全显示 */ }
+    const map = { '/hot': 'enable_hot', '/music': 'enable_music', '/ai': 'enable_ai' };
+    return [
+      { label: '视频解析', path: '/', icon: '🔍' },
+      { label: '实用工具', path: '/tools/', icon: '🛠️' },
+      { label: '热搜', path: '/hot', icon: '🔥' },
+      { label: '音乐', path: '/music', icon: '🎵' },
+      { label: 'AI 工具', path: '/ai', icon: '🤖' },
+    ].filter((item) => {
+      const key = map[item.path];
+      return !key || String(toggles?.[key] ?? '1') !== '0';
+    });
+  }, [settings.toggles]);
+
+  // 公告条：后台开启且内容非空时展示
+  const showAnnouncement = settings.announcement_enabled === '1' && !!settings.announcement;
+
+  const handleHeroSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      const target = heroUrl.trim();
+      if (!target) return;
+      const iface =
+        heroInterfaces.find((i) => String(i.id) === heroIfaceId) || heroInterfaces[0] || null;
+      if (!iface) return;
+      handleParse(target, iface);
+      // 播放区在首屏下方，滚动过去让用户立刻看到结果
+      const el = document.getElementById('parse-player');
+      if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+    [heroUrl, heroIfaceId, heroInterfaces, handleParse]
+  );
+
   return (
     <div className={darkMode ? 'dark' : ''}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
@@ -110,13 +176,7 @@ export default function HomePage() {
 
               {/* Desktop Nav */}
               <nav className="hidden md:flex items-center gap-1">
-                {[
-                  { label: '视频解析', path: '/', icon: '🔍' },
-                  { label: '实用工具', path: '/tools/', icon: '🛠️' },
-                  { label: '热搜', path: '/hot', icon: '🔥' },
-                  { label: '音乐', path: '/music', icon: '🎵' },
-                  { label: 'AI 工具', path: '/ai', icon: '🤖' },
-                ].map((item) => (
+                {navItems.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
@@ -148,6 +208,8 @@ export default function HomePage() {
         {/* Main Content */}
         <main className="flex-1">
           <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
+            {/* 首页公告（后台开启且内容非空时展示，置于 Hero 上方） */}
+            {showAnnouncement && <NoticeBanner message={settings.announcement} />}
             {/* Hero Section */}
             <div className="relative overflow-hidden rounded-2xl mb-5 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700">
               <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-blue-400/20 blur-3xl pointer-events-none"></div>
@@ -171,7 +233,7 @@ export default function HomePage() {
 
                 {/* Parse Form */}
                 <div className="max-w-2xl mx-auto">
-                  <form onSubmit={(e) => e.preventDefault()}>
+                  <form onSubmit={handleHeroSubmit}>
                     <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 p-1.5">
                         <div className="flex-1 flex items-center px-3 py-1 min-w-0">
@@ -180,23 +242,34 @@ export default function HomePage() {
                           </svg>
                           <input
                             type="text"
+                            value={heroUrl}
+                            onChange={(e) => setHeroUrl(e.target.value)}
                             placeholder="粘贴视频链接（支持腾讯/优酷/爱奇艺等）"
                             className="flex-1 min-w-0 py-2.5 bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 text-sm md:text-base focus:outline-none"
                           />
                         </div>
                         <div className="flex items-center gap-1.5 px-1 pb-1 sm:px-0 sm:pb-0">
-                          <select className="flex-1 sm:flex-initial sm:min-w-[120px] min-w-0 px-3 py-2 text-sm rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer truncate">
-                            <option value="1">搜影片名称专用</option>
-                            <option value="3">备用解析2</option>
-                            <option value="7">备用解析4</option>
-                            <option value="8">备用解析5</option>
-                            <option value="11">极速云解析</option>
-                            <option value="13">七七解析</option>
-                            <option value="14">咸鱼解析</option>
+                          <select
+                            value={heroIfaceId}
+                            onChange={(e) => setHeroIfaceId(e.target.value)}
+                            className="flex-1 sm:flex-initial sm:min-w-[120px] min-w-0 px-3 py-2 text-sm rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer truncate"
+                          >
+                            {heroInterfaces.length > 0 ? (
+                              heroInterfaces.map((iface) => (
+                                <option key={iface.id} value={String(iface.id)}>
+                                  {iface.name}
+                                </option>
+                              ))
+                            ) : (
+                              <option value="" disabled>
+                                暂无可用线路
+                              </option>
+                            )}
                           </select>
                           <button
                             type="submit"
-                            className="flex-1 sm:flex-initial justify-center px-5 md:px-6 py-2.5 md:py-3 text-sm md:text-base font-semibold rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 flex-shrink-0"
+                            disabled={!heroUrl.trim() || !heroIfaceId}
+                            className="flex-1 sm:flex-initial justify-center px-5 md:px-6 py-2.5 md:py-3 text-sm md:text-base font-semibold rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
@@ -208,15 +281,16 @@ export default function HomePage() {
                     </div>
                     <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-400 dark:text-gray-500 flex-wrap">
                       <span className="flex-shrink-0">试试：</span>
-                      <button type="button" className="px-2.5 py-1 rounded-full bg-white/60 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 hover:bg-white hover:border-blue-300 hover:text-blue-600 transition-all truncate max-w-[160px]">
-                        www.iqiyi.com
-                      </button>
-                      <button type="button" className="px-2.5 py-1 rounded-full bg-white/60 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 hover:bg-white hover:border-blue-300 hover:text-blue-600 transition-all truncate max-w-[160px]">
-                        v.qq.com
-                      </button>
-                      <button type="button" className="px-2.5 py-1 rounded-full bg-white/60 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 hover:bg-white hover:border-blue-300 hover:text-blue-600 transition-all truncate max-w-[160px]">
-                        www.youku.com
-                      </button>
+                      {['www.iqiyi.com', 'v.qq.com', 'www.youku.com'].map((site) => (
+                        <button
+                          key={site}
+                          type="button"
+                          onClick={() => setHeroUrl('https://' + site + '/')}
+                          className="px-2.5 py-1 rounded-full bg-white/60 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 hover:bg-white hover:border-blue-300 hover:text-blue-600 transition-all truncate max-w-[160px]"
+                        >
+                          {site}
+                        </button>
+                      ))}
                     </div>
                   </form>
                 </div>
@@ -241,7 +315,7 @@ export default function HomePage() {
             </div>
 
             {/* Player Area */}
-            <div className="mb-5 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-900">
+            <div id="parse-player" className="mb-5 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-900">
               <PlayerArea videoUrl={videoUrl} currentInterface={currentInterface} />
             </div>
 

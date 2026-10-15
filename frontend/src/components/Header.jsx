@@ -1,18 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { fetchSettings } from '../api/public';
+
+/** 导航项 → toggles 开关 key 映射（无 toggle 字段的项永显） */
+const NAV_TOGGLE_KEY = {
+  hot: 'enable_hot',
+  music: 'enable_music',
+  ai: 'enable_ai',
+};
 
 const NAV_ITEMS = [
   { label: '视频解析', path: '/', icon: '🔍' },
   { label: '实用工具', path: '/tools/', icon: '🛠️' },
-  { label: '热搜', path: '/hot', icon: '🔥' },
-  { label: '音乐', path: '/music', icon: '🎵' },
-  { label: 'AI 工具', path: '/ai', icon: '🤖' },
+  { label: '热搜', path: '/hot', icon: '🔥', toggle: 'hot' },
+  { label: '音乐', path: '/music', icon: '🎵', toggle: 'music' },
+  { label: 'AI 工具', path: '/ai', icon: '🤖', toggle: 'ai' },
 ];
+
+/**
+ * 解析 toggles 设置（JSON 字符串），失败/缺失返回 null（调用方按全显示处理）。
+ * 向后兼容：旧库无 toggles 键或值非法时不影响导航。
+ */
+function parseToggles(raw) {
+  if (!raw) return null;
+  try {
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === 'object' ? obj : null;
+  } catch {
+    return null;
+  }
+}
+
+/** 按 toggles 过滤导航；toggles 为 null 时全量返回 */
+function filterNavByToggles(items, toggles) {
+  if (!toggles) return items;
+  return items.filter((item) => {
+    const key = item.toggle && NAV_TOGGLE_KEY[item.toggle];
+    if (!key) return true;
+    return String(toggles[key] ?? '1') !== '0';
+  });
+}
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // 公共设置（toggles 开关组）：缺失/失败时导航全显示
+  const [navItems, setNavItems] = useState(NAV_ITEMS);
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
     return saved ? JSON.parse(saved) : window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -41,6 +75,19 @@ export default function Header() {
     }
   }, [darkMode]);
 
+  // 拉取公共设置，按 toggles 过滤导航（失败时保持全显示）
+  useEffect(() => {
+    let alive = true;
+    fetchSettings()
+      .then((res) => {
+        if (!alive || !res || !res.success) return;
+        const toggles = parseToggles(res.data && res.data.toggles);
+        if (toggles) setNavItems(filterNavByToggles(NAV_ITEMS, toggles));
+      })
+      .catch(() => { /* 兼容：拿不到设置就全显示 */ });
+    return () => { alive = false; };
+  }, []);
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
@@ -68,7 +115,7 @@ export default function Header() {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1">
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
@@ -169,7 +216,7 @@ export default function Header() {
           </div>
           <nav className="p-4">
             <div className="space-y-2">
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
