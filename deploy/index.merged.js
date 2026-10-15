@@ -287,6 +287,7 @@ app.use('/api/admin', adminLimiter);
   app.use('/api', require('./routes/rss')(db));
   app.use('/api', require('./routes/tracking')(db));
   app.use('/api/contact', require('./routes/contact')(db));
+  app.use('/api/user', require('./routes/user')(db));
 
   /* ── 以下四项为「补齐前端假实现」时新增（2026-10-15）──────────────
    * 原后端只有 public / admin / parser 三条线，前端那些 setTimeout 伪造

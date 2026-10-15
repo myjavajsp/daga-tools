@@ -15,6 +15,8 @@ if (!JWT_SECRET) {
  * Express middleware — validates JWT from Authorization header.
  * On success, sets req.admin with decoded payload.
  * On failure, returns 401.
+ *
+ * 令牌隔离：只接受 type='admin' 的令牌；用户令牌（type='user'）一律 401。
  */
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -26,7 +28,10 @@ function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
-    req.admin = decoded; // { id, username }
+    if (decoded.type !== 'admin') {
+      return res.status(401).json({ error: '令牌类型无效' });
+    }
+    req.admin = decoded; // { id, username, type: 'admin' }
     next();
   } catch (err) {
     return res.status(401).json({ error: '令牌无效或已过期' });
@@ -40,7 +45,7 @@ function authMiddleware(req, res, next) {
  */
 function generateToken(admin) {
   return jwt.sign(
-    { id: admin.id, username: admin.username },
+    { id: admin.id, username: admin.username, type: 'admin' },
     JWT_SECRET,
     { expiresIn: '24h' }
   );

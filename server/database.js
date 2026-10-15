@@ -364,6 +364,47 @@ async function initDatabase() {
     )
   `);
 
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(50) UNIQUE NOT NULL,
+      email VARCHAR(255) UNIQUE DEFAULT NULL,
+      password VARCHAR(255) NOT NULL,
+      nickname VARCHAR(100) DEFAULT '',
+      level TINYINT DEFAULT 0,                -- 0免费 1月费 2年费 3永久
+      vip_expires_at DATETIME DEFAULT NULL,   -- 永久会员填 '2038-01-01 00:00:00'
+      daily_quota INT DEFAULT 0,              -- 0=不覆盖，按等级+设置走；>0=后台单独覆盖
+      quota_used INT DEFAULT 0,
+      quota_date VARCHAR(10) DEFAULT '',      -- 配额归属日 YYYY-MM-DD
+      status TINYINT DEFAULT 1,               -- 1正常 0禁用
+      last_login_at DATETIME DEFAULT NULL,
+      last_login_ip VARCHAR(45) DEFAULT '',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      KEY idx_level (level),
+      KEY idx_status (status)
+    )
+  `);
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS parse_quota_log (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      date VARCHAR(10) NOT NULL,
+      ip VARCHAR(45) NOT NULL,
+      cnt INT DEFAULT 0,
+      UNIQUE KEY uk_date_ip (date, ip)
+    )
+  `);
+
+  // 配额相关设置默认值（幂等：已存在则不覆盖，兼容后台自行修改）
+  const quotaSettingDefaults = [
+    ['free_daily_quota', '5'],
+    ['vip_daily_quota', '100'],
+    ['guest_daily_quota', '5'],
+  ];
+  for (const [key, value] of quotaSettingDefaults) {
+    await db.prepare('INSERT IGNORE INTO site_settings (`key`, `value`) VALUES (?, ?)').run(key, value);
+  }
+
   const memeCount = await db.prepare('SELECT COUNT(*) as cnt FROM memes').get();
   if (memeCount && memeCount.cnt < 150) {
     // First time or migration from old seeds (<150): clear and reseed 190 memes
@@ -567,7 +608,7 @@ async function initDatabase() {
     console.log('[Database] 190 memes seeded (or reseeded).');
   }
 
-  console.log('[Database] 21 tables initialized.');
+  console.log('[Database] 23 tables initialized.');
   return db;
 }
 
