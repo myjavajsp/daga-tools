@@ -1,0 +1,30 @@
+{
+  "name": "daga-clone",
+  "version": "1.0.0",
+  "private": true,
+  "description": "daga-clone — 全民影视VIP视频解析站（本地开发对齐线上 mysql2 栈）",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.11.0",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "express-rate-limit": "^7.4.0",
+    "maxmind": "^4.1.0",
+    "axios": "^1.7.0",
+    "web-push": "^3.6.7",
+    "sharp": "^0.33.0",
+    "adm-zip": "^0.5.10",
+    "ssh2": "^1.15.0",
+    "geolite2-city": "^1.0.0"
+  }
+}

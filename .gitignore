@@ -14,3 +14,9 @@ captcha.json
 *.b64
 password.sh
 test.txt
+
+# project-level skills (may contain server credentials)
+.workbuddy/
+
+# GeoLite2 mmdb — 运行时由 node_modules/geolite2-city 自动解压生成，不入库（65MB）
+server/geo/
