@@ -46,7 +46,7 @@ module.exports = function (db) {
   }, 600));
 
   router.get('/settings', cachedHandler('settings', async () => {
-    const allowedKeys = ['site_title', 'site_keywords', 'site_description', 'enable_ad_preroll', 'vapid_public_key'];
+    const allowedKeys = ['site_title', 'site_keywords', 'site_description', 'enable_ad_preroll', 'vapid_public_key', 'announcement', 'announcement_enabled', 'stats_code', 'toggles'];
     const rows = await db.prepare('SELECT `key`, `value` FROM site_settings').all();
     const settings = {};
     for (const row of rows) {

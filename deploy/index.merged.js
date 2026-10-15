@@ -576,15 +576,16 @@ app.use('/api/admin', adminLimiter);
 
   async function getSeoSettings() {
     try {
-      const rows = await db.prepare("SELECT `key`, `value` FROM site_settings WHERE `key` IN ('site_title','site_description','site_keywords')").all();
+      const rows = await db.prepare("SELECT `key`, `value` FROM site_settings WHERE `key` IN ('site_title','site_description','site_keywords','stats_code')").all();
       const map = Object.fromEntries((rows || []).map(r => [r.key, r.value]));
       return {
         title: map.site_title || '全民影视VIP视频解析',
         description: map.site_description || '',
         keywords: map.site_keywords || '',
+        statsCode: map.stats_code || '',
       };
     } catch {
-      return { title: '全民影视VIP视频解析', description: '', keywords: '' };
+      return { title: '全民影视VIP视频解析', description: '', keywords: '', statsCode: '' };
     }
   }
 
@@ -646,6 +647,11 @@ app.use('/api/admin', adminLimiter);
       } else {
         result = result.replace('</head>', `${ldTag}\n  </head>`);
       }
+    }
+
+    // 统计代码（stats_code）注入：非空且 HTML 中尚不存在同一代码时，原样插入 </head> 前
+    if (seo.statsCode && !result.includes(seo.statsCode.trim())) {
+      result = result.replace('</head>', `    ${seo.statsCode}\n  </head>`);
     }
 
     return result;
@@ -801,7 +807,8 @@ app.use('/api/admin', adminLimiter);
       next();
     });
     // Serve pre-built static files (including route-specific HTML from seo-routes.js)
-    app.use(express.static(distPath, { maxAge: '30d', immutable: true }));
+    // index:false —— 让 "/" 也走下方 catch-all 的 per-route SEO 注入（ROUTE_SEO['/'] 才会生效）
+    app.use(express.static(distPath, { index: false, maxAge: '30d', immutable: true }));
     // Serve uploaded images (from scraper)
     app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'), { maxAge: '7d' }));
 
@@ -966,11 +973,14 @@ app.use('/api/admin', adminLimiter);
         };
       }
 
-      // Fallback to DB settings
+      // 统计代码（stats_code）为全站注入：无论 seo 来源（路由表/文章/DB）都读取并附带
+      const dbSeo = await getSeoSettings();
       if (!seo) {
-        seo = await getSeoSettings();
+        seo = dbSeo;
         seo.canonical = `https://www.ityvip.xyz${pathKey}`;
         seo.ogImage = '/og-image.png';
+      } else {
+        seo.statsCode = dbSeo.statsCode;
       }
 
       const html = injectSeoIntoHtml(rawHtml, seo);

@@ -405,6 +405,17 @@ async function initDatabase() {
     await db.prepare('INSERT IGNORE INTO site_settings (`key`, `value`) VALUES (?, ?)').run(key, value);
   }
 
+  // W3 设置扩展默认值（幂等：公告/统计代码/开关组）
+  const w3SettingDefaults = [
+    ['announcement', ''],
+    ['announcement_enabled', '0'],
+    ['stats_code', ''],
+    ['toggles', JSON.stringify({ enable_hot: '1', enable_music: '1', enable_ai: '1', enable_meme: '1' })],
+  ];
+  for (const [key, value] of w3SettingDefaults) {
+    await db.prepare('INSERT IGNORE INTO site_settings (`key`, `value`) VALUES (?, ?)').run(key, value);
+  }
+
   const memeCount = await db.prepare('SELECT COUNT(*) as cnt FROM memes').get();
   if (memeCount && memeCount.cnt < 150) {
     // First time or migration from old seeds (<150): clear and reseed 190 memes
