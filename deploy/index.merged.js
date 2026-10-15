@@ -805,7 +805,8 @@ app.use('/api/admin', adminLimiter);
 
     // Catch-all: dynamic SEO for article detail pages and fallback
     app.get('*', async (req, res) => {
-      if (req.path.startsWith('/api')) return;
+      // 未匹配的 GET /api/*：明确返回 404 JSON，避免请求无限挂起
+      if (req.path.startsWith('/api')) return res.status(404).json({ success: false, error: '接口不存在' });
 
       const rawHtml = fs.readFileSync(path.join(distPath, 'index.html'), 'utf-8');
       let seo = null;

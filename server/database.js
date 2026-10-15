@@ -567,7 +567,7 @@ async function initDatabase() {
     console.log('[Database] 190 memes seeded (or reseeded).');
   }
 
-  console.log('[Database] 10 tables initialized.');
+  console.log('[Database] 21 tables initialized.');
   return db;
 }
 
