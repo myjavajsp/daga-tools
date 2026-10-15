@@ -96,6 +96,7 @@ module.exports = function (db) {
       let referer = `${SITE_URL}/`;
       if (url.includes('douban')) referer = 'https://movie.douban.com/';
       else if (url.includes('wikimedia')) referer = 'https://zh.wikipedia.org/';
+      else if (url.includes('iqiyi')) referer = 'https://www.iqiyi.com/';
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000);
       const resp = await fetch(url, {

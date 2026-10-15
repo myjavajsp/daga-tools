@@ -306,6 +306,7 @@ app.use('/api/admin', adminLimiter);
   app.use('/api/pdf', require('./routes/pdf')());
   app.use('/api/ai', require('./routes/ai-writer'));
   app.use('/api', require('./routes/jx')(db));
+  app.use('/api/search', require('./routes/search')(db));
 
   app.post('/api/web-vitals', express.json({ limit: '10kb' }), (req, res) => {
     res.status(204).end();

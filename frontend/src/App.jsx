@@ -11,6 +11,7 @@ import MbtiTestPage from './pages/MbtiTestPage';
 import ToolsPage from './pages/ToolsPage';
 import ToolDetailPage from './pages/ToolDetailPage';
 import VideoParserPage from './pages/VideoParserPage';
+import SearchPage from './pages/SearchPage';
 import AIToolsPage from './pages/AIToolsPage';
 import ScreenRecorderPage from './pages/ScreenRecorderPage';
 import AboutPage from './pages/AboutPage';
@@ -60,6 +61,7 @@ export default function App() {
       <Route path="/meme" element={<MemePage />} />
       <Route path="/maker" element={<MakerPage />} />
       <Route path="/parser" element={<VideoParserPage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path="/m3u8" element={<M3u8PlayerPage />} />
       <Route path="/mp4" element={<Mp4PlayerPage />} />
       <Route path="/hot" element={<HotPage />} />

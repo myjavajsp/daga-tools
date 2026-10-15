@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FullscreenFrame from '../components/common/FullscreenFrame';
@@ -14,7 +14,9 @@ import { fmtSize, downloadBlob, safeName, BTN_PRIMARY } from '../lib/file-utils'
  *   - 短视频（抖音/快手等）      → 返回无水印下载地址，用 <video> 播放 + 下载
  */
 export default function VideoParserPage() {
-  const [url, setUrl] = useState('');
+  // 支持从搜索页等入口带 ?url= 预填（如 /parser?url=https://www.iqiyi.com/v_xxx.html）
+  const [searchParams] = useSearchParams();
+  const [url, setUrl] = useState(() => searchParams.get('url') || '');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');

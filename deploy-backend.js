@@ -32,6 +32,8 @@ const REMOTE_ROOT = '/opt/daga-clone/server';
  * middleware/auth.js（type:'admin' 隔离）、middleware/user-auth.js、middleware/quota.js、
  * routes/user.js、routes/admin.js、routes/admin/users.js、
  * routes/parse.js 与 routes/parser.js（解析配额挂载，属有意的本地领先改动）。
+ * W3 影片搜索新增：routes/search.js（爱奇艺上游 + 缓存 + SSRF 白名单 + 降级）、
+ * routes/public.js（/settings 白名单扩展公告/统计代码/开关组 + img-proxy 爱奇艺 referer 规则）。
  */
 const FILES = [
   ['E:/MTC/daga-clone/deploy/index.merged.js', 'index.js'],
@@ -42,6 +44,8 @@ const FILES = [
   ['E:/MTC/daga-clone/server/routes/user.js', 'routes/user.js'],
   ['E:/MTC/daga-clone/server/routes/admin.js', 'routes/admin.js'],
   ['E:/MTC/daga-clone/server/routes/admin/users.js', 'routes/admin/users.js'],
+  ['E:/MTC/daga-clone/server/routes/search.js', 'routes/search.js'],
+  ['E:/MTC/daga-clone/server/routes/public.js', 'routes/public.js'],
   ['E:/MTC/daga-clone/server/routes/parse.js', 'routes/parse.js'],
   ['E:/MTC/daga-clone/server/routes/parser.js', 'routes/parser.js'],
   ['E:/MTC/daga-clone/server/routes/media.js', 'routes/media.js'],
@@ -113,7 +117,7 @@ conn.on('ready', () => {
         console.log('  已上传', rel);
       }
       // 语法自检
-      const check = await run(conn, `cd /opt/daga-clone && node --check server/index.js && node --check server/database.js && node --check server/middleware/auth.js && node --check server/middleware/user-auth.js && node --check server/middleware/quota.js && node --check server/routes/user.js && node --check server/routes/admin.js && node --check server/routes/admin/users.js && node --check server/routes/parse.js && node --check server/routes/parser.js && node --check server/routes/media.js && node --check server/routes/pdf.js && node --check server/routes/ai-writer.js && node --check server/routes/jx.js && echo SYNTAX_OK`);
+      const check = await run(conn, `cd /opt/daga-clone && node --check server/index.js && node --check server/database.js && node --check server/middleware/auth.js && node --check server/middleware/user-auth.js && node --check server/middleware/quota.js && node --check server/routes/user.js && node --check server/routes/admin.js && node --check server/routes/admin/users.js && node --check server/routes/search.js && node --check server/routes/public.js && node --check server/routes/parse.js && node --check server/routes/parser.js && node --check server/routes/media.js && node --check server/routes/pdf.js && node --check server/routes/ai-writer.js && node --check server/routes/jx.js && echo SYNTAX_OK`);
       console.log('语法检查:', check.trim().split('\n').pop());
       if (!check.includes('SYNTAX_OK')) { conn.end(); process.exit(1); }
 
