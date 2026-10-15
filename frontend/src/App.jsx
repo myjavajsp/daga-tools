@@ -34,6 +34,9 @@ import PushPage from './pages/PushPage';
 import CategoriesPage from './pages/CategoriesPage';
 import MonitorPage from './pages/MonitorPage';
 import ArticlesManagePage from './pages/ArticlesManagePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import MemberPage from './pages/MemberPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // 后台页面
@@ -88,6 +91,11 @@ export default function App() {
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/monitor" element={<MonitorPage />} />
       <Route path="/articles-manage" element={<ArticlesManagePage />} />
+
+      {/* 用户体系 */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/member" element={<MemberPage />} />
 
       {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />

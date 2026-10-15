@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -9,6 +10,7 @@ import {
   MenuItem,
   Paper,
   Typography,
+  Alert,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -19,8 +21,10 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
  * @param {Array} interfaces — 解析接口列表 [{ id, name, url }]
  * @param {Function} onParse — 回调 (videoUrl, selectedInterface)
  * @param {boolean} loading — 外部 loading 状态
+ * @param {number|null} remaining — 今日剩余解析次数（解析响应带回时展示）
+ * @param {boolean} quotaExceeded — 今日配额已用完（展示注册/会员引导框）
  */
-export default function ParseForm({ interfaces = [], onParse, loading = false }) {
+export default function ParseForm({ interfaces = [], onParse, loading = false, remaining = null, quotaExceeded = false }) {
   const [videoUrl, setVideoUrl] = useState('');
   const [selectedId, setSelectedId] = useState('');
 
@@ -144,6 +148,37 @@ export default function ParseForm({ interfaces = [], onParse, loading = false })
         >
           当前频道：{selectedInterface.name} — 点击按钮或按 Enter 开始解析
         </Typography>
+      )}
+
+      {/* 今日剩余次数 */}
+      {remaining != null && !quotaExceeded && (
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ display: 'block', mt: 1, textAlign: 'center' }}
+        >
+          今日剩余 {remaining} 次解析
+        </Typography>
+      )}
+
+      {/* 配额用尽引导框 */}
+      {quotaExceeded && (
+        <Alert
+          severity="warning"
+          sx={{ mt: 2, borderRadius: 2 }}
+          action={
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button component={Link} to="/register" size="small" color="inherit" variant="outlined">
+                免费注册
+              </Button>
+              <Button component={Link} to="/member" size="small" color="inherit" variant="outlined">
+                我的会员
+              </Button>
+            </Box>
+          }
+        >
+          今日免费次数已用完，注册或升级会员可获得更多次数
+        </Alert>
       )}
     </Paper>
   );

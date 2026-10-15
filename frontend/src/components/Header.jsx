@@ -17,6 +17,20 @@ export default function Header() {
     const saved = localStorage.getItem('darkMode');
     return saved ? JSON.parse(saved) : window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
+  // 用户登录态（令牌存 localStorage['daga_user_token']，与后台 daga_token 隔离）
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('daga_user') || 'null');
+    } catch {
+      return null;
+    }
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem('daga_user_token');
+    localStorage.removeItem('daga_user');
+    setUser(null);
+  };
 
   useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
@@ -72,6 +86,31 @@ export default function Header() {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2">
+              {/* 用户登录态 */}
+              {user ? (
+                <>
+                  <Link
+                    to="/member"
+                    className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                  >
+                    <span className="max-w-[100px] truncate">{user.nickname || user.username}</span>
+                    <span className="text-brand-600 dark:text-brand-400 font-semibold">我的会员</span>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                  >
+                    登出
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors"
+                >
+                  登录 / 注册
+                </Link>
+              )}
               <button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -137,6 +176,47 @@ export default function Header() {
               ))}
             </div>
           </nav>
+
+          {/* 用户登录态（移动端抽屉） */}
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+            {user ? (
+              <div className="flex items-center justify-between">
+                <Link
+                  to="/member"
+                  onClick={() => setDrawerOpen(false)}
+                  className="font-medium text-gray-700 dark:text-gray-300"
+                >
+                  {user.nickname || user.username} · 我的会员
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setDrawerOpen(false);
+                  }}
+                  className="text-xs text-red-500 font-medium"
+                >
+                  登出
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Link
+                  to="/login"
+                  onClick={() => setDrawerOpen(false)}
+                  className="flex-1 text-center px-4 py-2 rounded-lg bg-brand-600 text-white text-sm font-medium"
+                >
+                  登录
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setDrawerOpen(false)}
+                  className="flex-1 text-center px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-300"
+                >
+                  注册
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
