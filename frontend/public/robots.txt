@@ -4,7 +4,6 @@ Allow: /
 # 百度爬虫
 User-agent: Baiduspider
 Allow: /
-Disallow: /6n1x5ltwujr5/
 
 # 搜狗爬虫
 User-agent: Sogou web spider

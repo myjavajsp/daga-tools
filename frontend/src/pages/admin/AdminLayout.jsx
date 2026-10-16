@@ -29,14 +29,14 @@ import { getMe } from '../../api/admin';
 const DRAWER_WIDTH = 240;
 
 const NAV_ITEMS = [
-  { label: '仪表盘',    path: '/6n1x5ltwujr5',            icon: <DashboardIcon /> },
-  { label: '解析接口',  path: '/6n1x5ltwujr5/interfaces',  icon: <ApiIcon /> },
-  { label: '广告管理',  path: '/6n1x5ltwujr5/ads',         icon: <CampaignIcon /> },
-  { label: '推荐链接',  path: '/6n1x5ltwujr5/links',       icon: <LinkIcon /> },
-  { label: '系统设置',  path: '/6n1x5ltwujr5/settings',    icon: <SettingsIcon /> },
-  { label: '使用说明',  path: '/6n1x5ltwujr5/guide',       icon: <MenuBookIcon /> },
-  { label: 'FAQ管理',   path: '/6n1x5ltwujr5/faq',         icon: <QuestionAnswerIcon /> },
-  { label: '用户管理',  path: '/6n1x5ltwujr5/users',       icon: <PeopleIcon /> },
+  { label: '仪表盘',    path: '/uqcdt9xzyu91melb',            icon: <DashboardIcon /> },
+  { label: '解析接口',  path: '/uqcdt9xzyu91melb/interfaces',  icon: <ApiIcon /> },
+  { label: '广告管理',  path: '/uqcdt9xzyu91melb/ads',         icon: <CampaignIcon /> },
+  { label: '推荐链接',  path: '/uqcdt9xzyu91melb/links',       icon: <LinkIcon /> },
+  { label: '系统设置',  path: '/uqcdt9xzyu91melb/settings',    icon: <SettingsIcon /> },
+  { label: '使用说明',  path: '/uqcdt9xzyu91melb/guide',       icon: <MenuBookIcon /> },
+  { label: 'FAQ管理',   path: '/uqcdt9xzyu91melb/faq',         icon: <QuestionAnswerIcon /> },
+  { label: '用户管理',  path: '/uqcdt9xzyu91melb/users',       icon: <PeopleIcon /> },
 ];
 
 /**
@@ -52,7 +52,7 @@ export default function AdminLayout() {
   useEffect(() => {
     const token = localStorage.getItem('daga_token');
     if (!token) {
-      navigate('/6n1x5ltwujr5/login', { replace: true });
+      navigate('/uqcdt9xzyu91melb/login', { replace: true });
       return;
     }
     // 获取管理员信息
@@ -69,19 +69,19 @@ export default function AdminLayout() {
     }).catch(() => {
       localStorage.removeItem('daga_token');
       localStorage.removeItem('daga_user');
-      navigate('/6n1x5ltwujr5/login', { replace: true });
+      navigate('/uqcdt9xzyu91melb/login', { replace: true });
     });
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('daga_token');
     localStorage.removeItem('daga_user');
-    navigate('/6n1x5ltwujr5/login', { replace: true });
+    navigate('/uqcdt9xzyu91melb/login', { replace: true });
   };
 
   // 当前页面标题
   const currentNav = NAV_ITEMS.find((item) => {
-    if (item.path === '/6n1x5ltwujr5') return location.pathname === '/6n1x5ltwujr5';
+    if (item.path === '/uqcdt9xzyu91melb') return location.pathname === '/uqcdt9xzyu91melb';
     return location.pathname.startsWith(item.path);
   });
   const pageTitle = currentNav ? currentNav.label : '管理后台';
@@ -107,8 +107,8 @@ export default function AdminLayout() {
           <ListItem key={item.path} disablePadding>
             <ListItemButton
               selected={
-                item.path === '/6n1x5ltwujr5'
-                  ? location.pathname === '/6n1x5ltwujr5'
+                item.path === '/uqcdt9xzyu91melb'
+                  ? location.pathname === '/uqcdt9xzyu91melb'
                   : location.pathname.startsWith(item.path)
               }
               onClick={() => {

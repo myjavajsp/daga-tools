@@ -103,10 +103,10 @@ export default function App() {
       <Route path="*" element={<NotFoundPage />} />
 
       {/* 后台登录 */}
-      <Route path="/6n1x5ltwujr5/login" element={<AdminLogin />} />
+      <Route path="/uqcdt9xzyu91melb/login" element={<AdminLogin />} />
 
       {/* 后台管理 */}
-      <Route path="/6n1x5ltwujr5" element={<AdminLayout />}>
+      <Route path="/uqcdt9xzyu91melb" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="interfaces" element={<InterfacesManage />} />
         <Route path="ads" element={<AdsManage />} />

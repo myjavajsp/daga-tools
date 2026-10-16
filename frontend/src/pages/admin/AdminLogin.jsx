@@ -68,7 +68,7 @@ export default function AdminLogin() {
       if (res.success) {
         localStorage.setItem('daga_token', res.data.token);
         localStorage.setItem('daga_user', JSON.stringify(res.data.user));
-        navigate('/6n1x5ltwujr5');
+        navigate('/uqcdt9xzyu91melb');
       } else {
         setError(res.error || '登录失败');
         loadCaptcha(); // 登录失败自动刷新验证码

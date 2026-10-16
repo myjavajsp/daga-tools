@@ -30,8 +30,8 @@ client.interceptors.response.use(
       localStorage.removeItem('daga_token');
       localStorage.removeItem('daga_user');
       // Redirect to login if not already there
-      if (!window.location.pathname.startsWith('/6n1x5ltwujr5/login')) {
-        window.location.href = '/6n1x5ltwujr5/login';
+      if (!window.location.pathname.startsWith('/uqcdt9xzyu91melb/login')) {
+        window.location.href = '/uqcdt9xzyu91melb/login';
       }
     }
     return Promise.reject(error);
