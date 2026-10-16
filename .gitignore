@@ -20,3 +20,12 @@ test.txt
 
 # GeoLite2 mmdb — 运行时由 node_modules/geolite2-city 自动解压生成，不入库（65MB）
 server/geo/
+
+# 含明文服务器 root 口令 / 上游 app_secret 的运维脚本 — 仅本机保留，禁止入库（2026-10-16）
+# 这些是 deploy-backend.js 等已入库脚本的凭据来源，新环境需自行在仓库根重建 deploy-fix.js。
+deploy-fix.js
+ssh-cmd.js
+deploy-dist.js
+deploy-parse.js
+deploy-cleanup.js
+deploy/update-line.js
