@@ -1,53 +1,63 @@
 ﻿import { useState } from 'react';
+import SparkMD5 from 'spark-md5';
+import { fmtSize, BTN_PRIMARY } from '../../lib/file-utils';
+
+/** ArrayBuffer -> 十六进制字符串 */
+function toHex(buf) {
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+const LIST = [
+  { key: 'md5', name: 'MD5', color: 'blue' },
+  { key: 'sha1', name: 'SHA-1', color: 'green' },
+  { key: 'sha256', name: 'SHA-256', color: 'purple' },
+  { key: 'sha512', name: 'SHA-512', color: 'orange' },
+];
 
 export default function HashGenerator() {
   const [input, setInput] = useState('');
   const [results, setResults] = useState({});
   const [copied, setCopied] = useState('');
+  const [fileInfo, setFileInfo] = useState(null);
 
   const generateHashes = async (text) => {
     if (!text) {
       setResults({});
       return;
     }
-
-    const enc = new TextEncoder();
-    const data = enc.encode(text);
-
-    // MD5 (simple implementation)
-    const md5 = await simpleMD5(text);
-
-    // SHA-1
-    const sha1Buffer = await crypto.subtle.digest('SHA-1', data);
-    const sha1 = Array.from(new Uint8Array(sha1Buffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    // SHA-256
-    const sha256Buffer = await crypto.subtle.digest('SHA-256', data);
-    const sha256 = Array.from(new Uint8Array(sha256Buffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    // SHA-512
-    const sha512Buffer = await crypto.subtle.digest('SHA-512', data);
-    const sha512 = Array.from(new Uint8Array(sha512Buffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    setResults({ md5, sha1, sha256, sha512 });
+    const data = new TextEncoder().encode(text);
+    const [sha1, sha256, sha512] = await Promise.all([
+      crypto.subtle.digest('SHA-1', data),
+      crypto.subtle.digest('SHA-256', data),
+      crypto.subtle.digest('SHA-512', data),
+    ]);
+    setResults({
+      md5: SparkMD5.hash(text), // 真正的 MD5（128 位 / 32 位十六进制）
+      sha1: toHex(sha1),
+      sha256: toHex(sha256),
+      sha512: toHex(sha512),
+    });
   };
 
-  const simpleMD5 = async (string) => {
-    // This is a simplified MD5 implementation for demo purposes
-    // In production, use a proper library
-    let hash = 0;
-    for (let i = 0; i < string.length; i++) {
-      const char = string.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
+  /** 文件模式：分块读取算 MD5 / SHA-256，避免一次性载入大文件 */
+  const hashFile = async (file) => {
+    const spark = new SparkMD5.ArrayBuffer();
+    const CHUNK = 4 * 1024 * 1024;
+    const total = file.size;
+    let offset = 0;
+    while (offset < total) {
+      const slice = file.slice(offset, Math.min(offset + CHUNK, total));
+      spark.append(await slice.arrayBuffer());
+      offset += CHUNK;
+      setFileInfo({ name: file.name, size: total, percent: Math.min(99, Math.round((offset / total) * 100)) });
     }
-    return Math.abs(hash).toString(16);
+    const md5 = spark.end();
+    const whole = new Uint8Array(await file.arrayBuffer());
+    const sha256 = toHex(await crypto.subtle.digest('SHA-256', whole));
+    setFileInfo({ name: file.name, size: total, percent: 100 });
+    setResults({ md5, sha1: '', sha256, sha512: '' });
   };
 
   const copyToClipboard = async (hashType) => {
@@ -60,6 +70,8 @@ export default function HashGenerator() {
     }
   };
 
+  const visible = LIST.filter((x) => results[x.key]);
+
   return (
     <div className="space-y-6">
       {/* 输入区域 */}
@@ -69,21 +81,45 @@ export default function HashGenerator() {
         </label>
         <textarea
           value={input}
-          onChange={(e) => { setInput(e.target.value); generateHashes(e.target.value); }}
+          onChange={(e) => {
+            setInput(e.target.value);
+            generateHashes(e.target.value);
+          }}
           placeholder="请输入要计算哈希值的文本..."
           className="w-full h-32 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 resize-none"
         />
       </div>
 
+      {/* 文件模式 */}
+      <div
+        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        onClick={() => document.getElementById('hf')?.click()}
+      >
+        <input
+          id="hf"
+          type="file"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            e.target.value = '';
+            if (f) hashFile(f);
+          }}
+        />
+        <div className="text-3xl mb-2">📁</div>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          {fileInfo ? `已计算：${fileInfo.name}` : '或点击选择文件，计算文件校验值'}
+        </p>
+        {fileInfo && (
+          <p className="text-xs text-gray-400 mt-1">
+            {fmtSize(fileInfo.size)} · {fileInfo.percent}%
+          </p>
+        )}
+      </div>
+
       {/* 哈希结果 */}
-      {Object.keys(results).length > 0 && (
+      {visible.length > 0 && (
         <div className="space-y-3">
-          {[
-            { key: 'md5', name: 'MD5', color: 'blue' },
-            { key: 'sha1', name: 'SHA-1', color: 'green' },
-            { key: 'sha256', name: 'SHA-256', color: 'purple' },
-            { key: 'sha512', name: 'SHA-512', color: 'orange' },
-          ].map(({ key, name, color }) => (
+          {visible.map(({ key, name, color }) => (
             <div key={key} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
               <div className={`w-16 text-center text-sm font-medium text-${color}-600 dark:text-${color}-400`}>
                 {name}
@@ -115,6 +151,9 @@ export default function HashGenerator() {
           <li>• <strong>SHA-256</strong>: 区块链、密码存储（256位，最常用）</li>
           <li>• <strong>SHA-512</strong>: 高安全性需求场景（512位）</li>
         </ul>
+        <p className="text-xs mt-2 text-gray-500">
+          文本模式实时计算；文件模式在本地分块读取，文件不会上传到服务器。
+        </p>
       </div>
     </div>
   );

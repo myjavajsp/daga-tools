@@ -2,9 +2,10 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { Box, Typography, Paper, Alert, CircularProgress } from '@mui/material';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import FullscreenFrame from '../common/FullscreenFrame';
 
 /**
- * PlayerArea — 播放器区域（iframe 嵌入）
+ * PlayerArea — 播放器区域（iframe 嵌入 + 本站可控全屏）
  */
 export default function PlayerArea({ videoUrl, currentInterface }) {
   const [iframeKey, setIframeKey] = useState(0);
@@ -80,46 +81,42 @@ export default function PlayerArea({ videoUrl, currentInterface }) {
               视频加载失败，请尝试切换其他解析接口或检查视频地址是否正确
             </Alert>
           )}
-          <Box sx={{ position: 'relative', width: '100%', pt: loadError ? 0 : '56.25%' }}>
-            {/* 加载动画叠加层 */}
-            {isLoading && !loadError && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0, left: 0,
-                  width: '100%', height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  bgcolor: '#1a1a2e',
-                  zIndex: 2,
-                }}
-              >
-                <CircularProgress sx={{ color: 'rgba(255,255,255,0.5)', mb: 2 }} />
-                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.4)' }}>
-                  正在加载解析服务…
-                </Typography>
-              </Box>
-            )}
-            {!loadError && (
-              <iframe
+
+          {!loadError && (
+            <Box sx={{ position: 'relative', width: '100%' }}>
+              <FullscreenFrame
                 key={iframeKey}
                 src={iframeSrc}
                 title="视频解析播放器"
-                allow="autoplay; encrypted-media; fullscreen"
-                allowFullScreen
                 onLoad={handleIframeLoad}
                 onError={handleIframeError}
-                style={{
-                  position: 'absolute',
-                  top: 0, left: 0,
-                  width: '100%', height: '100%',
-                  border: 'none',
-                }}
               />
-            )}
-          </Box>
+
+              {/* 加载动画叠加层 */}
+              {isLoading && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    bgcolor: '#1a1a2e',
+                    zIndex: 2,
+                  }}
+                >
+                  <CircularProgress sx={{ color: 'rgba(255,255,255,0.5)', mb: 2 }} />
+                  <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.4)' }}>
+                    正在加载解析服务…
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          )}
         </>
       ) : (
         <Box
