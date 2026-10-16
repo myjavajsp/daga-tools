@@ -22,10 +22,17 @@ async function autoSeed(db) {
   console.log('[Server] First run detected — auto-seeding database...');
 
   const bcrypt = require('bcryptjs');
-  const adminUser = process.env.ADMIN_USER || 'admin';
-  const adminPass = process.env.ADMIN_PASS || 'admin123';
-  const hash = bcrypt.hashSync(adminPass, bcrypt.genSaltSync(10));
-  await db.prepare('INSERT INTO admins (username, password) VALUES (?, ?)').run(adminUser, hash);
+  // 不再内置默认后台账号口令（历史上曾硬编码默认用户名/弱口令兜底，已随仓库公开）。
+  // 仅当环境显式提供 ADMIN_USER + ADMIN_PASS 时才种首个管理员；否则跳过并告警，
+  // 由运维通过环境变量或服务端脚本建立账号。
+  const adminUser = process.env.ADMIN_USER;
+  const adminPass = process.env.ADMIN_PASS;
+  if (adminUser && adminPass) {
+    const hash = bcrypt.hashSync(adminPass, bcrypt.genSaltSync(10));
+    await db.prepare('INSERT INTO admins (username, password) VALUES (?, ?)').run(adminUser, hash);
+  } else {
+    console.warn('[Server] ADMIN_USER/ADMIN_PASS not set — skipped seeding default admin. Set them to create the first admin.');
+  }
 
   const interfaces = [
     { name: '搜影片名称专用',           url: 'https://z1.m1907.top/?jx=',              sort: 1 },

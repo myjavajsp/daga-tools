@@ -7,16 +7,19 @@ async function seed() {
 
   console.log('[InitDB] Seeding database...');
 
-  const adminUser = process.env.ADMIN_USER || 'admin';
-  const adminPass = process.env.ADMIN_PASS || 'admin123';
-  const hash = bcrypt.hashSync(adminPass, bcrypt.genSaltSync(10));
-
-  const existingAdmin = await db.prepare('SELECT id FROM admins WHERE username = ?').get(adminUser);
-  if (!existingAdmin) {
-    await db.prepare('INSERT INTO admins (username, password) VALUES (?, ?)').run(adminUser, hash);
-    console.log(`[InitDB] Admin user "${adminUser}" created.`);
+  const adminUser = process.env.ADMIN_USER;
+  const adminPass = process.env.ADMIN_PASS;
+  if (adminUser && adminPass) {
+    const hash = bcrypt.hashSync(adminPass, bcrypt.genSaltSync(10));
+    const existingAdmin = await db.prepare('SELECT id FROM admins WHERE username = ?').get(adminUser);
+    if (!existingAdmin) {
+      await db.prepare('INSERT INTO admins (username, password) VALUES (?, ?)').run(adminUser, hash);
+      console.log(`[InitDB] Admin user "${adminUser}" created.`);
+    } else {
+      console.log(`[InitDB] Admin user "${adminUser}" already exists, skipping.`);
+    }
   } else {
-    console.log(`[InitDB] Admin user "${adminUser}" already exists, skipping.`);
+    console.warn('[InitDB] ADMIN_USER/ADMIN_PASS not set — skipping admin seed. Set them to create an admin.');
   }
 
   const interfaces = [

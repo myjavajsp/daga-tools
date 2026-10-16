@@ -1,11 +1,16 @@
 
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const mysql = require('mysql2/promise');
+if (!process.env.DB_PASSWORD) {
+  console.error('[FATAL] DB_PASSWORD environment variable not set');
+  process.exit(1);
+}
 (async () => {
   const pool = mysql.createPool({
     host: process.env.DB_HOST || '127.0.0.1',
     port: parseInt(process.env.DB_PORT || '3306'),
     user: process.env.DB_USER || 'daga',
-    password: process.env.DB_PASSWORD || 'daga_clone_2024',
+    password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME || 'daga_clone',
     waitForConnections: true,
     connectionLimit: 2,

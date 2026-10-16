@@ -25,15 +25,22 @@ const { createMiddleware: createQuotaMiddleware } = require('../middleware/quota
  * 内置「短视频去水印」上游（GET ?url= 形式）。
  * 第一条为当前稳定可用的「帝帝聚合」接口，其余为历史兜底。
  * 后台 parse_interfaces(type='short') 中的条目优先于此处（按 sort_order）。
+ * 内置短视频去水印兜底上游（仅当 parse_interfaces 表内 type='short' 为空时使用）。
+ * diadi 需 app_secret，改为从环境变量 DIADI_APP_SECRET 注入，源码不再含明文密钥；
+ * 未配置时不加入 diadi，其余为无密钥公开端点。
  */
 const DEFAULT_SHORT_UPSTREAMS = [
-  'https://gateway.diadi.cn/api/parse?app_secret=7vpylQoLLCxgaSKIIlsYrFHsCObBWPAup&url=',
   'https://api.pearktrue.cn/api/douyin/?url=',
   'https://api.toubiec.cn/api/douyin?url=',
   'https://api.lyhLink.cn/api/video/douyin?url=',
   'https://jiaoshou.jsososo.com/api/?url=',
   'https://api.iiiku.com/api/v1/douyin?url=',
 ];
+if (process.env.DIADI_APP_SECRET) {
+  DEFAULT_SHORT_UPSTREAMS.unshift(
+    `https://gateway.diadi.cn/api/parse?app_secret=${process.env.DIADI_APP_SECRET}&url=`
+  );
+}
 
 /** 请求上游/抖音 CDN 时使用的浏览器头 */
 const BROWSER_UA =

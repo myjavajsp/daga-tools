@@ -54,11 +54,17 @@ class Database {
 }
 
 async function initDatabase() {
+  // 数据库口令必须由环境提供，不再内置兜底值（历史上此处硬编码的明文口令
+  // 已随仓库公开，须视为已泄露并在环境侧轮换）。缺失时拒绝启动，与 JWT_SECRET 一致。
+  if (!process.env.DB_PASSWORD) {
+    console.error('[FATAL] DB_PASSWORD environment variable not set');
+    process.exit(1);
+  }
   const pool = mysql.createPool({
     host: process.env.DB_HOST || '127.0.0.1',
     port: parseInt(process.env.DB_PORT || '3306'),
     user: process.env.DB_USER || 'daga_clone',
-    password: process.env.DB_PASSWORD || 'smNMaMRrk3rxWxWt',
+    password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME || 'daga_clone',
     charset: 'utf8mb4',
     waitForConnections: true,
