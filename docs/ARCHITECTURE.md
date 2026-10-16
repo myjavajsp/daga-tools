@@ -117,10 +117,11 @@ effective  = daily_quota > 0 ? daily_quota : (isVip ? vip_daily_quota : free_dai
 6. **含密码的文件写不进仓库**：本机会被敏感内容过滤静默改写值，表现为认证失败。凭据一律放 `.env` 或 gitignore 排除的本地脚本。
 7. **验证线上生效**：比对 `index-*.js` hash；或两端 `md5sum` 直接比对（推荐，能一次确认全部文件一致性）。
 8. **旧后台令牌会失效**：加入 `type:'admin'` 校验后，历史无 `type` 的令牌全部拒用，上线后需重新登录。
+9. **改 `.env`（尤其 `DB_PASSWORD`）后用 `pm2 restart ityvip-backend --update-env`，不要用 `reload`**。`ityvip-backend` 是 cluster 模式，`reload` 灰度换 worker 时若旧 worker 正崩溃循环，会出现 `reload` 看似成功但进程仍用旧环境、`/api/health` 返回 000 的假恢复。轮换 DB 口令时曾因此短暂不可用，完整 `restart` 才干净生效。口令一律用 `ALTER USER USER()` 走账号自助（`daga_clone@'%'`），无需 root。
 
 ## 9. 待办与风险
 
-- **凭据治理**：`database.js` 与 `routes/parse.js` 代码内存在硬编码口令/密钥兜底；`DEPLOY_GUIDE.md` 含 root 公钥与 scp 流程；`.env` 与 6 个运维脚本已 gitignore，但历史提交里是否残留需单独审计。建议统一迁到环境变量并轮换。
+- **凭据治理（已处理主体，2026-10-16）**：`database.js`、`routes/parse.js`、`index.js`、`init-db.js` 的硬编码口令/默认后台账号/兜底密钥已移除，`DB_PASSWORD` 缺失即 fail-closed。生产 `daga_clone` 数据库口令、后台 `admin` 口令均已服务端随机轮换（新值存 `/root/daga-*.txt` 600），`.env` 权限收紧为 600，robots.txt 泄露的后台入口已删、前端后台路由改到新随机路径。**遗留**：仓库曾公开，git 历史里仍含旧明文口令 → 需转私有并（可选）BFG/filter-repo 清历史后 force-push；确认稳定后可删回滚备份 `/root/.env.pre-rot.*`（含旧口令）。
 - **短视频上游单点**：抖音去水印依赖第三方公开 demo 密钥，随时可能被限流或吊销。备选是自托管 `Evil0ctal/Douyin_TikTok_Download_API`（约 0.5–1GB 内存，服务器 8C/8G 放得下）或轻量签名服务；当前决策是沿用第三方直至失效。抖音签名地址约 10 分钟过期，须解析后立即下载。
 - **`routes/seo.js` 未挂载**，SEO 逻辑在 `index.js` 内联一份，两处易失同步。
 - **线上多 3 张 `monitor_*` 表**且本仓库无对应建表代码，需确认是保留（补进代码）还是清理。
