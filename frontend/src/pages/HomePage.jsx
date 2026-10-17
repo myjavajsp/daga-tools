@@ -192,10 +192,20 @@ export default function HomePage() {
           </>
         )}
 
+        {/* 广告区：阿里云单独一行，其他广告在另一行 */}
         {ads.length > 0 && (
           <section className="section">
             <div className="wrap">
-              <AdBanner ads={ads} row />
+              {/* 阿里云广告单独一行 */}
+              {ads.filter(a => a.name && a.name.includes('阿里云')).map((ad) => (
+                <div key={ad.id} style={{ marginBottom: 'var(--s2)' }}>
+                  <AdBanner ads={[ad]} />
+                </div>
+              ))}
+              {/* 其他广告一行 */}
+              {ads.filter(a => !a.name || !a.name.includes('阿里云')).length > 0 && (
+                <AdBanner ads={ads.filter(a => !a.name || !a.name.includes('阿里云'))} row />
+              )}
             </div>
           </section>
         )}
