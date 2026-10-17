@@ -29,22 +29,29 @@ export default function RecommendPage() {
     setLoading(true);
     setError(null);
     try {
+      // 拉取较多文章，前端按分类过滤（后端暂未支持 category 参数）
       const res = await client.get('/public/articles', {
-        params: { page, limit: PAGE_SIZE },
+        params: { page: 1, limit: 100 },
       });
       const data = res.data;
       if (data && data.success) {
-        setArticles(data.data.list || []);
-        const total = data.data.total || 0;
-        setTotalPages(Math.ceil(total / PAGE_SIZE));
+        const allArticles = data.data.list || [];
+        // 只保留影视相关分类：电影推荐、电视剧推荐
+        const filtered = allArticles.filter(a => {
+          const cat = (a.category || '').trim();
+          return cat === '电影推荐' || cat === '电视剧推荐';
+        });
+        // 分页处理
+        const start = (page - 1) * PAGE_SIZE;
+        const paged = filtered.slice(start, start + PAGE_SIZE);
+        setArticles(paged);
+        setTotalPages(Math.max(1, Math.ceil(filtered.length / PAGE_SIZE)));
       } else {
-        // API 返回 success=false，按空数据处理（不报错）
         setArticles([]);
         setTotalPages(1);
       }
     } catch (err) {
       console.error('[RecommendPage]', err.message);
-      // 本地无后端或网络错误：显示空态而非错误页，方便本地预览布局
       setArticles([]);
       setTotalPages(1);
     } finally {
