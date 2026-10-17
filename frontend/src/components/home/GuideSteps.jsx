@@ -11,16 +11,14 @@ import Reveal from '../Reveal';
 export default function GuideSteps({ steps = [], title = '怎么用', note, intro }) {
   if (steps.length === 0) return null;
 
-  // 按 step_number + content 去重，保留第一条
-  const uniqueSteps = React.useMemo(() => {
-    const seen = new Set();
-    return steps.filter((step) => {
-      const key = `${step.step_number}|${step.content}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }, [steps]);
+  // 按 step_number + content 去重，保留第一条（避免后端重复数据）
+  const uniqueKeys = [];
+  const uniqueSteps = steps.filter((step) => {
+    const key = `${step.step_number}|${step.content}`;
+    if (uniqueKeys.includes(key)) return false;
+    uniqueKeys.push(key);
+    return true;
+  });
 
   if (uniqueSteps.length === 0) return null;
 

@@ -11,16 +11,14 @@ import Reveal from '../Reveal';
 export default function FaqSection({ faqs = [], title = '常见问题', contactPath = '/contact' }) {
   if (faqs.length === 0) return null;
 
-  // 按 question + answer 去重，保留第一条
-  const uniqueFaqs = React.useMemo(() => {
-    const seen = new Set();
-    return faqs.filter((faq) => {
-      const key = `${faq.question}|${faq.answer}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }, [faqs]);
+  // 按 question + answer 去重，保留第一条（避免后端重复数据）
+  const uniqueKeys = [];
+  const uniqueFaqs = faqs.filter((faq) => {
+    const key = `${faq.question}|${faq.answer}`;
+    if (uniqueKeys.includes(key)) return false;
+    uniqueKeys.push(key);
+    return true;
+  });
 
   if (uniqueFaqs.length === 0) return null;
 
