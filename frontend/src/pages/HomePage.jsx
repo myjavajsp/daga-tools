@@ -117,7 +117,16 @@ export default function HomePage() {
   /** 推荐位：有文章用文章（真标题/摘要/封面/站内详情），没有就用后台友情链接 */
   const recItems = useMemo(() => {
     if (articles.length > 0) {
-      return articles.map((a) => ({
+      // 只保留影视相关文章，排除 AI、GitHub 等非影视内容
+      const movieArticles = articles.filter((a) => {
+        const cat = (a.category || '').trim();
+        return cat.includes('电影') || cat.includes('电视剧') || cat.includes('剧集');
+      });
+      
+      // 如果没有影视文章，显示所有；否则只显示影视内容
+      const displayArticles = movieArticles.length > 0 ? movieArticles : articles;
+      
+      return displayArticles.map((a) => ({
         key: a.id,
         title: a.title,
         desc: a.excerpt || '',
