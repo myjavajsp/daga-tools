@@ -117,6 +117,7 @@ export default function M3u8Player() {
           className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
         <button 
+          type="button"
           onClick={isPlaying ? stop : play} 
           disabled={!url.trim()} 
           className="btn-a px-6"
