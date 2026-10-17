@@ -44,22 +44,22 @@ export default function LoremIpsum() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">数量</label>
+          <label className="lbl">数量</label>
           <input
             type="number"
             min="1"
             max="50"
             value={count}
             onChange={(e) => setCount(Number(e.target.value))}
-            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">类型</label>
+          <label className="lbl">类型</label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            className="input w-full"
           >
             <option value="paragraphs">段落</option>
             <option value="sentences">句子</option>
@@ -70,7 +70,7 @@ export default function LoremIpsum() {
 
       <button
         onClick={generate}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+        className="btn-a w-full transition-colors"
       >
         生成文本
       </button>
@@ -78,13 +78,13 @@ export default function LoremIpsum() {
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">生成结果</label>
+            <label className="lbl">生成结果</label>
             <button
               onClick={copyOutput}
               className={`px-3 py-1 text-xs rounded-lg transition-colors ${
                 copied
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'
+                  ? 'bg-success-soft text-success'
+                  : 'bg-surface-2 text-ink-2 hover:bg-surface-3'
               }`}
             >
               {copied ? '已复制!' : '复制'}
@@ -93,13 +93,13 @@ export default function LoremIpsum() {
           <textarea
             value={output}
             readOnly
-            className="w-full h-64 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none"
+            className="w-full h-64 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none"
           />
         </div>
       )}
 
-      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-white mb-2">关于Lorem Ipsum</div>
+      <div className="bg-paper rounded-card p-4 text-sm text-ink-2">
+        <div className="font-medium text-ink mb-2">关于Lorem Ipsum</div>
         <p className="text-xs">Lorem Ipsum是印刷业的标准dummy文本，起源于15世纪。这段文本源自西塞罗的著作，已有2000多年历史。</p>
       </div>
     </div>

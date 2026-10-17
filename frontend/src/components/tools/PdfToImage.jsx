@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { fmtSize, downloadBlob, readAsArrayBuffer, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
+import Icon from '../Icons';
 
 export default function PdfToImage() {
   const [file, setFile] = useState(null);
@@ -96,12 +97,12 @@ export default function PdfToImage() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('p2i')?.click()}
       >
         <input id="p2i" type="file" accept=".pdf,application/pdf" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">🖼️</div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="image" /></span></div>
+        <p className="text-ink-2">
           {file ? `已选择: ${file.name}${total ? `（${total} 页）` : ''}` : '上传PDF转图片'}
         </p>
       </div>
@@ -109,7 +110,7 @@ export default function PdfToImage() {
       {total > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="lbl">
               输出清晰度：{scale}x
             </label>
             <div className="flex gap-2">
@@ -120,8 +121,8 @@ export default function PdfToImage() {
                   onClick={() => setScale(s)}
                   className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${
                     scale === s
-                      ? 'bg-blue-500 text-white border-blue-500'
-                      : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600'
+                      ? 'bg-accent text-accent-fg border-accent'
+                      : 'bg-paper text-ink-2 border-line'
                   }`}
                 >
                   {s}x
@@ -130,7 +131,7 @@ export default function PdfToImage() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">输出格式</label>
+            <label className="lbl">输出格式</label>
             <div className="flex gap-2">
               {['png', 'jpg'].map((f) => (
                 <button
@@ -139,8 +140,8 @@ export default function PdfToImage() {
                   onClick={() => setFmt(f)}
                   className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${
                     fmt === f
-                      ? 'bg-blue-500 text-white border-blue-500'
-                      : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600'
+                      ? 'bg-accent text-accent-fg border-accent'
+                      : 'bg-paper text-ink-2 border-line'
                   }`}
                 >
                   {f.toUpperCase()}
@@ -156,15 +157,15 @@ export default function PdfToImage() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">转换成功！已开始下载</div>
-          <div className="text-sm text-gray-500 mt-1">
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">转换成功！已开始下载</div>
+          <div className="text-sm text-ink-3 mt-1">
             {result.count > 1 ? `${result.count} 张图片打包为 ZIP` : '单张图片'} · {fmtSize(result.size)}
           </div>
         </div>

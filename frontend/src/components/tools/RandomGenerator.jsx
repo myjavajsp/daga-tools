@@ -60,7 +60,7 @@ export default function RandomGenerator() {
     <div className="space-y-6">
       {/* 类型选择 */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="lbl">
           生成类型
         </label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -75,8 +75,8 @@ export default function RandomGenerator() {
               onClick={() => setType(id)}
               className={`py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
                 type === id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-accent text-accent-fg'
+                  : 'bg-surface-2 text-ink-2 hover:bg-surface-3'
               }`}
             >
               {label}
@@ -88,7 +88,7 @@ export default function RandomGenerator() {
       {/* 长度设置 */}
       {type === 'password' && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             长度: {length}
           </label>
           <input
@@ -97,9 +97,9 @@ export default function RandomGenerator() {
             max="64"
             value={length}
             onChange={(e) => setLength(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            className="slider"
           />
-          <div className="flex justify-between text-xs text-gray-400 mt-1">
+          <div className="flex justify-between text-xs text-ink-3 mt-1">
             <span>4</span>
             <span>64</span>
           </div>
@@ -109,7 +109,7 @@ export default function RandomGenerator() {
       {/* 字符选项 */}
       {type === 'password' && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             字符选项
           </label>
           <div className="space-y-2">
@@ -119,14 +119,14 @@ export default function RandomGenerator() {
               { id: 'numbers', label: '数字 0-9' },
               { id: 'symbols', label: '特殊符号 !@#$%' },
             ].map(({ id, label }) => (
-              <label key={id} className="flex items-center gap-3 cursor-pointer">
+              <label key={id} className="flex items-center gap-3 cursor-pointer min-h-8">
                 <input
                   type="checkbox"
                   checked={options[id]}
                   onChange={(e) => setOptions({ ...options, [id]: e.target.checked })}
-                  className="w-5 h-5 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                  className="w-5 h-5 rounded border-line-2 text-accent focus:ring-accent-soft"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+                <span className="text-sm text-ink-2">{label}</span>
               </label>
             ))}
           </div>
@@ -136,27 +136,27 @@ export default function RandomGenerator() {
       {/* 生成按钮 */}
       <button
         onClick={generate}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+        className="btn-a w-full transition-colors"
       >
         生成{type === 'password' ? '随机密码' : type === 'uuid' ? 'UUID' : type === 'number' ? '随机数字' : '时间戳'}
       </button>
 
       {/* 结果展示 */}
       {result && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+        <div className="bg-paper rounded-card p-4">
           <div className="flex items-center justify-between">
-            <code className="text-lg font-mono text-gray-900 dark:text-white break-all">
+            <code className="text-lg font-mono text-ink break-all">
               {result}
             </code>
             <button
               onClick={copyToClipboard}
               className={`ml-4 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 copied
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                  : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500'
+                  ? 'bg-success-soft text-success'
+                  : 'bg-surface-2 text-ink-2 hover:bg-surface-3'
               }`}
             >
-              {copied ? '✓ 已复制' : '复制'}
+              {copied ? '已复制' : '复制'}
             </button>
           </div>
         </div>

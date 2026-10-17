@@ -1,5 +1,6 @@
 ﻿import { useState, useCallback } from 'react';
 import { PDFDocument } from 'pdf-lib';
+import Icon from '../Icons';
 import { fmtSize, downloadBlob, readAsArrayBuffer, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
 
 export default function PdfSplit() {
@@ -73,19 +74,19 @@ export default function PdfSplit() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('sf')?.click()}
       >
         <input id="sf" type="file" accept=".pdf,application/pdf" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">📄</div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="doc" /></span></div>
+        <p className="text-ink-2">
           {file ? `已选择: ${file.name}${total ? `（共 ${total} 页）` : ''}` : '上传PDF文件'}
         </p>
       </div>
 
       {total > 0 && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             选择页码范围（共 {total} 页）
           </label>
           <div className="flex gap-2 flex-wrap">
@@ -95,21 +96,21 @@ export default function PdfSplit() {
               max={total}
               value={start}
               onChange={(e) => setStart(Number(e.target.value) || 1)}
-              className="w-24 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+              className="w-24 px-3 py-2 bg-paper border border-line rounded-lg text-ink text-sm"
             />
-            <span className="text-gray-500 self-center">至</span>
+            <span className="text-ink-3 self-center">至</span>
             <input
               type="number"
               min={1}
               max={total}
               value={end}
               onChange={(e) => setEnd(Number(e.target.value) || 1)}
-              className="w-24 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+              className="w-24 px-3 py-2 bg-paper border border-line rounded-lg text-ink text-sm"
             />
             <button
               onClick={split}
               disabled={busy}
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              className="btn-a px-4 text-sm"
             >
               {busy ? '处理中…' : '拆分'}
             </button>
@@ -125,7 +126,7 @@ export default function PdfSplit() {
                       setStart(a);
                       setEnd(b);
                     }}
-                    className="px-2 py-1 text-xs rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    className="px-2 py-1 text-xs rounded-md bg-surface-2 text-ink-2 hover:bg-surface-3"
                   >
                     第 {a}-{b} 页
                   </button>
@@ -136,15 +137,15 @@ export default function PdfSplit() {
       )}
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">拆分完成！已开始下载</div>
-          <div className="text-sm text-gray-500 mt-1">
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">拆分完成！已开始下载</div>
+          <div className="text-sm text-ink-3 mt-1">
             第{result.start}-{result.end}页，共{result.count}页，{fmtSize(result.size)}
           </div>
         </div>

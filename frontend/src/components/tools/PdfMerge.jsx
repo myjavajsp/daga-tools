@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
+import Icon from '../Icons';
 import { fmtSize, downloadBlob, readAsArrayBuffer, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
 
 export default function PdfMerge() {
@@ -59,12 +60,12 @@ export default function PdfMerge() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('mf')?.click()}
       >
         <input id="mf" type="file" accept=".pdf,application/pdf" multiple onChange={handleFiles} className="hidden" />
-        <div className="text-4xl mb-3">📄</div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="doc" /></span></div>
+        <p className="text-ink-2">
           {files.length > 0 ? `已选择 ${files.length} 个PDF（点击下方文件名可移除）` : '点击选择PDF文件（可多选）'}
         </p>
       </div>
@@ -74,39 +75,42 @@ export default function PdfMerge() {
           {files.map((f, i) => (
             <div
               key={`${f.name}-${i}`}
-              className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg"
+              className="flex items-center justify-between text-sm text-ink-2 px-3 py-1.5 bg-paper rounded-lg"
             >
               <div className="flex items-center gap-2 min-w-0">
-                <span className="text-xs text-gray-400 w-5 text-right flex-shrink-0">{i + 1}</span>
+                <span className="text-xs text-ink-3 w-5 text-right flex-shrink-0">{i + 1}</span>
                 <span className="truncate">{f.name}</span>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-xs text-gray-400">{fmtSize(f.size)}</span>
+                <span className="text-xs text-ink-3">{fmtSize(f.size)}</span>
                 <button
                   type="button"
                   onClick={() => move(i, -1)}
                   disabled={i === 0}
-                  className="px-1 text-gray-400 hover:text-blue-500 disabled:opacity-30"
+                  className="icon-btn"
                   title="上移"
+                  aria-label="上移"
                 >
-                  ↑
+                  <Icon name="up" />
                 </button>
                 <button
                   type="button"
                   onClick={() => move(i, 1)}
                   disabled={i === files.length - 1}
-                  className="px-1 text-gray-400 hover:text-blue-500 disabled:opacity-30"
+                  className="icon-btn"
                   title="下移"
+                  aria-label="下移"
                 >
-                  ↓
+                  <Icon name="down" />
                 </button>
                 <button
                   type="button"
                   onClick={() => removeAt(i)}
-                  className="px-1 text-gray-400 hover:text-red-500"
+                  className="icon-btn hover:text-danger"
                   title="移除"
+                  aria-label="移除"
                 >
-                  ✕
+                  <Icon name="close" />
                 </button>
               </div>
             </div>
@@ -119,15 +123,15 @@ export default function PdfMerge() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">合并成功！已开始下载</div>
-          <div className="text-sm text-gray-500 mt-1">
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">合并成功！已开始下载</div>
+          <div className="text-sm text-ink-3 mt-1">
             共 {result.pages} 页 · {fmtSize(result.size)} · {result.name}
           </div>
         </div>

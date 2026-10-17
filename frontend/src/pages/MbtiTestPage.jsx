@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import Icon from '../components/Icons';
+import { useNavigate, Link } from 'react-router-dom';
+
+/* 测试卡片的图标：按测试类型映射到线性图标（旧写法是每个类型一个 emoji） */
+const TEST_ICON = { mbti: 'scan', enneagram: 'sliders', career: 'idcard' };
 
 export default function MbtiTestPage() {
   const navigate = useNavigate();
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedType, setSelectedType] = useState(null);
 
   useEffect(() => {
     loadTests();
@@ -34,43 +37,40 @@ export default function MbtiTestPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <div className="animate-spin spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-paper">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">
-          在线心理测试
-        </h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <main className="wrap py-8 max-w-4xl">
+        <div className="phead">
+          <h1>在线心理测试</h1>
+          <span className="note">结果仅供参考</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tests.map(test => (
-            <div
+            <Link
               key={test.id}
-              className="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-colors cursor-pointer"
-              onClick={() => startTest(test)}
+              to={`/tests/${test.type}`}
+              className="card p-5 hover:border-accent transition-colors block"
             >
-              <div className="text-4xl mb-4">
-                {test.type === 'mbti' ? '🧠' : test.type === 'enneagram' ? '🔢' : '💼'}
+              <span className="chip mb-3"><Icon name={TEST_ICON[test.type] || 'users'} /></span>
+              <h3 className="text-lg font-bold text-ink mb-2">{test.name}</h3>
+              <div className="flex flex-wrap gap-3 text-ink-3 text-sm">
+                <span className="inline-flex items-center gap-1.5"><Icon name="pen" />{test.questions} 题</span>
+                <span className="inline-flex items-center gap-1.5"><Icon name="timer" />{test.time}</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{test.name}</h3>
-              <div className="flex gap-4 text-gray-400 text-sm">
-                <span>📝 {test.questions}题</span>
-                <span>⏱️ {test.time}</span>
-              </div>
-              <button className="mt-4 w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                开始测试
-              </button>
-            </div>
+              <span className="btn-a w-full mt-4">开始测试</span>
+            </Link>
           ))}
         </div>
-      </div>
+      </main>
       
       <Footer />
     </div>

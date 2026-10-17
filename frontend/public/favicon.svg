@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="全民影视 三线站标">
+  <!-- 16px 标签页用：结构线用纯墨 #0e1116、线宽提到 3（灰线在这个尺寸太吃亏），
+       中间那条蓝线走一半＋末端一颗点，和站内站标同一套语言。
+       底板白＋发丝边，保证浏览器深色的标签栏上也分得出来。 -->
+  <rect width="32" height="32" rx="8" fill="#ffffff" stroke="#dfe3e8" stroke-width="1"/>
+  <path d="M6 9.6H26" stroke="#0e1116" stroke-width="3" stroke-linecap="round"/>
+  <path d="M6 16h11.2" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+  <path d="M6 22.4H23" stroke="#0e1116" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="23.3" cy="16" r="3.3" fill="#2563eb"/>
+</svg>

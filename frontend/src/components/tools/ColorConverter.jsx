@@ -130,7 +130,7 @@ const PRESETS = [
 ];
 
 const inputCls =
-  'w-full mt-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30';
+  'w-full mt-1 px-3 py-2 bg-paper border border-line rounded-lg text-ink focus:outline-none focus:ring-2 focus:ring-accent-soft';
 
 export default function ColorConverter() {
   // RGB 是唯一数据源
@@ -195,9 +195,9 @@ export default function ColorConverter() {
   };
 
   const RGB_FIELDS = [
-    { key: 'r', label: 'R', cls: 'text-red-500' },
-    { key: 'g', label: 'G', cls: 'text-green-500' },
-    { key: 'b', label: 'B', cls: 'text-blue-500' },
+    { key: 'r', label: 'R', cls: 'text-danger' },
+    { key: 'g', label: 'G', cls: 'text-success' },
+    { key: 'b', label: 'B', cls: 'text-accent' },
   ];
   const HSL_FIELDS = [
     { key: 'h', label: 'H', unit: '°', max: 360 },
@@ -206,8 +206,8 @@ export default function ColorConverter() {
   ];
 
   const CopyBtn = ({ text, tag }) => (
-    <button onClick={() => copy(text, tag)} className="text-xs text-blue-500 hover:text-blue-600">
-      {copied === tag ? '已复制 ✓' : '复制'}
+    <button onClick={() => copy(text, tag)} className="act">
+      {copied === tag ? '已复制' : '复制'}
     </button>
   );
 
@@ -216,25 +216,28 @@ export default function ColorConverter() {
       {/* 预览 */}
       <div>
         <div
-          className="w-full h-28 rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-inner flex items-end justify-end p-3"
+          className="w-full h-28 rounded-card border-2 border-line flex items-center justify-center"
           style={{ backgroundColor: hex }}
         >
+          {/* 色块上只放大号 Aa。原来这里是 12px 的 HEX 文字，底是用户随便选的色，
+              怎么调都过不了正文 4.5:1（实测 3.30:1）；放大到 30px 就落进大字号的 3:1 档，
+              而这恰好也是这个工具要演示的东西 —— 建议色在这块底上到底够不够清楚。 */}
           <span
-            className="text-xs font-mono px-2 py-1 rounded bg-black/20 backdrop-blur-sm"
+            className="text-3xl font-bold"
             style={{ color: advice.best === '黑' ? '#111827' : '#FFFFFF' }}
           >
-            {hex}
+            Aa
           </span>
         </div>
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          此色块上建议用{advice.best}色文字（对比度 {advice.ratio}:1）
+        <p className="mt-2 text-xs text-ink-3">
+          <span className="mono text-ink">{hex}</span> 色块上建议用{advice.best}色文字（对比度 {advice.ratio}:1）
         </p>
       </div>
 
       {/* HEX */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">HEX</label>
+          <label className="lbl">HEX</label>
           <CopyBtn text={hex} tag="hex" />
         </div>
         <input
@@ -244,14 +247,14 @@ export default function ColorConverter() {
           onBlur={() => setHexText(hex)}
           onFocus={(e) => e.target.select()}
           placeholder="#3B82F6"
-          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink font-mono focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
 
       {/* RGB */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">RGB</label>
+          <label className="lbl">RGB</label>
           <CopyBtn text={`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`} tag="rgb" />
         </div>
         <div className="grid grid-cols-3 gap-3">
@@ -276,12 +279,12 @@ export default function ColorConverter() {
       {/* HSL */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">HSL</label>
+          <label className="lbl">HSL</label>
         </div>
         <div className="grid grid-cols-3 gap-3">
           {HSL_FIELDS.map(({ key, label, unit, max }) => (
             <div key={key}>
-              <span className="text-xs font-medium text-gray-500">{label}</span>
+              <span className="text-xs font-medium text-ink-3">{label}</span>
               <input
                 type="number"
                 min="0"
@@ -292,29 +295,29 @@ export default function ColorConverter() {
                 onFocus={(e) => e.target.select()}
                 className={inputCls}
               />
-              <span className="text-xs text-gray-400">{unit}</span>
+              <span className="text-xs text-ink-3">{unit}</span>
             </div>
           ))}
         </div>
         <div className="mt-3 flex items-center justify-between">
-          <code className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+          <code className="text-xs text-ink-3 font-mono">
             hsl({hsl.h}, {hsl.s}%, {hsl.l}%)
           </code>
           <CopyBtn text={`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`} tag="hsl" />
         </div>
       </div>
 
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
 
       {/* 预设色 */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">预设色</label>
+        <label className="lbl">预设色</label>
         <div className="grid grid-cols-6 gap-2">
           {PRESETS.map((c) => (
             <button
               key={c}
               onClick={() => handleHex(c)}
-              className="w-full h-10 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:scale-105 transition-transform"
+              className="w-full h-10 rounded-lg border-2 border-line hover:scale-105 transition-transform"
               style={{ backgroundColor: c }}
               title={c}
             />

@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import Icon from '../Icons';
 const ID_PATTERN = /^[1-9]\d{5}(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]$/;
 const PROVINCES = {
   11: '北京', 12: '天津', 13: '河北', 14: '山西', 15: '内蒙古',
@@ -37,29 +38,29 @@ export default function IdCardLookup() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">身份证号</label>
+        <label className="lbl">身份证号</label>
         <input
           type="text"
           value={idCard}
           onChange={(e) => setIdCard(e.target.value.replace(/\D/g, '').slice(0, 18))}
           placeholder="输入18位身份证号..."
-          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-mono"
+          className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft font-mono"
         />
       </div>
 
-      <button onClick={() => lookup(idCard)} disabled={idCard.length !== 18} className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all">
+      <button onClick={() => lookup(idCard)} disabled={idCard.length !== 18} className="btn-a w-full transition-colors">
         查询
       </button>
 
-      {error && <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">{error}</div>}
+      {error && <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">{error}</div>}
 
       {result && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 space-y-3">
+        <div className="bg-paper rounded-card p-4 space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-2xl">🪪</div>
+            <span className="chip"><Icon name="idcard" /></span>
             <div>
-              <div className="font-bold text-gray-900 dark:text-white font-mono text-lg">{result.idCard}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{result.province}</div>
+              <div className="font-bold text-ink font-mono text-lg">{result.idCard}</div>
+              <div className="text-xs text-ink-3">{result.province}</div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
@@ -69,17 +70,17 @@ export default function IdCardLookup() {
               { label: '生日', value: result.birthDate },
               { label: '校验码', value: result.checkCode },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-white dark:bg-gray-800 rounded-lg p-3">
-                <div className="text-gray-500 dark:text-gray-400 text-xs">{label}</div>
-                <div className="font-medium text-gray-900 dark:text-white">{value}</div>
+              <div key={label} className="bg-surface rounded-lg p-3">
+                <div className="text-ink-3 text-xs">{label}</div>
+                <div className="font-medium text-ink">{value}</div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-white mb-2">身份证号码结构</div>
+      <div className="bg-accent-soft border border-line rounded-card p-4 text-sm text-ink-2">
+        <div className="font-medium text-ink mb-2">身份证号码结构</div>
         <div className="text-xs space-y-1">
           <div>• 前6位：地址码（省市区）</div>
           <div>• 7-14位：出生日期（YYYYMMDD）</div>

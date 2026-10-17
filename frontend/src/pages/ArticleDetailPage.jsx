@@ -1,86 +1,118 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import MediaPlayerTool from '../components/MediaPlayerTool';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Icon from '../components/Icons';
+import client from '../api/client';
 
 export default function ArticleDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadArticle();
   }, [slug]);
 
-  const loadArticle = async () => {
+  async function loadArticle() {
+    setLoading(true);
+    setError(null);
     try {
-      // 模拟文章数据
-      const mockArticle = {
-        id: slug,
-        title: '这篇文章的标题',
-        content: '这是文章的内容...\n\n这里是正文部分...',
-        author: '管理员',
-        date: '2024-01-01',
-        views: 1234
-      };
-      setArticle(mockArticle);
-    } catch (error) {
-      console.error('Failed to load article:', error);
-      navigate('/404');
+      const res = await client.get(`/public/articles/${slug}`);
+      const data = res.data;
+      if (data && data.success) {
+        setArticle(data.data);
+      } else {
+        setError('文章不存在');
+      }
+    } catch (err) {
+      console.error('[ArticleDetailPage]', err.message);
+      // 本地无后端或网络错误：显示空态
+      setError('文章不存在');
     } finally {
       setLoading(false);
     }
-  };
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <div className="animate-spin spin"></div>
       </div>
     );
   }
 
-  if (!article) {
-    return <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <p className="text-white">文章不存在</p>
-    </div>;
+  if (error || !article) {
+    return (
+      <div className="min-h-screen bg-paper">
+        <Header />
+        <main className="wrap py-8 max-w-content">
+          <div className="card p-8 text-center">
+            <Icon name="alert" className="sz15 mx-auto mb-3" />
+            <p className="text-ink-2">{error || '文章不存在'}</p>
+            <button className="btn-a mt-4" onClick={() => navigate(-1)}>返回</button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-paper">
       <Header />
       
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="wrap py-8 max-w-content">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-ink-3 hover:text-accent transition-colors mb-5 min-h-10"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <Icon name="arrow" className="rotate-180" />
           返回列表
         </button>
-        
-        <article className="bg-gray-800 rounded-xl p-8">
-          <h1 className="text-3xl font-bold text-white mb-4">{article.title}</h1>
-          
-          <div className="flex items-center gap-6 text-gray-400 text-sm mb-8">
-            <span>👤 {article.author}</span>
-            <span>📅 {article.date}</span>
-            <span>👁️ {article.views} 阅读</span>
-          </div>
-          
-          <div className="prose prose-invert max-w-none">
-            {article.content.split('\n\n').map((paragraph, index) => (
-              <p key={index} className="text-gray-300 leading-relaxed mb-4">
-                {paragraph}
-              </p>
-            ))}
+
+        <article className="card overflow-hidden">
+          {article.cover_image && (
+            <img
+              src={article.cover_image}
+              alt={article.title}
+              className="w-full h-64 sm:h-80 object-cover"
+            />
+          )}
+          <div className="p-5 sm:p-8">
+            <h1 className="text-2xl font-bold text-ink mb-3 tracking-tight">{article.title}</h1>
+
+            <div className="flex flex-wrap items-center gap-4 text-ink-3 text-sm mb-6 pb-5 border-b border-line">
+              {article.author && (
+                <span className="inline-flex items-center gap-1.5"><Icon name="user" className="sz12" />{article.author}</span>
+              )}
+              {article.published_at && (
+                <span className="inline-flex items-center gap-1.5"><Icon name="calendar" className="sz12" />{formatDate(article.published_at)}</span>
+              )}
+              {article.views != null && (
+                <span className="inline-flex items-center gap-1.5"><Icon name="eye" className="sz12" />{article.views} 阅读</span>
+              )}
+              {article.category && (
+                <span className="chip">{article.category}</span>
+              )}
+            </div>
+
+            {/* .article 是真正生效的正文刻度 */}
+            <div className="article" dangerouslySetInnerHTML={{ __html: article.content }} />
           </div>
         </article>
-      </div>
+      </main>
       
       <Footer />
     </div>

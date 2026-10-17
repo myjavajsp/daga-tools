@@ -91,12 +91,13 @@ export default function MemberPage() {
   const level = quota.level ?? 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-paper">
       <Header />
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
-          我的会员
-        </Typography>
+      <div className="wrap py-8 col-sm">
+        <div className="phead">
+          <h1>我的会员</h1>
+          <span className="note">等级、到期时间与今日解析额度</span>
+        </div>
 
         {error && (
           <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
@@ -107,7 +108,7 @@ export default function MemberPage() {
         {data && (
           <>
             {/* 账号信息 */}
-            <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid #e0e0e0', mb: 3 }}>
+            <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
                 <Box
                   sx={{
@@ -115,7 +116,7 @@ export default function MemberPage() {
                     height: 56,
                     borderRadius: '50%',
                     bgcolor: 'primary.main',
-                    color: '#fff',
+                    color: 'primary.contrastText',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -146,17 +147,17 @@ export default function MemberPage() {
 
             {/* 配额卡片 */}
             <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mb: 3 }}>
-              <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid #e0e0e0', flex: '1 1 200px' }}>
+              <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', flex: '1 1 200px' }}>
                 <Typography variant="caption" color="text.secondary">会员等级</Typography>
                 <Typography variant="h5" sx={{ fontWeight: 700 }}>{LEVEL_LABELS[level] || '免费用户'}</Typography>
               </Paper>
-              <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid #e0e0e0', flex: '1 1 200px' }}>
+              <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', flex: '1 1 200px' }}>
                 <Typography variant="caption" color="text.secondary">到期时间</Typography>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>
                   {level === 3 ? '永久有效' : fmtExpires(quota.vip_expires_at)}
                 </Typography>
               </Paper>
-              <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid #e0e0e0', flex: '1 1 200px' }}>
+              <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', flex: '1 1 200px' }}>
                 <Typography variant="caption" color="text.secondary">今日剩余解析</Typography>
                 <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
                   {quota.remaining ?? 0} / {quota.effective_quota ?? 0} 次

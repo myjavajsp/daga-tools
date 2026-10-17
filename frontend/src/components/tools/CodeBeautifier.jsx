@@ -43,15 +43,15 @@ export default function CodeBeautifier() {
     <div className="space-y-4">
       <div className="flex gap-3 items-end">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">语言</label>
-          <select value={lang} onChange={e=>setLang(e.target.value)} className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30">
+          <label className="lbl">语言</label>
+          <select value={lang} onChange={e=>setLang(e.target.value)} className="input w-full">
             <option value="json">JSON</option>
             <option value="html">HTML</option>
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">缩进</label>
-          <select value={indent} onChange={e=>setIndent(Number(e.target.value))} className="px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30">
+          <label className="lbl">缩进</label>
+          <select value={indent} onChange={e=>setIndent(Number(e.target.value))} className="input">
             <option value={2}>2空格</option>
             <option value={4}>4空格</option>
             <option value={1}>1 Tab</option>
@@ -59,30 +59,30 @@ export default function CodeBeautifier() {
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">输入</label>
+        <label className="lbl">输入</label>
         <textarea
           value={code}
           onChange={e=>setCode(e.target.value)}
           placeholder={`粘贴${lang==='json'?'JSON':'HTML'}代码...`}
-          className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-full h-48 px-4 py-3 bg-paper border border-line rounded-card text-ink font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
       <button
         onClick={format}
         disabled={!code.trim()}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+        className="btn-a w-full transition-colors"
       >
         格式化
       </button>
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">结果</label>
-            <button onClick={copyOutput} className={`text-xs px-3 py-1 rounded-lg transition-colors ${copied?'bg-green-100 dark:bg-green-900/30 text-green-600':'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}`}>
+            <label className="lbl">结果</label>
+            <button onClick={copyOutput} className={`text-xs px-3 py-1 rounded-lg transition-colors ${copied?'bg-success-soft text-success':'bg-surface-2 text-ink-2'}`}>
               {copied?'已复制!':'复制'}
             </button>
           </div>
-          <pre className="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl text-sm font-mono text-gray-800 dark:text-gray-200 overflow-auto max-h-64 whitespace-pre-wrap">{output}</pre>
+          <pre className="p-4 bg-paper rounded-card text-sm font-mono text-ink overflow-auto max-h-64 whitespace-pre-wrap">{output}</pre>
         </div>
       )}
     </div>

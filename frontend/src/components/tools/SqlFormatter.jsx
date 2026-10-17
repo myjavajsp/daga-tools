@@ -29,29 +29,29 @@ export default function SqlFormatter() {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">SQL语句</label>
+        <label className="lbl">SQL语句</label>
         <textarea
           value={sql}
           onChange={(e) => setSql(e.target.value)}
-          className="w-full h-40 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-full h-40 px-4 py-3 bg-paper border border-line rounded-card text-ink font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
       <button
         onClick={handleFormat}
         disabled={!sql.trim()}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+        className="btn-a w-full transition-colors"
       >
         格式化
       </button>
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">格式化结果</label>
-            <button onClick={copyOutput} className={`text-xs px-3 py-1 rounded-lg transition-colors ${copied?'bg-green-100 dark:bg-green-900/30 text-green-600':'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}`}>
+            <label className="lbl">格式化结果</label>
+            <button onClick={copyOutput} className={`text-xs px-3 py-1 rounded-lg transition-colors ${copied?'bg-success-soft text-success':'bg-surface-2 text-ink-2'}`}>
               {copied ? '已复制!' : '复制'}
             </button>
           </div>
-          <pre className="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre-wrap overflow-auto max-h-64">{output}</pre>
+          <pre className="p-4 bg-paper rounded-card text-sm font-mono text-ink whitespace-pre-wrap overflow-auto max-h-64">{output}</pre>
         </div>
       )}
     </div>

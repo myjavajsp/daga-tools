@@ -5,7 +5,7 @@ export default function AudioCompress() {
     <MediaJob
       job="compress-audio"
       accept="audio/*"
-      icon="📉"
+      icon="chart"
       hint="降低比特率以减小体积，输出为 MP3"
       buttonText="压缩音频"
       defaultOptions={{ bitrate: 128 }}

@@ -18,22 +18,22 @@ export default function MomentsCopy() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">心情</label>
+        <label className="lbl">心情</label>
         <div className="flex gap-2">
-          {['happy', 'sad', 'motivational'].map(m => <button key={m} onClick={() => setMood(m)} className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${mood === m ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}>{m === 'happy' ? '开心' : m === 'sad' ? '伤感' : '励志'}</button>)}
+          {['happy', 'sad', 'motivational'].map(m => <button key={m} onClick={() => setMood(m)} className={`flex-1 py-2 rounded-card text-sm font-medium transition-all ${mood === m ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'}`}>{m === 'happy' ? '开心' : m === 'sad' ? '伤感' : '励志'}</button>)}
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">场景</label>
+        <label className="lbl">场景</label>
         <div className="flex gap-2">
-          {['daily', 'work', 'travel'].map(s => <button key={s} onClick={() => setScenario(s)} className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${scenario === s ? 'bg-purple-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}>{s === 'daily' ? '日常' : s === 'work' ? '工作' : '旅行'}</button>)}
+          {['daily', 'work', 'travel'].map(s => <button key={s} onClick={() => setScenario(s)} className={`flex-1 py-2 rounded-card text-sm font-medium transition-all ${scenario === s ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'}`}>{s === 'daily' ? '日常' : s === 'work' ? '工作' : '旅行'}</button>)}
         </div>
       </div>
-      <button onClick={generate} className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">生成文案</button>
+      <button onClick={generate} className="btn-a w-full transition-colors">生成文案</button>
       {output && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-center">
-          <p className="text-gray-800 dark:text-gray-200 text-base">{output}</p>
-          <button onClick={() => navigator.clipboard.writeText(output)} className="mt-3 text-sm text-blue-500 hover:text-blue-600">复制文案</button>
+        <div className="bg-paper rounded-card p-4 text-center">
+          <p className="text-ink text-base">{output}</p>
+          <button onClick={() => navigator.clipboard.writeText(output)} className="act mt-3">复制文案</button>
         </div>
       )}
     </div>

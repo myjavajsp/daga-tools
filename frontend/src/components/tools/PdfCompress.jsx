@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
+import Icon from '../Icons';
 import { fmtSize, downloadBlob, readAsArrayBuffer, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
 
 export default function PdfCompress() {
@@ -86,18 +87,18 @@ export default function PdfCompress() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('cf')?.click()}
       >
         <input id="cf" type="file" accept=".pdf,application/pdf" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">📉</div>
-        <p className="text-gray-600 dark:text-gray-400">{file ? `已选择: ${file.name}` : '上传PDF压缩'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="chart" /></span></div>
+        <p className="text-ink-2">{file ? `已选择: ${file.name}` : '上传PDF压缩'}</p>
       </div>
 
       <div>
         <div className="flex justify-between text-sm mb-2">
-          <span className="text-gray-600 dark:text-gray-400">压缩质量</span>
-          <span className="font-mono text-gray-900 dark:text-white">{quality}%</span>
+          <span className="text-ink-2">压缩质量</span>
+          <span className="font-mono text-ink">{quality}%</span>
         </div>
         <input
           type="range"
@@ -105,9 +106,9 @@ export default function PdfCompress() {
           max="100"
           value={quality}
           onChange={(e) => setQuality(Number(e.target.value))}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+          className="slider"
         />
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="text-xs text-ink-3 mt-2">
           质量越低体积越小。压缩通过栅格化重采样实现，输出为图片版 PDF（文字将不可选中）。
         </p>
       </div>
@@ -117,26 +118,26 @@ export default function PdfCompress() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">压缩完成！已开始下载</div>
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">压缩完成！已开始下载</div>
           <div className="grid grid-cols-3 gap-3 mt-3 text-sm">
             <div>
-              <div className="text-gray-500">原大小</div>
+              <div className="text-ink-3">原大小</div>
               <div className="font-bold">{fmtSize(result.original)}</div>
             </div>
             <div>
-              <div className="text-gray-500">压缩后</div>
-              <div className="font-bold text-green-600">{fmtSize(result.compressed)}</div>
+              <div className="text-ink-3">压缩后</div>
+              <div className="font-bold text-success">{fmtSize(result.compressed)}</div>
             </div>
             <div>
-              <div className="text-gray-500">节省</div>
-              <div className="font-bold text-blue-600">
+              <div className="text-ink-3">节省</div>
+              <div className="font-bold text-accent">
                 {result.saved > 0 ? `${result.percent}%` : '0%（原文件已较小）'}
               </div>
             </div>

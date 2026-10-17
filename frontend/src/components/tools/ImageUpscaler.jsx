@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { fmtSize, downloadBlob, loadImage, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
+import Icon from '../Icons';
 
 /** 3x3 锐化卷积（拉普拉斯型），让放大后的边缘更清晰 */
 function applySharpen(ctx, w, h) {
@@ -96,37 +97,37 @@ export default function ImageUpscaler() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('us')?.click()}
       >
         <input id="us" type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">🔍</div>
-        <p className="text-gray-600 dark:text-gray-400">{file ? `已选择: ${file.name}` : '上传图片放大'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="search" /></span></div>
+        <p className="text-ink-2">{file ? `已选择: ${file.name}` : '上传图片放大'}</p>
       </div>
 
       {preview && !result && (
         <div className="text-center">
-          <img src={preview} alt="原图" className="max-h-48 mx-auto rounded-xl" />
+          <img src={preview} alt="原图" className="max-h-48 mx-auto rounded-card" />
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">放大倍数</label>
+        <label className="lbl">放大倍数</label>
         <div className="flex gap-2">
           {[2, 3, 4].map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => setScale(s)}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
-                scale === s ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+              className={`flex-1 py-2 rounded-card text-sm font-medium transition-colors ${
+                scale === s ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'
               }`}
             >
               {s}x
             </button>
           ))}
         </div>
-        <label className="flex items-center gap-2 mt-3 text-sm text-gray-600 dark:text-gray-300">
+        <label className="flex items-center gap-2 mt-3 text-sm text-ink-2 min-h-8">
           <input type="checkbox" checked={sharpen} onChange={(e) => setSharpen(e.target.checked)} />
           锐化处理（放大后边缘更清晰）
         </label>
@@ -137,21 +138,21 @@ export default function ImageUpscaler() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">放大完成！已开始下载</div>
-          <div className="text-sm text-gray-500 mt-1">
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">放大完成！已开始下载</div>
+          <div className="text-sm text-ink-3 mt-1">
             {result.from} → {result.to} · {fmtSize(result.size)}
           </div>
-          <div className="mt-3 bg-white/60 dark:bg-gray-800/60 rounded-lg p-2">
+          <div className="mt-3 bg-surface-2 rounded-lg p-2">
             <img src={result.url} alt="放大结果" className="max-h-48 mx-auto object-contain rounded-lg" />
           </div>
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-ink-3 mt-2">
             使用浏览器高质量插值 + 锐化。这是传统算法放大，不是 AI 超分，不会凭空生成新细节。
           </p>
         </div>

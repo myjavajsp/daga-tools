@@ -66,32 +66,32 @@ export default function ZhConverter() {
       <div className="flex gap-2">
         <button
           onClick={() => { setMode('zh-cn'); setOutput(''); }}
-          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${mode === 'zh-cn' ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
+          className={`flex-1 py-2 rounded-card text-sm font-medium transition-all ${mode === 'zh-cn' ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'}`}
         >
           简→繁
         </button>
         <button
           onClick={() => { setMode('zh-tw'); setOutput(''); }}
-          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${mode === 'zh-tw' ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
+          className={`flex-1 py-2 rounded-card text-sm font-medium transition-all ${mode === 'zh-tw' ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'}`}
         >
           繁→简
         </button>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">输入文本</label>
+        <label className="lbl">输入文本</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="输入简体中文或繁体中文..."
-          className="w-full h-40 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-full h-40 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
 
       <button
         onClick={handleConvert}
         disabled={!input.trim()}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+        className="btn-a w-full transition-colors"
       >
         转换
       </button>
@@ -99,22 +99,22 @@ export default function ZhConverter() {
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">转换结果</label>
-            <button onClick={copyOutput} className="text-xs text-blue-500 hover:text-blue-600">复制</button>
+            <label className="lbl">转换结果</label>
+            <button onClick={copyOutput} className="act">复制</button>
           </div>
           <textarea
             value={output}
             readOnly
-            className="w-full h-40 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none"
+            className="w-full h-40 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none"
           />
         </div>
       )}
 
-      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-white mb-2">常用简繁对照</div>
+      <div className="bg-paper rounded-card p-4 text-sm text-ink-2">
+        <div className="font-medium text-ink mb-2">常用简繁对照</div>
         <div className="grid grid-cols-3 gap-2 text-xs font-mono">
           {['里→裡', '后→後', '发→發', '面→麵', '谷→穀', '斗→鬥', '云→雲', '干→乾', '里→裡', '只→隻', '钟→鐘', '余→餘'].map(item => (
-            <span key={item} className="px-2 py-1 bg-white dark:bg-gray-800 rounded">{item}</span>
+            <span key={item} className="px-2 py-1 bg-surface rounded">{item}</span>
           ))}
         </div>
       </div>

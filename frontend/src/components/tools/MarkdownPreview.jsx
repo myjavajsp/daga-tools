@@ -6,17 +6,17 @@ export default function MarkdownPreview() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[calc(100vh-200px)]">
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Markdown</label>
+        <label className="lbl">Markdown</label>
         <textarea
           value={md}
           onChange={(e) => setMd(e.target.value)}
-          className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="input mono min-h-56 resize-none"
         />
       </div>
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">预览</label>
+        <label className="lbl">预览</label>
         <div
-          className="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-auto prose prose-sm dark:prose-invert max-w-none"
+          className="card article overflow-auto p-4 min-h-56"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </div>

@@ -18,20 +18,20 @@ export default function UuidGenerator() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">生成数量</label>
+        <label className="lbl">生成数量</label>
         <input
           type="number"
           min="1"
           max="100"
           value={count}
           onChange={(e) => setCount(Number(e.target.value))}
-          className="w-32 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-32 px-4 py-3 bg-paper border border-line rounded-card text-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
 
       <button
         onClick={generate}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+        className="btn-a w-full transition-colors"
       >
         生成 UUID
       </button>
@@ -39,22 +39,22 @@ export default function UuidGenerator() {
       {uuids.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">共 {uuids.length} 个 UUID</span>
+            <span className="text-sm text-ink-2">共 {uuids.length} 个 UUID</span>
             <button
               onClick={copyAll}
-              className={`text-xs px-3 py-1 rounded-lg transition-colors ${copied ? 'bg-green-100 dark:bg-green-900/30 text-green-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'}`}
+              className={`text-xs px-3 py-1 rounded-lg transition-colors ${copied ? 'bg-success-soft text-success' : 'bg-surface-2 text-ink-2 hover:bg-surface-3'}`}
             >
               {copied ? '已复制!' : '复制全部'}
             </button>
           </div>
           <div className="space-y-1 max-h-80 overflow-auto">
             {uuids.map((uuid, i) => (
-              <div key={i} className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2">
-                <span className="text-xs text-gray-400 w-6">{i + 1}.</span>
-                <code className="flex-1 text-sm font-mono text-gray-700 dark:text-gray-300">{uuid}</code>
+              <div key={i} className="flex items-center gap-2 bg-paper rounded-lg px-3 py-2">
+                <span className="text-xs text-ink-3 w-6">{i + 1}.</span>
+                <code className="flex-1 text-sm font-mono text-ink-2">{uuid}</code>
                 <button
                   onClick={() => { navigator.clipboard.writeText(uuid); }}
-                  className="text-xs text-blue-500 hover:text-blue-600"
+                  className="act"
                 >
                   复制
                 </button>
@@ -64,8 +64,8 @@ export default function UuidGenerator() {
         </div>
       )}
 
-      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-white mb-2">关于 UUID</div>
+      <div className="bg-paper rounded-card p-4 text-sm text-ink-2">
+        <div className="font-medium text-ink mb-2">关于 UUID</div>
         <p className="text-xs">UUID v4 是由随机数生成的通用唯一标识符，格式为 xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx，其中 y 为 8、9、a 或 b。</p>
       </div>
     </div>

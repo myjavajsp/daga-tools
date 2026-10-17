@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Icon from '../components/Icons';
+import { EmptyState } from '../components/ToolUI';
 
 export default function ArticleListPage() {
   const [articles, setArticles] = useState([]);
@@ -29,43 +31,42 @@ export default function ArticleListPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <div className="animate-spin spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-paper">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">
-          文章列表
-        </h1>
-        
-        <div className="max-w-3xl mx-auto space-y-4">
+      <main className="wrap py-8 max-w-3xl">
+        <div className="phead">
+          <h1>文章列表</h1>
+          <span className="note">公告与使用教程</span>
+        </div>
+
+        <div className="space-y-3">
           {articles.map(article => (
             <Link
               key={article.id}
               to={`/article/${article.slug}`}
-              className="block bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-colors"
+              className="block card p-5 hover:border-accent transition-colors"
             >
-              <h2 className="text-xl font-semibold text-white mb-2">{article.title}</h2>
-              <div className="flex items-center gap-4 text-gray-400 text-sm">
-                <span>📅 {article.date}</span>
-                <span>👁️ {article.views} 阅读</span>
+              <h2 className="text-lg font-semibold text-ink mb-2">{article.title}</h2>
+              <div className="flex items-center gap-4 text-ink-3 text-sm">
+                <span className="inline-flex items-center gap-1.5"><Icon name="calendar" />{article.date}</span>
+                <span className="inline-flex items-center gap-1.5"><Icon name="eye" />{article.views} 阅读</span>
               </div>
             </Link>
           ))}
         </div>
         
         {articles.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-400">暂无文章</p>
-          </div>
+          <EmptyState icon="doc" title="暂无文章" />
         )}
-      </div>
+      </main>
       
       <Footer />
     </div>

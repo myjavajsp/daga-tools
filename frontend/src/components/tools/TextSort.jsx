@@ -26,12 +26,12 @@ export default function TextSort() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">文本（每行一条）</label>
+        <label className="lbl">文本（每行一条）</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="输入要排序的文本，每行一条..."
-          className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+          className="w-full h-48 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft resize-none"
         />
       </div>
 
@@ -45,10 +45,10 @@ export default function TextSort() {
           <button
             key={id}
             onClick={() => setMethod(id)}
-            className={`py-2 rounded-xl text-sm font-medium transition-all ${
+            className={`py-2 rounded-card text-sm font-medium transition-all ${
               method === id
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                ? 'bg-accent text-accent-fg'
+                : 'bg-surface-2 text-ink-2'
             }`}
           >
             {label}
@@ -59,7 +59,7 @@ export default function TextSort() {
       <button
         onClick={handleSort}
         disabled={!input.trim()}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+        className="btn-a w-full transition-colors"
       >
         排序
       </button>
@@ -67,13 +67,13 @@ export default function TextSort() {
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">结果</label>
+            <label className="lbl">结果</label>
             <button
               onClick={copyOutput}
               className={`px-3 py-1 text-xs rounded-lg transition-colors ${
                 copied
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'
+                  ? 'bg-success-soft text-success'
+                  : 'bg-surface-2 text-ink-2 hover:bg-surface-3'
               }`}
             >
               {copied ? '已复制!' : '复制'}
@@ -82,7 +82,7 @@ export default function TextSort() {
           <textarea
             value={output}
             readOnly
-            className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none"
+            className="w-full h-48 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none"
           />
         </div>
       )}

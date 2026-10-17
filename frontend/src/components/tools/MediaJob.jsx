@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { fmtSize, downloadBlob, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
 import { uploadForBlob } from '../../lib/upload';
+import { Dropzone } from '../ToolUI';
 
 /**
  * MediaJob —— 音视频处理通用组件
@@ -14,7 +15,7 @@ import { uploadForBlob } from '../../lib/upload';
 export default function MediaJob({
   job,
   accept,
-  icon = '🎬',
+  icon = 'filmstrip',
   hint = '',
   options = [],
   defaultOptions = {},
@@ -104,24 +105,21 @@ export default function MediaJob({
   const isVideo = file && /^video\//i.test(file.type);
 
   return (
-    <div className="space-y-6">
-      <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
-        onClick={() => document.getElementById(`mj-${job}`)?.click()}
-      >
-        <input id={`mj-${job}`} type="file" accept={accept} onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">{icon}</div>
-        <p className="text-gray-600 dark:text-gray-400">
-          {file ? `已选择: ${file.name}（${fmtSize(file.size)}）` : '点击选择文件'}
-        </p>
-        {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
-      </div>
+    <div className="space-y-5">
+      <Dropzone
+        id={`mj-${job}`}
+        accept={accept}
+        icon={icon}
+        onChange={handleFile}
+        title={file ? `已选择：${file.name}（${fmtSize(file.size)}）` : '点击选择文件'}
+        hint={hint}
+      />
 
       {options.length > 0 && (
         <div className="space-y-4">
           {options.map((o) => (
             <div key={o.key}>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="lbl">
                 {o.label}
               </label>
               {o.type === 'choice' ? (
@@ -131,10 +129,10 @@ export default function MediaJob({
                       key={String(c)}
                       type="button"
                       onClick={() => setOpts((prev) => ({ ...prev, [o.key]: c }))}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  className={`px-4 py-2 rounded-card text-sm font-medium transition-all ${
                         String(opts[o.key]) === String(c)
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                          ? 'bg-accent text-accent-fg'
+                          : 'bg-surface-2 text-ink-2'
                       }`}
                     >
                       {o.labels ? o.labels[ci] : String(c).toUpperCase()}
@@ -148,7 +146,7 @@ export default function MediaJob({
                   min={o.min}
                   max={o.max}
                   onChange={(e) => setOpts((prev) => ({ ...prev, [o.key]: Number(e.target.value) }))}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink"
                 />
               )}
             </div>
@@ -163,15 +161,15 @@ export default function MediaJob({
       )}
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">处理完成！已开始下载</div>
-          <div className="text-sm text-gray-500 mt-1">
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">处理完成！已开始下载</div>
+          <div className="text-sm text-ink-3 mt-1">
             {result.name} · {fmtSize(result.size)}
           </div>
           {result.url && (

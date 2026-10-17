@@ -32,11 +32,11 @@ export default function HttpStatus() {
   );
 
   const getGroupColor = (code) => {
-    if (code < 200) return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400';
-    if (code < 300) return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400';
-    if (code < 400) return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400';
-    if (code < 500) return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400';
-    return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
+    if (code < 200) return 'bg-accent-soft text-accent';
+    if (code < 300) return 'bg-success-soft text-success';
+    if (code < 400) return 'bg-warning-soft text-warning';
+    if (code < 500) return 'bg-warning-soft text-warning';
+    return 'bg-danger-soft text-danger';
   };
 
   return (
@@ -46,7 +46,7 @@ export default function HttpStatus() {
         value={search}
         onChange={e => setSearch(e.target.value)}
         placeholder="搜索状态码..."
-        className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+        className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft"
       />
 
       <div className="grid gap-2 max-h-96 overflow-auto">
@@ -54,33 +54,33 @@ export default function HttpStatus() {
           <button
             key={s.code}
             onClick={() => setSelected(s)}
-            className={`flex items-center gap-4 px-4 py-3 rounded-xl text-left hover:shadow-md transition-all ${
-              selected?.code === s.code ? 'ring-2 ring-blue-500' : ''
+            className={`flex items-center gap-4 px-4 py-3 rounded-card text-left hover:shadow-md transition-all ${
+              selected?.code === s.code ? 'ring-2 ring-accent-soft' : ''
             }`}
           >
             <span className={`px-3 py-1 rounded-lg font-mono font-bold text-sm ${getGroupColor(s.code)}`}>
               {s.code}
             </span>
             <div className="flex-1">
-              <div className="font-medium text-gray-900 dark:text-white text-sm">{s.text}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{s.desc}</div>
+              <div className="font-medium text-ink text-sm">{s.text}</div>
+              <div className="text-xs text-ink-3">{s.desc}</div>
             </div>
           </button>
         ))}
       </div>
 
       {selected && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 space-y-2">
+        <div className="bg-paper rounded-card p-4 space-y-2">
           <div className="flex items-center gap-3">
-            <span className={`px-4 py-2 rounded-xl font-mono font-bold text-lg ${getGroupColor(selected.code)}`}>
+            <span className={`px-4 py-2 rounded-card font-mono font-bold text-lg ${getGroupColor(selected.code)}`}>
               {selected.code}
             </span>
             <div>
-              <div className="font-bold text-gray-900 dark:text-white">{selected.text}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">{selected.desc}</div>
+              <div className="font-bold text-ink">{selected.text}</div>
+              <div className="text-sm text-ink-3">{selected.desc}</div>
             </div>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-ink-2">
             {selected.code >= 200 && selected.code < 300 ? '表示请求已成功处理。' :
              selected.code >= 300 && selected.code < 400 ? '表示需要进一步操作以完成请求。' :
              selected.code >= 400 && selected.code < 500 ? '表示客户端请求有误。' :
@@ -92,13 +92,13 @@ export default function HttpStatus() {
 
       <div className="grid grid-cols-5 gap-2 text-xs text-center">
         {[
-          { label: '信息', range: '1xx', color: 'bg-blue-500' },
-          { label: '成功', range: '2xx', color: 'bg-green-500' },
-          { label: '重定向', range: '3xx', color: 'bg-yellow-500' },
-          { label: '客户端错误', range: '4xx', color: 'bg-orange-500' },
-          { label: '服务器错误', range: '5xx', color: 'bg-red-500' },
+          { label: '信息', range: '1xx', color: 'bg-accent' },
+          { label: '成功', range: '2xx', color: 'bg-success' },
+          { label: '重定向', range: '3xx', color: 'bg-warning' },
+          { label: '客户端错误', range: '4xx', color: 'bg-warning' },
+          { label: '服务器错误', range: '5xx', color: 'bg-danger' },
         ].map(({ label, range, color }) => (
-          <div key={range} className={`px-2 py-2 rounded-lg text-white ${color}`}>{label}</div>
+          <div key={range} className={`px-2 py-2 rounded-lg text-accent-fg ${color}`}>{label}</div>
         ))}
       </div>
     </div>

@@ -1,5 +1,6 @@
 ﻿import { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
+import Icon from '../Icons';
 export default function ExcelViewer() {
   const [sheets, setSheets] = useState([]);
   const [activeSheet, setActiveSheet] = useState(0);
@@ -33,12 +34,12 @@ export default function ExcelViewer() {
   return (
     <div className="space-y-4">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-6 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <input ref={fileInputRef} type="file" accept=".xlsx,.xls,.csv" onChange={handleFile} className="hidden" />
-        <div className="text-3xl mb-2">📊</div>
-        <p className="text-sm text-gray-600 dark:text-gray-400">{fileName || '点击上传 Excel / CSV 文件'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="chart" /></span></div>
+        <p className="text-sm text-ink-2">{fileName || '点击上传 Excel / CSV 文件'}</p>
       </div>
 
       {sheets.length > 0 && sheets.length > 1 && (
@@ -48,7 +49,7 @@ export default function ExcelViewer() {
               key={i}
               onClick={() => { const wb = XLSX.read(null, { type: 'binary' }); setActiveSheet(i); }}
               className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                activeSheet === i ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                activeSheet === i ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'
               }`}
             >
               {name}
@@ -58,28 +59,28 @@ export default function ExcelViewer() {
       )}
 
       {rows.length > 0 && (
-        <div className="overflow-auto max-h-96 border border-gray-200 dark:border-gray-700 rounded-xl">
+        <div className="overflow-auto max-h-96 border border-line rounded-card">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-50 dark:bg-gray-800">
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 w-10">#</th>
+              <tr className="bg-paper">
+                <th className="px-3 py-2 text-left text-xs font-medium text-ink-3 w-10">#</th>
                 {headers.map((h, i) => (
-                  <th key={i} className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">{h}</th>
+                  <th key={i} className="px-3 py-2 text-left text-xs font-medium text-ink-3 whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {rows.map((row, ri) => (
-                <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/50'}>
-                  <td className="px-3 py-2 text-xs text-gray-400 font-mono">{ri + 1}</td>
+                <tr key={ri} className={ri % 2 === 0 ? 'bg-surface' : 'bg-paper'}>
+                  <td className="px-3 py-2 text-xs text-ink-3 font-mono">{ri + 1}</td>
                   {headers.map((_, ci) => (
-                    <td key={ci} className="px-3 py-2 text-gray-700 dark:text-gray-300 whitespace-nowrap max-w-xs truncate">{row[ci] ?? ''}</td>
+                    <td key={ci} className="px-3 py-2 text-ink-2 whitespace-nowrap max-w-xs truncate">{row[ci] ?? ''}</td>
                   ))}
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="px-3 py-2 text-xs text-gray-400 border-t border-gray-200 dark:border-gray-700">
+          <div className="px-3 py-2 text-xs text-ink-3 border-t border-line">
             共 {rows.length} 行 × {headers.length} 列
           </div>
         </div>

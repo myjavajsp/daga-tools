@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import Icon from '../Icons';
 export default function ImageNineGrid() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -37,17 +38,17 @@ export default function ImageNineGrid() {
 
   return (
     <div className="space-y-6">
-      <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer" onClick={() => document.getElementById('nf')?.click()}>
+      <div className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer" onClick={() => document.getElementById('nf')?.click()}>
         <input id="nf" type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">📐</div>
-        <p className="text-gray-600 dark:text-gray-400">{preview ? '点击更换图片' : '上传图片切成九宫格'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="grid9" /></span></div>
+        <p className="text-ink-2">{preview ? '点击更换图片' : '上传图片切成九宫格'}</p>
       </div>
-      {preview && <img src={preview} alt="Preview" className="max-h-48 mx-auto rounded-xl" />}
-      <button onClick={cut} disabled={!file} className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50">切成九宫格</button>
+      {preview && <img src={preview} alt="Preview" className="max-h-48 mx-auto rounded-card" />}
+      <button onClick={cut} disabled={!file} className="btn-a w-full">切成九宫格</button>
       {output.length > 0 && (
         <div className="grid grid-cols-3 gap-2">
           {output.map((url, i) => (
-            <a key={i} href={url} download={`grid_${i + 1}.png`} className="block rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
+            <a key={i} href={url} download={`grid_${i + 1}.png`} className="block rounded-card overflow-hidden border-2 border-line hover:shadow-lift transition-shadow">
               <img src={url} alt={`Grid ${i + 1}`} className="w-full h-auto" />
             </a>
           ))}

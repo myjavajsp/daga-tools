@@ -1,101 +1,110 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
+
+const TYPES = [
+  { id: 'linear', label: '线性渐变' },
+  { id: 'radial', label: '径向渐变' },
+];
+
+/**
+ * 注意：这里出现的 linear-/radial-gradient 是工具的产品输出，不是页面装饰，
+ * 属于「明亮清爽 v5」禁用渐变规则的唯一例外（同 ImageCrop 的透明棋盘格）。
+ */
 export default function GradientGenerator() {
   const [color1, setColor1] = useState('#3B82F6');
   const [color2, setColor2] = useState('#8B5CF6');
   const [angle, setAngle] = useState(135);
   const [type, setType] = useState('linear');
+  const [copied, setCopied] = useState(false);
 
-  const cssValue = type === 'linear'
-    ? `linear-gradient(${angle}deg, ${color1}, ${color2})`
-    : `radial-gradient(circle, ${color1}, ${color2})`;
+  const cssValue =
+    type === 'linear'
+      ? `linear-gradient(${angle}deg, ${color1}, ${color2})`
+      : `radial-gradient(circle, ${color1}, ${color2})`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(`background: ${cssValue};`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* 剪贴板被浏览器拒绝时不做假提示 */
+    }
+  };
+
+  const swatch = (label, value, setValue) => (
+    <div className="min-w-0">
+      <label className="lbl">{label}</label>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          aria-label={`${label}取色`}
+          className="swatch"
+        />
+        {/* 旧版这里少了 min-w-0：type=text 的 input 有 ~194px 的固有宽度，
+            在 grid-cols-2 的半宽格子里把整页撑到 396px（实测横向溢出）。 */}
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          aria-label={`${label}色值`}
+          className="input mono min-w-0 flex-1"
+        />
+      </div>
+    </div>
+  );
 
   return (
-    <div className="space-y-6">
-      <div
-        className="w-full h-40 rounded-xl shadow-lg"
-        style={{ background: cssValue }}
-      />
+    <div className="space-y-5">
+      <div className="h-40 w-full rounded-card border border-line" style={{ background: cssValue }} />
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">颜色1</label>
-          <div className="flex items-center gap-2">
-            <input
-              type="color"
-              value={color1}
-              onChange={(e) => setColor1(e.target.value)}
-              className="w-10 h-10 rounded cursor-pointer"
-            />
-            <input
-              type="text"
-              value={color1}
-              onChange={(e) => setColor1(e.target.value)}
-              className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white font-mono text-sm"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">颜色2</label>
-          <div className="flex items-center gap-2">
-            <input
-              type="color"
-              value={color2}
-              onChange={(e) => setColor2(e.target.value)}
-              className="w-10 h-10 rounded cursor-pointer"
-            />
-            <input
-              type="text"
-              value={color2}
-              onChange={(e) => setColor2(e.target.value)}
-              className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white font-mono text-sm"
-            />
-          </div>
-        </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {swatch('颜色 1', color1, setColor1)}
+        {swatch('颜色 2', color2, setColor2)}
+      </div>
+
+      <div className="flex gap-2">
+        {TYPES.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setType(t.id)}
+            aria-pressed={type === t.id}
+            className={
+              'min-h-10 flex-1 rounded-sm text-sm font-medium transition-colors ' +
+              (type === t.id
+                ? 'bg-accent text-accent-fg'
+                : 'bg-surface-2 text-ink-2 hover:bg-accent-soft hover:text-accent-press')
+            }
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {type === 'linear' && (
         <div>
-          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <span>角度: {angle}°</span>
-          </div>
+          <label className="lbl" htmlFor="gg-angle">角度 {angle}°</label>
           <input
+            id="gg-angle"
             type="range"
             min="0"
             max="360"
             value={angle}
             onChange={(e) => setAngle(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            className="w-full accent-accent"
           />
         </div>
       )}
 
-      <div className="flex gap-2">
-        {['linear', 'radial'].map((t) => (
-          <button
-            key={t}
-            onClick={() => setType(t)}
-            className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${
-              type === t
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-            }`}
-          >
-            {t === 'linear' ? '线性渐变' : '径向渐变'}
-          </button>
-        ))}
-      </div>
-
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">CSS代码</label>
-          <button
-            onClick={() => navigator.clipboard.writeText(cssValue)}
-            className="text-xs text-blue-500 hover:text-blue-600"
-          >
-            复制
+        <div className="mb-2 flex items-center justify-between">
+          <label className="lbl mb-0">CSS 代码</label>
+          <button onClick={copy} className="btn-ghost min-h-9 px-3 text-xs">
+            {copied ? '已复制' : '复制'}
           </button>
         </div>
-        <code className="block p-3 bg-gray-50 dark:bg-gray-700 rounded-xl text-sm font-mono text-gray-700 dark:text-gray-300 break-all">
+        <code className="mono block break-all rounded-card bg-surface p-3 text-sm text-ink-2">
           background: {cssValue};
         </code>
       </div>

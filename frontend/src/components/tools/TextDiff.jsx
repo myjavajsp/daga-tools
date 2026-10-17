@@ -25,21 +25,21 @@ export default function TextDiff() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">原文</label>
+          <label className="lbl">原文</label>
           <textarea
             value={text1}
             onChange={(e) => setText1(e.target.value)}
             placeholder="输入原始文本..."
-            className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+            className="w-full h-48 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft resize-none"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">修改后</label>
+          <label className="lbl">修改后</label>
           <textarea
             value={text2}
             onChange={(e) => setText2(e.target.value)}
             placeholder="输入修改后的文本..."
-            className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+            className="w-full h-48 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft resize-none"
           />
         </div>
       </div>
@@ -47,19 +47,19 @@ export default function TextDiff() {
       <button
         onClick={findDiff}
         disabled={!text1.trim() || !text2.trim()}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+        className="btn-a w-full transition-colors"
       >
         对比差异
       </button>
 
       {diff.length > 0 && (
-        <div className="max-h-96 overflow-auto border border-gray-200 dark:border-gray-700 rounded-xl">
+        <div className="max-h-96 overflow-auto border border-line rounded-card">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-50 dark:bg-gray-800">
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">行号</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">原文</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">修改后</th>
+              <tr className="bg-paper">
+                <th className="px-3 py-2 text-left text-xs font-medium text-ink-3">行号</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-ink-3">原文</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-ink-3">修改后</th>
               </tr>
             </thead>
             <tbody>
@@ -68,17 +68,17 @@ export default function TextDiff() {
                   key={line}
                   className={
                     isDiff
-                      ? 'bg-red-50 dark:bg-red-900/10'
+                      ? 'bg-danger-soft'
                       : line % 2 === 0
-                      ? 'bg-gray-50 dark:bg-gray-800/50'
-                      : 'bg-white dark:bg-gray-900'
+                      ? 'bg-paper'
+                      : 'bg-surface'
                   }
                 >
-                  <td className="px-3 py-2 text-xs text-gray-400 font-mono">{line}</td>
-                  <td className={`px-3 py-2 font-mono ${isDiff ? 'text-red-600 dark:text-red-400 line-through' : 'text-gray-700 dark:text-gray-300'}`}>
+                  <td className="px-3 py-2 text-xs text-ink-3 font-mono">{line}</td>
+                  <td className={`px-3 py-2 font-mono ${isDiff ? 'text-danger line-through' : 'text-ink-2'}`}>
                     {text1 || '（空）'}
                   </td>
-                  <td className={`px-3 py-2 font-mono ${isDiff ? 'text-green-600 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}`}>
+                  <td className={`px-3 py-2 font-mono ${isDiff ? 'text-success' : 'text-ink-2'}`}>
                     {text2 || '（空）'}
                   </td>
                 </tr>

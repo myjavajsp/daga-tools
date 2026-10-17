@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>全民影视VIP解析 · 首页重设计 Demo（明亮清爽 v5）</title>
+<meta name="description" content="免费在线视频解析工具站首页重设计演示：纸白底、单一钴蓝强调色、图标工具卡阵与竖版封面推荐区。" />
+<meta name="theme-color" content="#f7f8f9" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ffffff' stroke='%23dfe3e8' stroke-width='1'/><path d='M6 9.6H26' stroke='%230e1116' stroke-width='3' stroke-linecap='round'/><path d='M6 16h11.2' stroke='%231c47d6' stroke-width='3' stroke-linecap='round'/><path d='M6 22.4H23' stroke='%230e1116' stroke-width='3' stroke-linecap='round'/><circle cx='23.3' cy='16' r='3.3' fill='%231c47d6'/></svg>" />
+<script>document.documentElement.className += ' js';</script>
+<style>
+/* ============================================================
+   明亮清爽 v5
+   保留 v4 的克制（单一强调色、无 emoji、无渐变字、无光斑脉冲），
+   把被削掉的“分量”还回来：图标芯片、卡片抬升、竖版封面、
+   线路状态自检表。层级靠 边框 / 极轻阴影 / 留白 三层，不靠颜色堆。
+   ============================================================ */
+:root{
+  --paper:#f7f8f9;      /* 冷调纸白，比 v4 更明亮 */
+  --surface:#ffffff;    /* 卡片 */
+  --surface-2:#eef0f2;  /* 分隔/公告底 */
+  --ink:#0e1116;
+  --ink-2:#535a63;
+  --ink-3:#656c75;      /* 三级灰：13px 说明文字，实测 4.8:1 起 */
+  --line:#e2e5e9;
+  --line-2:#cdd2d8;
+  --accent:#1c47d6;     /* 唯一强调色：按钮、选中态、悬停 */
+  --accent-press:#1638ac;
+  --accent-soft:#eaeefc;
+  /* 导航不新造颜色：底=卡片白、线=全站发丝线、阴影=卡片同款 --sh，
+     和下面所有内容同一套材质；滚动后浮起来才有阴影，静止时零厚度 */
+  --nav-bg:var(--surface);
+  --nav-line:var(--line);
+  --danger:#b62d23;
+  --r:12px; --r-sm:9px;
+  --sh:0 1px 2px rgba(14,17,22,.05), 0 6px 16px -10px rgba(14,17,22,.10);
+  --sh-2:0 2px 4px rgba(14,17,22,.06), 0 14px 28px -12px rgba(14,17,22,.16);
+  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:64px;
+  --fs-label:13px; --fs-body:15px; --fs-lead:17px;
+  --fs-h2:clamp(20px,2.2vw,25px); --fs-h1:clamp(32px,4.6vw,50px);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --maxw:1140px;
+  --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+
+/* ================= 基础 ================= */
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:120px;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--font);
+  font-size:var(--fs-body); line-height:1.65; -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+img{display:block;max-width:100%;}
+button,input,select{font:inherit;color:inherit;}
+button{border:none;background:none;cursor:pointer;}
+h1,h2,h3,h4,p{margin:0;overflow-wrap:break-word;}
+ol,ul{margin:0;padding:0;list-style:none;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px;}
+::selection{background:var(--accent-soft);color:var(--accent-press);}
+
+.wrap{max-width:var(--maxw);margin:0 auto;
+  padding-inline:max(var(--s3), env(safe-area-inset-left), env(safe-area-inset-right));}
+.ic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+.ic.fill{fill:currentColor;stroke:none;}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+/* 图标芯片：全站唯一允许的色块，尺寸固定 */
+.chip{width:38px;height:38px;border-radius:var(--r-sm);background:var(--accent-soft);color:var(--accent-press);
+  display:grid;place-items:center;flex:none;transition:background-color .2s var(--ease),color .2s var(--ease);}
+.chip .ic{width:19px;height:19px;}
+
+/* ================= 头部 ================= */
+header{
+  position:sticky;top:0;z-index:50;background:var(--nav-bg);
+  border-bottom:1px solid var(--nav-line);padding-top:env(safe-area-inset-top);
+  transition:box-shadow .25s var(--ease);
+}
+/* 浮起态：和卡片同一个阴影 token，不用颜色区分层级 */
+header.up{box-shadow:var(--sh);}
+.nav{display:flex;align-items:center;gap:var(--s4);min-height:62px;}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px;letter-spacing:-.01em;}
+/* 站标「三线」：三条圆头线＝站内三条线路，中间那条钴蓝走到一半、末端一颗点＝当前正在解析的这条。
+   结构线用 --ink-3 灰（对导航白底 5.31:1，比纯墨轻一档），强调只留给蓝线和点；16px 下实测仍是三段。
+   viewBox 取描边后的实际墨迹范围（x 3.7..24.3 / y 7.1..20.9）并四边各留 0.5 余量防圆头被切，
+   所以盒子基本等于可见边缘：能和正文左对齐，gap 就是真实视觉间距，不需要负 margin 去校。 */
+.brand .mk{display:block;width:29px;height:19.9px;flex:none;color:var(--ink-3);}
+.brand .mk .ln{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;}
+.brand .mk .ln.acc{stroke:var(--accent);}
+.brand .mk .knob{fill:var(--accent);}
+footer .brand .mk{width:27px;height:18.5px;}
+.menu{display:flex;align-items:center;gap:var(--s3);margin-left:auto;}
+.menu a{font-size:var(--fs-label);color:var(--ink-2);padding:6px 0;position:relative;
+  display:inline-flex;align-items:center;transition:color .18s var(--ease);}
+.menu a:hover{color:var(--ink);}
+.menu a.on{color:var(--ink);font-weight:600;}
+.menu a.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);}
+
+/* ================= 首屏 ================= */
+.hero{padding:var(--s5) 0 var(--s4);}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:var(--s5);align-items:start;}
+.hero-grid>*{min-width:0;}
+.hero h1{font-size:var(--fs-h1);line-height:1.22;font-weight:700;letter-spacing:-.026em;}
+.hero h1 em{font-style:normal;color:var(--ink-3);}
+.hero .lead{font-size:var(--fs-lead);color:var(--ink-2);margin-top:var(--s3);max-width:44ch;line-height:1.75;}
+
+form.parse{margin-top:var(--s4);}
+.field{display:flex;gap:var(--s1);align-items:stretch;padding:6px;border:1px solid var(--line-2);
+  border-radius:var(--r);background:var(--surface);box-shadow:var(--sh);transition:.18s var(--ease);}
+.field:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft),var(--sh);}
+.field .link{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 10px;}
+.field .link .ic{color:var(--ink-3);}
+/* 16px 是硬要求：iOS Safari 对 <16px 的输入框聚焦时会强制放大整页 */
+.field input{flex:1;min-width:0;width:100%;background:transparent;border:none;outline:none;padding:13px 0;font-size:16px;}
+.field input::placeholder{color:var(--ink-3);}
+.field input:-webkit-autofill{box-shadow:0 0 0 40px var(--surface) inset;-webkit-text-fill-color:var(--ink);}
+.btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:var(--r-sm);
+  background:var(--accent);color:#fff;font-weight:600;font-size:15px;white-space:nowrap;
+  transition:background-color .2s var(--ease),transform .2s var(--ease),opacity .2s var(--ease);}
+.btn-cta:hover:not(:disabled){background:var(--accent-press);transform:translateY(-1px);}
+.btn-cta:disabled{opacity:.4;cursor:not-allowed;}
+.field.bad{border-color:var(--danger);animation:shake .38s var(--ease);}
+@keyframes shake{20%{transform:translateX(-4px)}45%{transform:translateX(4px)}70%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
+
+/* 线路：单选胶囊，选中态填浅强调底 + 强调描边 */
+.lines{display:flex;align-items:center;gap:var(--s1);margin-top:14px;flex-wrap:wrap;}
+.lines-lbl{font-size:var(--fs-label);color:var(--ink-3);margin-right:2px;}
+.ln{position:relative;display:inline-flex;}
+.ln input{position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;}
+.ln span{display:inline-flex;align-items:center;min-height:36px;padding:6px 13px;border-radius:999px;
+  border:1px solid var(--line);color:var(--ink-2);font-size:var(--fs-label);cursor:pointer;background:var(--surface);
+  transition:border-color .18s var(--ease),color .18s var(--ease),background-color .18s var(--ease);}
+.ln:hover span{color:var(--ink);border-color:var(--line-2);}
+.ln input:checked+span{border-color:var(--accent);color:var(--accent-press);background:var(--accent-soft);font-weight:600;}
+.ln input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px;}
+.after{display:flex;align-items:center;gap:var(--s2);margin-top:14px;flex-wrap:wrap;
+  font-size:var(--fs-label);color:var(--ink-3);}
+.after .stats{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+.after .dot{width:1px;height:12px;background:var(--line-2);}
+.after button{font-family:var(--mono);font-size:12px;color:var(--ink-2);padding:4px 0;
+  border-bottom:1px solid var(--line-2);transition:.18s var(--ease);}
+.after button:hover{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ---- 播放器（解析结果就出现在这里） ---- */
+.player{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);box-shadow:var(--sh);}
+.player .frame{aspect-ratio:16/9;position:relative;background:#0e1116;}
+.player img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.player .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,17,22,.1),rgba(14,17,22,.58));}
+.player .bar{position:absolute;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:4;transition:width 1.3s var(--ease);}
+.player .center{position:absolute;inset:0;display:grid;place-items:center;z-index:3;padding:var(--s3);}
+.player .hint{color:#f1f3f6;font-size:var(--fs-label);text-align:center;max-width:28ch;line-height:1.6;}
+.player .playbtn{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.46);backdrop-filter:blur(3px);display:grid;place-items:center;color:#fff;
+  transition:.2s var(--ease);}
+.player .playbtn:hover{background:var(--accent);border-color:var(--accent);}
+.player .playbtn .ic{width:22px;height:22px;}
+.player .spin{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;animation:spin .9s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.player .meta{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);
+  padding:12px 16px;background:var(--surface);border-top:1px solid var(--line);
+  font-size:var(--fs-label);color:var(--ink-2);}
+.player .meta .now{display:flex;align-items:center;gap:9px;min-width:0;}
+.player .meta .sq{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;}
+.player .meta b{color:var(--ink);font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.player .meta .res{font-family:var(--mono);font-size:12px;flex:none;color:var(--ink-3);}
+.player-cap{margin-top:10px;font-size:var(--fs-label);color:var(--ink-3);}
+
+/* ---- 线路状态：把“换线路”从口头建议变成可见信息 ---- */
+.status{margin-top:var(--s2);background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:2px 16px;box-shadow:var(--sh);}
+.status h3{font-size:var(--fs-label);color:var(--ink-3);font-weight:500;padding:13px 0 11px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2);}
+.status h3 span{font-family:var(--mono);font-size:11px;flex:none;}
+.status li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:var(--fs-label);}
+.status .nm{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.status .st{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:none;}
+.status .dot{width:5px;height:5px;border-radius:50%;flex:none;}
+.status .dot.ok{background:var(--accent);}
+.status .dot.slow{background:var(--line-2);}
+
+/* ---- 公告 ---- */
+.notice{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:var(--r);}
+.notice .ic{color:var(--ink-2);margin-top:2px;}
+.notice p{font-size:var(--fs-label);color:var(--ink-2);line-height:1.75;}
+.notice b{color:var(--ink);font-weight:600;}
+
+/* ================= 区块通用 ================= */
+.section{padding:var(--s6) 0;border-top:1px solid var(--line);scroll-margin-top:120px;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head h2{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.02em;}
+.sec-head .note{font-size:var(--fs-label);color:var(--ink-3);}
+.sec-head .more{margin-left:auto;font-size:var(--fs-label);color:var(--ink-2);
+  display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 4px;}
+.sec-head .more:hover{color:var(--accent);}
+.sec-head .more .ic{width:14px;height:14px;}
+
+/* ---- 工具：1 个横贯主推 + 3 列卡阵 ---- */
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2);margin-top:var(--s4);}
+.tools>*{min-width:0;}
+.tcard{display:flex;flex-direction:column;gap:14px;padding:20px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);}
+.tcard:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2);}
+.tcard:hover .chip{background:var(--accent);color:#fff;}
+.tcard .hd{display:flex;align-items:center;gap:12px;min-width:0;}
+.tcard h3{font-size:16px;font-weight:600;letter-spacing:-.01em;min-width:0;}
+.tcard:hover h3{color:var(--accent);}
+.tcard .tg{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:none;}
+.tcard p{font-size:var(--fs-label);color:var(--ink-3);line-height:1.7;}
+.tcard .go{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-label);color:var(--ink-2);
+  opacity:0;transform:translateY(3px);transition:.2s var(--ease);margin-top:auto;}
+.tcard .go:hover,.tcard:hover .go{opacity:1;transform:none;color:var(--accent);}
+.tcard .go .ic{width:14px;height:14px;}
+.tcard.feat{grid-column:1/-1;flex-direction:row;align-items:center;gap:var(--s3);}
+.tcard.feat .txt{min-width:0;}
+.tcard.feat h3{font-size:19px;}
+.tcard.feat p{margin-top:8px;font-size:var(--fs-body);color:var(--ink-2);max-width:58ch;line-height:1.75;}
+.tcard.feat .chip{width:44px;height:44px;}
+.tcard.feat .open{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:7px;
+  padding:11px 18px;border:1px solid var(--ink);border-radius:var(--r-sm);font-size:var(--fs-label);font-weight:600;
+  transition:.18s var(--ease);}
+.tcard.feat .open:hover{background:var(--ink);color:#fff;}
+
+/* ---- 推荐：一大卡 + 三张竖版封面 ---- */
+.rec-feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);margin-top:var(--s4);
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);
+  transition:transform .22s var(--ease),box-shadow .22s var(--ease);}
+.rec-feat:hover{transform:translateY(-2px);box-shadow:var(--sh-2);}
+.rec-feat>*{min-width:0;}
+.rec-feat .top{display:block;position:relative;background:#0e1116;min-height:260px;}
+.rec-feat .top img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.rec-feat .body{padding:var(--s4);display:block;}
+.meta-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-3);margin-bottom:12px;flex-wrap:wrap;}
+.meta-row .k{color:var(--ink);font-weight:600;}
+.meta-row .bar{width:1px;height:11px;background:var(--line-2);}
+.rec-feat h3{font-size:21px;font-weight:700;line-height:1.45;letter-spacing:-.02em;}
+.rec-feat:hover h3{color:var(--accent);}
+.rec-feat p{font-size:var(--fs-body);color:var(--ink-2);margin-top:12px;line-height:1.8;}
+.rec-feat .op{display:inline-flex;align-items:center;gap:7px;margin-top:20px;font-size:var(--fs-label);
+  font-weight:600;color:var(--accent);}
+.rec-feat .op .ic{width:15px;height:15px;}
+.rec-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3);margin-top:var(--s3);}
+.rec-grid>*{min-width:0;}
+.rcard{display:block;}
+.rcard>span:not(.cov){display:block;}
+.rcard .cov{display:block;position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;
+  background:var(--surface-2);border:1px solid var(--line);box-shadow:var(--sh);}
+.rcard .cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease);}
+.rcard:hover .cov img{transform:scale(1.025);}
+.rcard .rk{position:absolute;left:10px;top:10px;z-index:2;font-family:var(--mono);font-size:11px;
+  padding:4px 8px;border-radius:6px;background:color-mix(in srgb,var(--surface) 88%,transparent);color:var(--ink);
+  backdrop-filter:blur(4px);}
+.rcard h4{font-size:var(--fs-body);font-weight:600;line-height:1.5;margin-top:12px;letter-spacing:-.01em;}
+.rcard:hover h4{color:var(--accent);}
+.rcard .m{display:block;font-size:12px;color:var(--ink-3);margin-top:5px;font-family:var(--mono);}
+
+/* ---- 用法：左说明 + 右四张细卡 ---- */
+.two{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:var(--s5);align-items:start;}
+.two>*{min-width:0;}
+.two .h{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.02em;}
+.two .p{font-size:var(--fs-body);color:var(--ink-2);margin-top:14px;line-height:1.85;max-width:36ch;}
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);}
+.steps li{display:flex;flex-direction:column;gap:12px;padding:20px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);}
+.steps li>*{min-width:0;}
+.steps .n{font-family:var(--mono);font-size:11px;color:var(--accent-press);background:var(--accent-soft);
+  width:30px;height:26px;border-radius:7px;display:grid;place-items:center;}
+.steps h4{font-size:var(--fs-body);font-weight:600;}
+.steps p{font-size:var(--fs-label);color:var(--ink-3);line-height:1.75;}
+
+/* ---- FAQ ---- */
+.faq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:2px var(--s3);box-shadow:var(--sh);}
+.faq details{border-bottom:1px solid var(--line);}
+.faq details:last-child{border-bottom:none;}
+.faq summary{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);
+  padding:18px 0;cursor:pointer;font-weight:600;min-height:44px;list-style:none;font-size:14.5px;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary:hover{color:var(--accent);}
+.faq .pm{position:relative;width:14px;height:14px;flex:none;color:var(--ink-3);}
+.faq .pm::before,.faq .pm::after{content:"";position:absolute;background:currentColor;
+  transition:transform .25s var(--ease),opacity .25s var(--ease);}
+.faq .pm::before{top:6px;left:0;width:14px;height:1.5px;}
+.faq .pm::after{left:6.25px;top:0;width:1.5px;height:14px;}
+.faq details[open] .pm::after{transform:rotate(90deg);opacity:0;}
+.faq .ans{padding:0 var(--s4) 20px 0;max-width:62ch;color:var(--ink-2);font-size:var(--fs-body);line-height:1.85;}
+.contact{font-size:var(--fs-label);color:var(--ink-3);margin-top:18px;line-height:1.8;}
+.contact a{color:var(--ink);border-bottom:1px solid var(--line-2);
+  display:inline-block;padding:11px 0;margin:-11px 0;}
+.contact a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ---- 广告位：明确是占位，不伪装成内容 ---- */
+.ad{margin-top:var(--s5);border:1px dashed var(--line-2);border-radius:var(--r);background:var(--surface-2);
+  min-height:96px;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;gap:var(--s2);
+  font-size:12px;color:var(--ink-3);font-family:var(--mono);}
+
+/* ================= 页脚 ================= */
+footer{border-top:1px solid var(--line);padding:var(--s6) 0 var(--s4);background:var(--surface);}
+.foot{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr);gap:var(--s5);}
+.foot>*{min-width:0;}
+.fdesc{font-size:var(--fs-label);color:var(--ink-3);margin-top:14px;max-width:34ch;line-height:1.85;}
+.fcol h5{font-size:var(--fs-label);color:var(--ink);font-weight:600;margin-bottom:6px;}
+.fcol li a{font-size:var(--fs-label);color:var(--ink-2);display:inline-flex;align-items:center;min-height:36px;}
+.fcol li a:hover{color:var(--accent);}
+.copy{margin-top:var(--s5);padding-top:var(--s3);border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:var(--s2);flex-wrap:wrap;font-size:12px;color:var(--ink-3);}
+
+/* ---- 回顶 ---- */
+.totop{position:fixed;right:calc(20px + env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));
+  width:44px;height:44px;border-radius:50%;z-index:60;background:var(--surface);border:1px solid var(--line-2);
+  color:var(--ink-2);display:grid;place-items:center;opacity:0;transform:translateY(8px);pointer-events:none;
+  box-shadow:var(--sh);
+  transition:opacity .25s var(--ease),transform .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease);}
+.totop.show{opacity:1;transform:none;pointer-events:auto;}
+.totop:hover{color:var(--accent);border-color:var(--accent);}
+
+.js .reveal{opacity:0;transform:translateY(14px);}
+.js .reveal.in{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .5s var(--ease);}
+
+/* ================= 响应式 ================= */
+@media(max-width:1000px){
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .rec-feat{grid-template-columns:minmax(0,1fr);}
+  .rec-feat .top{min-height:0;aspect-ratio:16/9;}
+}
+@media(max-width:940px){
+  /* 只动上下：.nav 和 .wrap 是同一个元素，写 padding 简写会把容器的内联 padding 清零，
+     导致 681–940 这段导航贴到屏幕边、和下面正文（24）不对齐 */
+  .nav{flex-wrap:wrap;min-height:40px;padding-top:6px;padding-bottom:0;gap:8px var(--s3);}
+  .brand{flex:1 1 auto;min-width:0;min-height:44px;}
+  .menu{order:5;flex:1 1 100%;margin:2px 0 0;padding:4px 0;gap:var(--s3);overflow-x:auto;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;border-top:1px solid var(--nav-line);
+    mask-image:linear-gradient(90deg,transparent,#000 12px,#000 calc(100% - 16px),transparent);}
+  .menu::-webkit-scrollbar{display:none;}
+  .menu a{white-space:nowrap;padding:0;min-height:44px;display:inline-flex;align-items:center;}
+  .menu a.on::after{bottom:0;}
+  .lines .ln span{min-height:40px;}
+  .after button{display:inline-flex;align-items:center;min-height:40px;padding:0;}
+  .fcol li a{min-height:44px;}
+  .hero-grid,.two{grid-template-columns:minmax(0,1fr);gap:var(--s4);}
+  .section{scroll-margin-top:130px;}
+  .tcard.feat{flex-direction:column;align-items:flex-start;gap:var(--s2);}
+  .tcard.feat .open{margin-left:0;}
+}
+@media(max-width:680px){
+  :root{--s6:44px;--s5:32px;--s4:24px;--fs-lead:16px;--r:11px;}
+  .wrap{padding-inline:max(var(--s2), env(safe-area-inset-left), env(safe-area-inset-right));}
+  .hero{padding:var(--s4) 0 var(--s3);}
+  .hero h1{line-height:1.28;}
+  .field{flex-wrap:wrap;padding:var(--s1);}
+  .field .link{flex:1 1 100%;min-width:0;padding:0 8px;}
+  .btn-cta{flex:1 1 100%;padding:15px 8px;}
+  .lines .ln span{min-height:44px;padding:8px 14px;border-radius:var(--r-sm);}
+  .after{gap:10px;}
+  .player .center{padding:var(--s2);}
+  .player .meta{padding:11px 14px;font-size:12px;}
+  .sec-head{flex-wrap:wrap;gap:4px 12px;}
+  .sec-head .note{flex:1 1 100%;}
+  .tools,.rec-grid,.steps{grid-template-columns:minmax(0,1fr);}
+  .rec-feat .body{padding:var(--s3);}
+  .rec-feat h3{font-size:19px;}
+  /* 竖版封面在手机上一格太占地方，改成 96px 缩略图 + 文字的横条 */
+  .rcard{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:start;}
+  .rcard h4{margin-top:0;}
+  .faq{padding:2px var(--s2);}
+  .faq summary{font-size:14px;}
+  .faq .ans{padding-right:0;font-size:14.5px;}
+  .foot{grid-template-columns:1fr 1fr;gap:var(--s4);}
+  .foot>div:first-child{grid-column:1/-1;}
+  .brand{font-size:14px;}
+  .ad{padding:14px 16px;}
+}
+@media(max-width:380px){
+  .ad{flex-direction:column;align-items:flex-start;gap:6px;}
+  .tcard,.steps li{padding:16px;}
+  .rcard{grid-template-columns:76px minmax(0,1fr);}
+}
+@media(hover:none){
+  .tcard .go{opacity:.5;transform:none;}
+  .tcard:hover,.rec-feat:hover{transform:none;box-shadow:var(--sh);}
+  .rcard:hover .cov img{transform:none;}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+  .js .reveal{opacity:1;transform:none;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#">
+      <svg class="mk" viewBox="3.2 6.6 21.6 14.8" aria-hidden="true" focusable="false"><path class="ln" d="M5 8.4H23"/><path class="ln acc" d="M5 14h9.8"/><path class="ln" d="M5 19.6H20"/><circle class="knob" cx="20.4" cy="14" r="2.9"/></svg>
+      <span>全民影视VIP解析</span>
+    </a>
+    <nav class="menu" id="menu"></nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= 首屏 ================= -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="reveal">
+        <h1>把播放页链接粘进来，<br/>直接看好剧<em>。</em></h1>
+        <p class="lead">腾讯、优酷、爱奇艺、芒果 TV 的会员内容都能解析。不用注册、不用装客户端，卡在某一线路时换下一条即可。</p>
+
+        <form class="parse" id="parseForm" autocomplete="off">
+          <div class="field" id="field">
+            <div class="link">
+              <svg class="ic" viewBox="0 0 24 24"><path d="M10.5 13.5a4 4 0 0 0 5.7 0l2.8-2.8a4 4 0 1 0-5.7-5.7l-1 1"/><path d="M13.5 10.5a4 4 0 0 0-5.7 0L5 13.3a4 4 0 1 0 5.7 5.7l1-1"/></svg>
+              <input id="url" type="text" size="1" inputmode="url" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="粘贴视频播放页链接…" aria-label="视频链接" />
+            </div>
+            <button class="btn-cta" id="parseBtn" type="submit" disabled>解析播放</button>
+          </div>
+          <div class="lines" role="radiogroup" aria-label="解析线路">
+            <span class="lines-lbl">线路</span>
+            <label class="ln"><input type="radio" name="line" value="万能线路" checked /><span>万能线路</span></label>
+            <label class="ln"><input type="radio" name="line" value="线路 1 · 高清" /><span>线路 1 · 高清</span></label>
+            <label class="ln"><input type="radio" name="line" value="线路 2 · 极速" /><span>线路 2 · 极速</span></label>
+            <label class="ln"><input type="radio" name="line" value="线路 3 · 备用" /><span>线路 3 · 备用</span></label>
+          </div>
+          <div class="after">
+            <!-- 数字为占位，接入真实统计后替换 -->
+            <span class="stats">4 条线路可用 · 平均 2.4s · 今日 1,283 次</span>
+            <span class="dot"></span>
+            <span>试试：</span>
+            <button type="button" data-fill="https://v.qq.com/x/cover/abc.html">v.qq.com</button>
+            <button type="button" data-fill="https://www.iqiyi.com/v_1234.html">iqiyi.com</button>
+            <button type="button" data-fill="https://www.youku.com/v_show/id_X.html">youku.com</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="reveal">
+        <div class="player" id="player">
+          <div class="frame">
+            <img class="poster" id="poster" src="assets/hero.png" alt="解析后的影片画面预览" />
+            <div class="scrim"></div>
+            <div class="bar" id="pbar"></div>
+            <div class="center" id="pcenter">
+              <p class="hint" id="phint">粘贴链接并点「解析播放」，画面会出现在这里</p>
+            </div>
+          </div>
+          <div class="meta">
+            <span class="now"><span class="sq"></span><b id="plineName">待解析</b></span>
+            <span class="res" id="pres">—</span>
+          </div>
+        </div>
+        <p class="player-cap">示意画面 · 实际清晰度取决于源站与线路</p>
+
+        <div class="status">
+          <h3>线路状态 <span>每 5 分钟自检</span></h3>
+          <ul>
+            <li><span class="dot ok"></span><span class="nm">万能线路</span><span class="st">2.1s · 正常</span></li>
+            <li><span class="dot ok"></span><span class="nm">线路 1 · 高清</span><span class="st">2.8s · 正常</span></li>
+            <li><span class="dot slow"></span><span class="nm">线路 2 · 极速</span><span class="st">6.4s · 偏慢</span></li>
+            <li><span class="dot ok"></span><span class="nm">线路 3 · 备用</span><span class="st">3.0s · 正常</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="notice reveal">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z"/></svg>
+      <p><b>先说清楚：</b>本站只做在线解析播放，不存储、不提供下载任何片源。请用于学习与交流，观看后 24 小时内删除，勿作商业用途。</p>
+    </div>
+  </div>
+
+  <!-- ================= 工具 ================= -->
+  <section class="section" id="tools">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>实用工具</h2>
+        <span class="note">解析之外，日常用得最多的几个</span>
+        <a class="more" href="#">全部 32 个工具 <svg class="ic" viewBox="0 0 24 24"><path d="M4 12h13"/><path d="M13 7l5 5-5 5"/></svg></a>
+      </div>
+
+      <div class="tools reveal" id="toolGrid"></div>
+    </div>
+  </section>
+
+  <!-- ================= 推荐 ================= -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>最新推荐</h2>
+        <span class="note">按本周站内播放量排序</span>
+        <a class="more" href="#">影视推荐 <svg class="ic" viewBox="0 0 24 24"><path d="M4 12h13"/><path d="M13 7l5 5-5 5"/></svg></a>
+      </div>
+
+      <div class="recs reveal">
+        <a class="rec-feat" href="#">
+          <span class="top"><img src="assets/poster-a.png" alt="《山海之间·剑影行》剧照" /></span>
+          <span class="body">
+            <span class="meta-row"><span class="k">古装 · 36 集</span><span class="bar"></span><span>爱奇艺</span><span class="bar"></span><span>更新至 18 集</span></span>
+            <h3>山海之间·剑影行：孤剑上绝顶，云海尽头的东方史诗</h3>
+            <p>实景拍摄加水墨色调，第七集的悬崖长镜头被剪成短视频刷了三天。本周站内热度第一，晚间八点线路最挤。</p>
+            <span class="op">去解析 <svg class="ic" viewBox="0 0 24 24"><path d="M4 12h13"/><path d="M13 7l5 5-5 5"/></svg></span>
+          </span>
+        </a>
+        <div class="rec-grid">
+          <a class="rcard" href="#">
+            <span class="cov"><span class="rk">01</span><img src="assets/poster-d.png" alt="《霓虹雨夜》海报" /></span>
+            <span><h4>霓虹雨夜：一桩旧案牵出整座城市的暗流</h4><span class="m">12 集 · 腾讯 · 09-08</span></span>
+          </a>
+          <a class="rcard" href="#">
+            <span class="cov"><span class="rk">02</span><img src="assets/poster-e.png" alt="《海风与灯塔》海报" /></span>
+            <span><h4>海风与灯塔：一座小岛上的三种人生</h4><span class="m">电影 · 优酷 · 09-02</span></span>
+          </a>
+          <a class="rcard" href="#">
+            <span class="cov"><span class="rk">03</span><img src="assets/poster-c.png" alt="《剑归》海报" /></span>
+            <span><h4>剑归：云海尽头那一趟没走完的下山路</h4><span class="m">古装 · 芒果 · 08-27</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 用法 ================= -->
+  <section class="section">
+    <div class="wrap two">
+      <div class="reveal">
+        <h2 class="h">怎么用</h2>
+        <p class="p">整个过程通常不超过十秒。真正会卡住的只有一件事：粘进来的地址不是播放页，而是搜索结果页或短视频分享页。</p>
+      </div>
+      <ol class="steps reveal">
+        <li><span class="n">01</span><div><h4>复制播放页地址</h4><p>在视频网站点开某一集，复制浏览器地址栏里那一串，不要复制分享口令。</p></div></li>
+        <li><span class="n">02</span><div><h4>粘贴并选线路</h4><p>放进上方解析框，先用默认线路；不同站点在不同线路上的兼容性差别很大。</p></div></li>
+        <li><span class="n">03</span><div><h4>点解析播放</h4><p>画面出现在右侧播放器，默认尝试 1080P，清晰度由源站决定。</p></div></li>
+        <li><span class="n">04</span><div><h4>不通就换一条</h4><p>一直转圈或黑屏时，依次切到线路 2、线路 3；刷新后重试通常能解决。</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="section">
+    <div class="wrap two">
+      <div class="reveal">
+        <h2 class="h">常见问题</h2>
+        <p class="contact">没找到答案？把站点、线路和现象描述发到 <a href="#">feedback@ityvip.xyz</a>，一般两个工作日内回。</p>
+      </div>
+      <div class="faq reveal" id="faq"></div>
+    </div>
+    <div class="wrap">
+      <div class="ad"><span>AD · 广告位 970×90</span><span>广告投放：ads@ityvip.xyz</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#">
+          <svg class="mk" viewBox="3.2 6.6 21.6 14.8" aria-hidden="true" focusable="false"><path class="ln" d="M5 8.4H23"/><path class="ln acc" d="M5 14h9.8"/><path class="ln" d="M5 19.6H20"/><circle class="knob" cx="20.4" cy="14" r="2.9"/></svg>
+          <span>全民影视VIP解析</span>
+        </a>
+        <p class="fdesc">一个只做解析和在线小工具的站。不存片源、不要注册、不装任何客户端。</p>
+      </div>
+      <div class="fcol">
+        <h5>功能</h5>
+        <ul><li><a href="#">视频解析</a></li><li><a href="#tools">实用工具</a></li><li><a href="#">热搜榜</a></li><li><a href="#">音乐搜索</a></li><li><a href="#">AI 工具</a></li></ul>
+      </div>
+      <div class="fcol">
+        <h5>关于</h5>
+        <ul><li><a href="#">使用帮助</a></li><li><a href="#">免责声明</a></li><li><a href="#">隐私政策</a></li><li><a href="#">联系我们</a></li></ul>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2026 全民影视VIP解析 · 仅供学习交流，请勿用于商业用途</span>
+      <span>视频解析 · M3U8 · 去水印 · 实用工具</span>
+    </div>
+  </div>
+</footer>
+
+<button class="totop" id="totop" aria-label="返回顶部">
+  <svg class="ic" viewBox="0 0 24 24"><path d="M12 19V6"/><path d="M6 12l6-6 6 6"/></svg>
+</button>
+
+<script>
+/* ================= 线性图标（无 emoji） ================= */
+const I = {
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/>',
+  tools:'<rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/>',
+  flame:'<path d="M12 22a6 6 0 0 0 6-6c0-4.6-6-10.5-6-10.5S6 11.4 6 16a6 6 0 0 0 6 6Z"/><path d="M12 18.6a2.6 2.6 0 0 0 2.6-2.6c0-2-2.6-4.6-2.6-4.6s-2.6 2.6-2.6 4.6A2.6 2.6 0 0 0 12 18.6Z"/>',
+  music:'<path d="M9 18V6l10-2.2V15"/><circle cx="6.4" cy="18" r="2.6"/><circle cx="16.4" cy="15" r="2.6"/>',
+  sparkles:'<path d="M10 3l1.8 4.6L16.4 9.4 11.8 11.2 10 15.8 8.2 11.2 3.6 9.4 8.2 7.6 10 3Z"/><path d="M18 14l.9 2.3 2.3.9-2.3.9L18 20.4l-.9-2.3-2.3-.9 2.3-.9 2.3-.9L18 14Z"/>',
+  download:'<path d="M12 4v10"/><path d="M8 11l4 3.5L16 11"/><path d="M5 19.5h14"/>',
+  qr:'<rect x="3.5" y="3.5" width="7" height="7" rx="1.2"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.2"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.2"/><path d="M14 14h2v2h-2zM18.5 14h2v2h-2zM14 18.5h2v2h-2zM18.5 18.5h2v2h-2z"/>',
+  file:'<path d="M14 3.5H7.5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8l-4.5-4.5Z"/><path d="M13.8 3.6V8H18"/>',
+  image:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.4" cy="9.9" r="1.5"/><path d="M5 17.5l4.6-4.4 3.1 2.9L17.4 11 21 14.6"/>',
+  wand:'<path d="M3.5 20.5 13.8 10.2"/><path d="M15.2 9 17.5 6.7"/><path d="M18.6 2.8l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1 1-2.4Z"/>',
+  play:'<path d="M8.6 5.8v12.4L19 12 8.6 5.8Z"/>',
+  arrow:'<path d="M4 12h13"/><path d="M13 7l5 5-5 5"/>',
+  film:'<rect x="3" y="4.6" width="18" height="14.8" rx="2"/><path d="M7.5 4.6v14.8M16.5 4.6v14.8M3 9.5h4.5M3 14.5h4.5M16.5 9.5H21M16.5 14.5H21"/>',
+  crop:'<path d="M6 3v12a3 3 0 0 0 3 3h12"/><path d="M3 6h12a3 3 0 0 1 3 3v12"/>',
+  text:'<path d="M4 6.5h16M4 12h10M4 17.5h7"/>',
+};
+const svg=(n,cls)=>'<svg class="ic '+(cls||'')+'" viewBox="0 0 24 24">'+I[n]+'</svg>';
+
+/* ================= 导航 ================= */
+const NAV=[
+  {label:'视频解析', on:true},
+  {label:'实用工具', href:'#tools'},
+  {label:'热搜榜'},
+  {label:'音乐'},
+  {label:'AI 工具'},
+  {label:'影视推荐'},
+];
+document.getElementById('menu').innerHTML=NAV.map(n=>
+  '<a href="'+(n.href||'#')+'"'+(n.on?' class="on" aria-current="page"':'')+'>'+n.label+'</a>'
+).join('');
+
+/* ================= 工具卡阵（主推项排第一，横贯整行） ================= */
+const TOOLS=[
+  {ic:'play',  t:'M3U8 播放器',  d:'手上有 m3u8 直链就能直接播放，支持自定义请求头与全屏。文件不会上传，全部在你浏览器里跑。', tg:'主推', feat:true},
+  {ic:'film',  t:'短视频去水印', d:'抖音、快手分享链接解析，保留原分辨率。', tg:'日 420 次'},
+  {ic:'qr',    t:'二维码生成',   d:'批量导入、自定义尺寸与前景色，支持 PNG / SVG。', tg:'批量'},
+  {ic:'file',  t:'PDF 合并',     d:'浏览器内合并，文件不上传服务器。', tg:'本地'},
+  {ic:'text',  t:'图片转文字',   d:'中文手写识别准确率一般，印刷体可用。', tg:'OCR'},
+  {ic:'wand',  t:'AI 去背景',    d:'人像与商品抠图，输出透明 PNG。', tg:'AI'},
+  {ic:'crop',  t:'视频转 GIF',   d:'截取 2–10 秒，可控制帧率与体积。', tg:'2–10s'},
+  {ic:'image', t:'图片压缩',     d:'按质量或目标大小压到 200KB 以内。', tg:'本地'},
+  {ic:'music', t:'音乐搜索',     d:'QQ 曲库检索与歌词查看。', tg:'曲库'},
+  {ic:'flame', t:'热搜聚合',     d:'十一个平台榜单合并，五分钟刷新一次。', tg:'11 站'},
+];
+document.getElementById('toolGrid').innerHTML=TOOLS.map(o=> o.feat
+  ? '<a class="tcard feat" href="#">'+
+      '<span class="chip">'+svg(o.ic)+'</span>'+
+      '<div class="txt"><h3>'+o.t+'</h3><p>'+o.d+'</p></div>'+
+      '<span class="open">打开 '+svg('arrow')+'</span>'+
+    '</a>'
+  : '<a class="tcard" href="#">'+
+      '<span class="hd"><span class="chip">'+svg(o.ic)+'</span><h3>'+o.t+'</h3><span class="tg">'+o.tg+'</span></span>'+
+      '<p>'+o.d+'</p>'+
+      '<span class="go">使用 '+svg('arrow')+'</span>'+
+    '</a>'
+).join('');
+
+/* ================= FAQ ================= */
+const FAQ=[
+  {q:'支持哪些视频平台？', a:'腾讯、优酷、爱奇艺、芒果 TV、乐视、B 站均可尝试。各平台接口状态会变化，某站点长期失效通常是线路还没适配，可以来信反馈。'},
+  {q:'解析失败或一直转圈怎么办？', a:'按顺序排查：① 确认粘贴的是完整播放页地址，而不是搜索结果页或分享口令；② 换下一条线路；③ 刷新后重试。同一站点在不同线路上的差别很大。'},
+  {q:'需要登录或付费吗？', a:'不需要。解析和所有小工具都免费，站内没有注册、会员这些入口，也不保存任何播放记录。'},
+  {q:'最高清晰度是多少？', a:'取决于源站与线路，多数情况下能到 1080P。高帧率、杜比这类规格由源站自身限制，本站无法突破。'},
+  {q:'为什么有时有声音没画面？', a:'多半是该线路返回的封装格式浏览器不认。换线路一般就能解决；反复出现请把站点和集数发给我们复现。'},
+  {q:'可以下载视频吗？', a:'不提供下载，也不存储片源。请遵守各平台的版权与服务条款。'},
+];
+document.getElementById('faq').innerHTML=FAQ.map(f=>
+  '<details><summary><span>'+f.q+'</span><span class="pm"></span></summary><div class="ans">'+f.a+'</div></details>'
+).join('');
+
+/* ================= 解析流程 ================= */
+const url=document.getElementById('url');
+const btn=document.getElementById('parseBtn');
+const field=document.getElementById('field');
+const center=document.getElementById('pcenter');
+const pbar=document.getElementById('pbar');
+const lineName=document.getElementById('plineName');
+const pres=document.getElementById('pres');
+
+url.addEventListener('input',()=>{ btn.disabled=!url.value.trim(); field.classList.remove('bad'); });
+document.querySelectorAll('.after button[data-fill]').forEach(c=>c.addEventListener('click',()=>{
+  url.value=c.dataset.fill; url.dispatchEvent(new Event('input')); url.focus();
+}));
+
+let timer=null;
+document.getElementById('parseForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!url.value.trim()){ field.classList.add('bad'); setTimeout(()=>field.classList.remove('bad'),500); return; }
+  const chosen=(document.querySelector('input[name="line"]:checked')||{}).value||'万能线路';
+  clearTimeout(timer);
+  document.getElementById('player').scrollIntoView({behavior:'smooth',block:'center'});
+  center.innerHTML='<div style="text-align:center"><div class="spin"></div><p class="hint">正在解析 · '+chosen+'</p></div>';
+  pbar.style.width='0'; lineName.textContent='解析中 · '+chosen; pres.textContent='…';
+  requestAnimationFrame(()=>setTimeout(()=>pbar.style.width='100%',60));
+  timer=setTimeout(()=>{
+    center.innerHTML='<button class="playbtn" id="pb" aria-label="播放">'+svg('play','fill')+'</button>';
+    document.getElementById('pb').addEventListener('click',function(){
+      this.style.transform='scale(1.08)'; setTimeout(()=>{this.style.transform='';},160);
+    });
+    lineName.textContent=chosen+' · 解析成功'; pres.textContent='1080P';
+  },1500);
+});
+
+/* ================= 滚动出现 ================= */
+(function observeReveals(){
+  const nodes=[].slice.call(document.querySelectorAll('.reveal:not(.in)'));
+  const show=el=>el.classList.add('in');
+  if(!('IntersectionObserver' in window)){nodes.forEach(show);return;}
+  const io=new IntersectionObserver(es=>es.forEach(en=>{
+    if(en.isIntersecting){show(en.target);io.unobserve(en.target);}
+  }),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  nodes.forEach(el=>io.observe(el));
+  /* 安全网：IntersectionObserver 在页面被隐藏/预渲染时不会回调，
+     若只依赖它，整页会停在 opacity:0。兜底把可见元素揭示出来。 */
+  setTimeout(()=>nodes.forEach(el=>{
+    const b=el.getBoundingClientRect();
+    if(b.top<innerHeight&&b.bottom>0) show(el);
+  }),1200);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden) nodes.forEach(el=>{
+      const b=el.getBoundingClientRect();
+      if(b.top<innerHeight&&b.bottom>0) show(el);
+    });
+  });
+})();
+
+/* ================= 回顶 + 导航浮起 ================= */
+const tt=document.getElementById('totop'), hd=document.querySelector('header');
+function onScroll(){
+  const y=window.scrollY;
+  tt.classList.toggle('show',y>480);
+  hd.classList.toggle('up',y>8);
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
+tt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+</script>
+</body>
+</html>

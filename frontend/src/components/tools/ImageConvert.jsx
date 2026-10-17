@@ -1,4 +1,5 @@
 ﻿import { useState, useRef } from 'react';
+import Icon from '../Icons';
 export default function ImageConvert() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -70,32 +71,32 @@ export default function ImageConvert() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">🖼️</div>
-        <p className="text-gray-600 dark:text-gray-400">{preview ? '点击更换图片' : '点击或拖拽上传图片'}</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">支持 JPG、PNG、WebP、BMP</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="image" /></span></div>
+        <p className="text-ink-2">{preview ? '点击更换图片' : '点击或拖拽上传图片'}</p>
+        <p className="text-xs text-ink-3 mt-1">支持 JPG、PNG、WebP、BMP</p>
       </div>
 
       {preview && (
         <>
-          <img src={preview} alt="Preview" className="max-h-48 mx-auto rounded-xl" />
+          <img src={preview} alt="Preview" className="max-h-48 mx-auto rounded-card" />
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">目标格式</label>
+              <label className="lbl">目标格式</label>
               <select
                 value={format}
                 onChange={(e) => setFormat(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                className="input w-full"
               >
                 {formats.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="lbl">
                 质量: {quality}%
               </label>
               <input
@@ -104,7 +105,7 @@ export default function ImageConvert() {
                 max="100"
                 value={quality}
                 onChange={(e) => setQuality(Number(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 mt-3"
+                className="slider mt-3"
               />
             </div>
           </div>
@@ -112,24 +113,24 @@ export default function ImageConvert() {
           <button
             onClick={convert}
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+            className="btn-a w-full transition-colors"
           >
             {loading ? '转换中...' : '开始转换'}
           </button>
 
           {result && (
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 space-y-3">
+            <div className="bg-success-soft border border-line rounded-card p-4 space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-gray-400">原文件</span>
-                <span className="font-medium text-gray-900 dark:text-white">{(image.size / 1024).toFixed(1)} KB</span>
+                <span className="text-ink-3">原文件</span>
+                <span className="font-medium text-ink">{(image.size / 1024).toFixed(1)} KB</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-gray-400">转换后</span>
-                <span className="font-medium text-green-600 dark:text-green-400">{(result.size / 1024).toFixed(1)} KB ({result.format})</span>
+                <span className="text-ink-3">转换后</span>
+                <span className="font-medium text-success">{(result.size / 1024).toFixed(1)} KB ({result.format})</span>
               </div>
               <button
                 onClick={download}
-                className="w-full py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors"
+                className="btn-a ok w-full transition-colors"
               >
                 下载转换后的图片
               </button>

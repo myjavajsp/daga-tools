@@ -1,20 +1,28 @@
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Icon from '../components/Icons';
 
+/* 这一页原本铺了 12 个一模一样的 😄 方块：纯占位，且是「当图标用的 emoji」。
+   表情包素材需要后台数据支撑，没有数据时不假装有内容。 */
 export default function MemesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-paper">
       <Header />
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">更多表情包</h1>
-        <div className="grid grid-cols-4 md:grid-cols-6 gap-4">
-          {[1,2,3,4,5,6,7,8,9,10,11,12].map(i => (
-            <div key={i} className="aspect-square bg-gray-800 rounded-lg flex items-center justify-center">
-              <span className="text-3xl">😄</span>
-            </div>
-          ))}
+
+      <main className="wrap py-8 max-w-3xl">
+        <div className="phead">
+          <h1>表情包</h1>
+          <span className="note">常用表情与梗图</span>
         </div>
-      </div>
+
+        <div className="card p-8 text-center">
+          <div className="flex justify-center mb-3"><span className="chip"><Icon name="maskface" /></span></div>
+          <p className="text-sm text-ink-2">表情包库正在接入，敬请期待</p>
+          <Link to="/meme" className="btn-a mt-5">先看看常用表情</Link>
+        </div>
+      </main>
+
       <Footer />
     </div>
   );

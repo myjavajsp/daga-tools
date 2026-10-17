@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import Icon from '../Icons';
 export default function M3u8Player() {
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
@@ -26,14 +27,14 @@ export default function M3u8Player() {
           value={url}
           onChange={e => setUrl(e.target.value)}
           placeholder="粘贴M3U8播放链接..."
-          className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
-        <button onClick={play} disabled={!url.trim()} className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50">
+        <button onClick={play} disabled={!url.trim()} className="btn-a px-6">
           播放
         </button>
       </div>
 
-      <div className="relative rounded-xl overflow-hidden bg-black aspect-video">
+      <div className="relative rounded-card overflow-hidden bg-black aspect-video">
         <video
           ref={videoRef}
           controls
@@ -43,24 +44,26 @@ export default function M3u8Player() {
           您的浏览器不支持视频播放
         </video>
         {!url && (
-          <div className="absolute inset-0 flex items-center justify-center text-gray-500">
+          /* 这块空状态压在 bg-black 的舞台上，必须用 .on-media（写死的 #f2f4f7）；
+             沿用 text-ink-3 时实测对比度只有 3.96:1，低于正文 4.5:1 门槛。 */
+          <div className="on-media absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-6xl mb-4">🎬</div>
+              <div className="flex justify-center mb-3"><span className="chip"><Icon name="filmstrip" /></span></div>
               <p>输入M3U8链接开始播放</p>
-              <p className="text-xs text-gray-400 mt-2">支持 http:// 和 https:// 开头地址</p>
+              <p className="on-media mt-2 text-xs opacity-90">支持 http:// 和 https:// 开头地址</p>
             </div>
           </div>
         )}
       </div>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
-      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-white mb-2">使用说明</div>
+      <div className="bg-paper rounded-card p-4 text-sm text-ink-2">
+        <div className="font-medium text-ink mb-2">使用说明</div>
         <ul className="space-y-1 text-xs">
           <li>• 输入M3U8格式的播放链接（如直播源、点播源）</li>
           <li>• 建议使用Chrome或Edge浏览器以获得最佳兼容性</li>

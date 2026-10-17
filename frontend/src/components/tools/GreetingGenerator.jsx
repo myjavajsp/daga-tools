@@ -18,20 +18,20 @@ export default function GreetingGenerator() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">祝福类型</label>
+        <label className="lbl">祝福类型</label>
         <div className="flex gap-2">
-          {Object.keys(BIRTHDAY_PHRASES).map(t => <button key={t} onClick={() => setType(t)} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${type === t ? 'bg-pink-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}>{t}</button>)}
+          {Object.keys(BIRTHDAY_PHRASES).map(t => <button key={t} onClick={() => setType(t)} className={`px-4 py-2 rounded-card text-sm font-medium transition-all ${type === t ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'}`}>{t}</button>)}
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">收件人姓名</label>
-        <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="可选..." className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white" />
+        <label className="lbl">收件人姓名</label>
+        <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="可选..." className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink" />
       </div>
-      <button onClick={generate} className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">生成祝福语</button>
+      <button onClick={generate} className="btn-a w-full transition-colors">生成祝福语</button>
       {output && (
-        <div className="bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 border border-pink-200 dark:border-pink-800 rounded-xl p-6 text-center">
-          <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{output}</p>
-          <button onClick={() => navigator.clipboard.writeText(output)} className="mt-3 text-sm text-blue-500 hover:text-blue-600">复制</button>
+        <div className="bg-surface-2 border border-line rounded-card p-6 text-center">
+          <p className="text-ink whitespace-pre-wrap">{output}</p>
+          <button onClick={() => navigator.clipboard.writeText(output)} className="act mt-3">复制</button>
         </div>
       )}
     </div>

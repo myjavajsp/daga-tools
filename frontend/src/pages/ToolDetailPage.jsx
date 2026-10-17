@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from 'react';
+import Icon from '../components/Icons';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -300,7 +301,7 @@ const toolMetadata = {
 function LoadingFallback() {
   return (
     <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-500"></div>
+      <div className="animate-spin spin"></div>
     </div>
   );
 }
@@ -318,14 +319,14 @@ function RecentTools({ toolKey }) {
   if (recent.length === 0) return null;
 
   return (
-    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-      <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">最近使用</div>
+    <div className="mt-4 pt-4 border-t border-line">
+      <div className="text-xs text-ink-3 mb-2">最近使用</div>
       <div className="flex flex-wrap gap-2">
         {recent.map(t => (
           <Link
             key={t.id}
             to={`/tools/${t.id}`}
-            className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="px-3 py-1.5 bg-surface-2 text-ink-2 rounded-lg text-sm hover:bg-accent-soft hover:text-accent transition-colors"
           >
             {t.name}
           </Link>
@@ -355,44 +356,50 @@ export default function ToolDetailPage() {
 
   if (!ToolComponent) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <div className="min-h-screen bg-paper">
         <Header />
-        <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-          <div className="text-6xl mb-4">🔍</div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">工具不存在</h1>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">该工具暂未开放，敬请期待</p>
-          <button onClick={() => navigate('/tools/')} className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">返回工具列表</button>
+      <main className="wrap py-8">
+        <div className="flex justify-center py-10">
+          <span className="chip"><Icon name="search" /></span>
         </div>
+          <h1 className="text-2xl font-bold text-ink mb-2 text-center">工具不存在</h1>
+          <p className="text-ink-3 mb-6 text-center">该工具暂未开放，敬请期待</p>
+          <div className="text-center">
+            <button onClick={() => navigate('/tools')} className="btn-a">返回工具列表</button>
+          </div>
+        </main>
         <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-paper">
       <Header />
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <Link to="/tools/" className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-6">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+      <main className="wrap py-8">
+        <Link to="/tools" className="inline-flex items-center gap-1.5 text-sm text-ink-3 hover:text-accent transition-colors mb-5 min-h-10">
+          <Icon name="arrow" className="rotate-180" />
           <span>返回工具列表</span>
         </Link>
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+
+        <div className="card p-5 mb-5">
           <div className="flex items-start gap-4">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-3xl shadow-lg">🔧</div>
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">{metadata.name}</h1>
-              <p className="text-gray-500 dark:text-gray-400">{metadata.desc}</p>
+            <span className="chip"><Icon name="tools" /></span>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl md:text-2xl font-bold text-ink mb-1.5 tracking-tight">{metadata.name}</h1>
+              <p className="text-sm text-ink-3">{metadata.desc}</p>
             </div>
           </div>
           {/* 最近使用 */}
           <RecentTools toolKey={toolKey} />
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 md:p-8">
+
+        <div className="card p-5 md:p-6">
           <Suspense fallback={<LoadingFallback />}>
             <ToolComponent />
           </Suspense>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

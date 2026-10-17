@@ -85,7 +85,7 @@ export default function AgeCalculator() {
       {/* 输入区域 */}
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             姓名（可选）
           </label>
           <input
@@ -93,12 +93,12 @@ export default function AgeCalculator() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="请输入姓名..."
-            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50"
+            className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft focus:border-accent"
           />
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             出生日期
           </label>
           <input
@@ -106,14 +106,14 @@ export default function AgeCalculator() {
             value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)}
             max={new Date().toISOString().split('T')[0]}
-            className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50"
+            className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink focus:outline-none focus:ring-2 focus:ring-accent-soft focus:border-accent"
           />
         </div>
         
         <button
           onClick={handleCalculate}
           disabled={!birthDate}
-          className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="btn-a w-full disabled:cursor-not-allowed transition-colors"
         >
           计算年龄
         </button>
@@ -122,45 +122,45 @@ export default function AgeCalculator() {
       {/* 结果展示 */}
       {result && (
         <div className="space-y-4">
-          <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 text-center">
-            <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
+          <div className="bg-surface-2 rounded-card p-6 text-center">
+            <div className="text-5xl font-bold mb-2 text-accent">
               {result.years}
             </div>
-            <div className="text-gray-600 dark:text-gray-400">
+            <div className="text-ink-2">
               {result.name || '您'} 今年{' '}
-              <span className="font-semibold text-blue-600 dark:text-blue-400">{result.years}</span>
+              <span className="font-semibold text-accent">{result.years}</span>
               {' '}岁{' '}
-              <span className="text-gray-500 dark:text-gray-500">{result.months} 个月 {result.days} 天</span>
+              <span className="text-ink-3">{result.months} 个月 {result.days} 天</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-center">
-              <div className="text-xl font-bold text-gray-900 dark:text-white">{result.totalDays.toLocaleString()}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">已活天数</div>
+            <div className="bg-paper rounded-card p-4 text-center">
+              <div className="text-xl font-bold text-ink">{result.totalDays.toLocaleString()}</div>
+              <div className="text-xs text-ink-3 mt-1">已活天数</div>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-center">
-              <div className="text-xl font-bold text-gray-900 dark:text-white">{result.totalWeeks.toLocaleString()}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">已活周数</div>
+            <div className="bg-paper rounded-card p-4 text-center">
+              <div className="text-xl font-bold text-ink">{result.totalWeeks.toLocaleString()}</div>
+              <div className="text-xs text-ink-3 mt-1">已活周数</div>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-center">
-              <div className="text-xl font-bold text-gray-900 dark:text-white">{result.totalHours.toLocaleString()}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">已活小时</div>
+            <div className="bg-paper rounded-card p-4 text-center">
+              <div className="text-xl font-bold text-ink">{result.totalHours.toLocaleString()}</div>
+              <div className="text-xs text-ink-3 mt-1">已活小时</div>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-center">
-              <div className="text-xl font-bold text-gray-900 dark:text-white">{result.daysUntilBirthday}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">距生日天数</div>
+            <div className="bg-paper rounded-card p-4 text-center">
+              <div className="text-xl font-bold text-ink">{result.daysUntilBirthday}</div>
+              <div className="text-xs text-ink-3 mt-1">距生日天数</div>
             </div>
           </div>
 
           <div className="flex justify-center gap-6 text-sm">
             <div className="flex items-center gap-2">
               <span className="text-2xl">♒</span>
-              <span className="text-gray-700 dark:text-gray-300">{result.zodiac}</span>
+              <span className="text-ink-2">{result.zodiac}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-2xl">🐭</span>
-              <span className="text-gray-700 dark:text-gray-300">{result.zodiacAnimal}座</span>
+              <span className="text-ink-2">{result.zodiacAnimal}座</span>
             </div>
           </div>
         </div>

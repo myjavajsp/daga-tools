@@ -9,12 +9,13 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import Icon from '../components/Icons';
 import { register } from '../api/user';
 
 /**
- * RegisterPage — 用户注册页（风格对齐 AdminLogin）
+ * RegisterPage — 用户注册页
  * 注册成功即自动登录：令牌存 localStorage['daga_user_token']
+ * 材质与 LoginPage 一致：纸底 + 描边卡片 + 图标芯片，不用渐变背景。
  */
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -69,17 +70,19 @@ export default function RegisterPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+        bgcolor: 'background.default',
         p: 2,
       }}
     >
       <Paper
         component="form"
         onSubmit={handleSubmit}
-        elevation={8}
+        elevation={0}
         sx={{
           p: { xs: 3, sm: 4 },
-          borderRadius: 4,
+          borderRadius: 1, /* 同 LoginPage：对齐 --r=12，不用 36px 大圆角 */
+          border: '1px solid var(--line)',
+          boxShadow: 'var(--sh)',
           maxWidth: 420,
           width: '100%',
           textAlign: 'center',
@@ -90,14 +93,15 @@ export default function RegisterPage() {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 64,
-            height: 64,
-            borderRadius: '50%',
-            bgcolor: 'rgba(25,118,210,0.1)',
+            width: 44,
+            height: 44,
+            borderRadius: '9px',
+            bgcolor: 'var(--accent-soft)',
+            color: 'var(--accent-press)',
             mb: 2,
           }}
         >
-          <PersonAddIcon sx={{ fontSize: 36, color: 'primary.main' }} />
+          <Icon name="user" />
         </Box>
 
         <Typography variant="h5" sx={{ mb: 1, fontWeight: 700 }}>
@@ -171,7 +175,9 @@ export default function RegisterPage() {
 
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
           已有账号？
-          <Link to="/login" style={{ marginLeft: 4, fontWeight: 600 }}>
+          {/* 和 /login 的「免费注册」用同一个 .lnk：内联 style 那种写法既没有
+              24px 的点击框（实测 52x17），也不会跟着主题换色。 */}
+          <Link to="/login" className="lnk ml-1">
             直接登录
           </Link>
         </Typography>

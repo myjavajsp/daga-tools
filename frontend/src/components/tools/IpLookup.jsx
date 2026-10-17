@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import Icon from '../Icons';
 export default function IpLookup() {
   const [ip, setIp] = useState('');
   const [result, setResult] = useState(null);
@@ -37,23 +38,23 @@ export default function IpLookup() {
           value={ip}
           onChange={(e) => setIp(e.target.value)}
           placeholder="输入IP地址..."
-          className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 font-mono"
+          className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft font-mono"
         />
-        <button onClick={lookup} disabled={!ip} className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50">
+        <button onClick={lookup} disabled={!ip} className="btn-a px-6">
           查询
         </button>
       </div>
-      <button onClick={checkMyIp} className="text-sm text-blue-500 hover:text-blue-600">查看我的IP</button>
+      <button onClick={checkMyIp} className="act">查看我的IP</button>
 
-      {error && <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">{error}</div>}
+      {error && <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">{error}</div>}
 
       {result && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 space-y-3">
+        <div className="bg-paper rounded-card p-4 space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-2xl">🌍</div>
+            <span className="chip"><Icon name="globe" /></span>
             <div>
-              <div className="font-bold text-gray-900 dark:text-white font-mono text-lg">{result.ip}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{result.country_name || 'Unknown'}</div>
+              <div className="font-bold text-ink font-mono text-lg">{result.ip}</div>
+              <div className="text-xs text-ink-3">{result.country_name || 'Unknown'}</div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
@@ -65,16 +66,16 @@ export default function IpLookup() {
               { label: '时区', value: result.timezone || '-' },
               { label: '运营商', value: result.org || '-' },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-white dark:bg-gray-800 rounded-lg p-3">
-                <div className="text-gray-500 dark:text-gray-400 text-xs">{label}</div>
-                <div className="font-medium text-gray-900 dark:text-white">{value}</div>
+              <div key={label} className="bg-surface rounded-lg p-3">
+                <div className="text-ink-3 text-xs">{label}</div>
+                <div className="font-medium text-ink">{value}</div>
               </div>
             ))}
           </div>
           {result.latitude && result.longitude && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-sm">
-              <div className="text-gray-500 dark:text-gray-400 text-xs mb-1">坐标</div>
-              <code className="font-mono text-gray-700 dark:text-gray-300">{result.latitude}, {result.longitude}</code>
+            <div className="bg-surface rounded-lg p-3 text-sm">
+              <div className="text-ink-3 text-xs mb-1">坐标</div>
+              <code className="font-mono text-ink-2">{result.latitude}, {result.longitude}</code>
             </div>
           )}
         </div>

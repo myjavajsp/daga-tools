@@ -24,26 +24,26 @@ export default function VoiceoverScript() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">配音主题</label>
+        <label className="lbl">配音主题</label>
         <div className="flex flex-wrap gap-2">
-          {TOPICS.map(t => <button key={t} onClick={() => setTopic(t)} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${topic === t ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}>{t}</button>)}
+          {TOPICS.map(t => <button key={t} onClick={() => setTopic(t)} className={`px-4 py-2 rounded-card text-sm font-medium transition-all ${topic === t ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'}`}>{t}</button>)}
         </div>
       </div>
       <div>
         <div className="flex justify-between text-sm mb-2">
-          <span className="text-gray-600 dark:text-gray-400">预计时长</span>
-          <span className="font-mono text-gray-900 dark:text-white">{duration}秒</span>
+          <span className="text-ink-2">预计时长</span>
+          <span className="font-mono text-ink">{duration}秒</span>
         </div>
-        <input type="range" min="10" max="120" value={duration} onChange={e => setDuration(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+        <input type="range" min="10" max="120" value={duration} onChange={e => setDuration(Number(e.target.value))} className="slider" />
       </div>
-      <button onClick={generate} className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">生成配音脚本</button>
+      <button onClick={generate} className="btn-a w-full transition-colors">生成配音脚本</button>
       {output && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+        <div className="bg-paper rounded-card p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">配音文案</span>
-            <button onClick={() => navigator.clipboard.writeText(output)} className="text-xs text-blue-500">复制</button>
+            <span className="text-sm font-medium text-ink-2">配音文案</span>
+            <button onClick={() => navigator.clipboard.writeText(output)} className="text-xs text-accent">复制</button>
           </div>
-          <pre className="whitespace-pre-wrap text-sm text-gray-800 dark:text-gray-200">{output}</pre>
+          <pre className="whitespace-pre-wrap text-sm text-ink">{output}</pre>
         </div>
       )}
     </div>

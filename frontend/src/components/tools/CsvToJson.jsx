@@ -32,28 +32,28 @@ export default function CsvToJson() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[calc(100vh-200px)]">
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CSV 输入</label>
+        <label className="lbl">CSV 输入</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none font-mono text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
       <div className="flex flex-col">
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">JSON 输出</label>
-          {json && <button onClick={copyJson} className="text-xs text-blue-500 hover:text-blue-600">{copied ? '已复制!' : '复制'}</button>}
+          <label className="lbl">JSON 输出</label>
+          {json && <button onClick={copyJson} className="act">{copied ? '已复制!' : '复制'}</button>}
         </div>
         <textarea
           value={json}
           readOnly
-          className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none font-mono text-sm"
+          className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none font-mono text-sm"
         />
       </div>
-      <button onClick={convert} disabled={!input.trim()} className="self-start px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl hover:shadow-lg disabled:opacity-50 transition-all">
+      <button onClick={convert} disabled={!input.trim()} className="btn-a self-start px-6 transition-colors">
         转换
       </button>
-      {error && <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 text-red-600 dark:text-red-400 text-sm">{error}</div>}
+      {error && <div className="bg-danger-soft border border-line rounded-card p-3 text-danger text-sm">{error}</div>}
     </div>
   );
 }

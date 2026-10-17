@@ -48,14 +48,14 @@ export default function TypingSpeed() {
   };
 
   const getCharClass = (i) => {
-    if (i >= input.length) return 'text-gray-400 dark:text-gray-500';
-    if (input[i] === text[i]) return 'text-green-600 dark:text-green-400';
-    return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30';
+    if (i >= input.length) return 'text-ink-3';
+    if (input[i] === text[i]) return 'text-success';
+    return 'text-danger bg-danger-soft';
   };
 
   return (
     <div className="space-y-6">
-      <div className="relative p-4 bg-gray-50 dark:bg-gray-700 rounded-xl font-mono text-lg leading-relaxed select-none">
+      <div className="relative p-4 bg-paper rounded-card font-mono text-lg leading-relaxed select-none">
         {text.split('').map((char, i) => (
           <span key={i} className={getCharClass(i)}>{char}</span>
         ))}
@@ -67,31 +67,31 @@ export default function TypingSpeed() {
         onChange={handleChange}
         disabled={completed}
         placeholder="开始打字..."
-        className={`w-full h-32 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none ${completed ? 'opacity-50' : ''}`}
+        className={`w-full h-32 px-4 py-3 border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft focus:border-accent resize-none text-base ${completed ? 'bg-surface-2' : 'bg-paper'}`}
       />
 
       {completed && (
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 text-center">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{wpm}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">WPM</div>
+          <div className="bg-accent-soft border border-line rounded-card p-4 text-center">
+            <div className="text-3xl font-bold text-accent">{wpm}</div>
+            <div className="text-xs text-ink-3 mt-1">WPM</div>
           </div>
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400">{accuracy}%</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">准确率</div>
+          <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+            <div className="text-3xl font-bold text-success">{accuracy}%</div>
+            <div className="text-xs text-ink-3 mt-1">准确率</div>
           </div>
-          <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-xl p-4 text-center">
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+          <div className="bg-accent-soft border border-line rounded-card p-4 text-center">
+            <div className="text-3xl font-bold text-accent">
               {((endTime - startTime) / 1000).toFixed(1)}s
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">用时</div>
+            <div className="text-xs text-ink-3 mt-1">用时</div>
           </div>
         </div>
       )}
 
       <button
         onClick={reset}
-        className="w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+        className="w-full py-3 bg-surface-2 text-ink-2 font-semibold rounded-card hover:bg-surface-3 transition-all"
       >
         重新开始
       </button>

@@ -22,7 +22,7 @@ import React, { useMemo } from 'react';
  * 因此这里不需要、也不应该再叠加任何浮层按钮：
  *   播放器自带的全屏按钮即可正常工作（Esc 退出）。
  */
-export default function FullscreenFrame({ src, title = '视频播放', onLoad, onError }) {
+export default function FullscreenFrame({ src, title = '视频播放', onLoad, onError, fill = false }) {
   // 直接使用原始线路地址，不再套本站同源代理前缀
   const frameSrc = useMemo(() => {
     if (!src) return null;
@@ -30,6 +30,24 @@ export default function FullscreenFrame({ src, title = '视频播放', onLoad, o
   }, [src]);
 
   if (!frameSrc) return null;
+
+  /* fill：父级已经给了 16:9 的定位盒子（首页 .player .frame），
+     这里就不再自带 padding-top 盒子，否则会二次撑高。 */
+  if (fill) {
+    return (
+      <iframe
+        src={frameSrc}
+        title={title}
+        allow="fullscreen *; autoplay; encrypted-media; picture-in-picture; clipboard-write"
+        allowFullScreen
+        webkitallowfullscreen="true"
+        mozallowfullscreen="true"
+        onLoad={onLoad}
+        onError={onError}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0, display: 'block' }}
+      />
+    );
+  }
 
   return (
     <div

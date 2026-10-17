@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import Icon from '../Icons';
 
 export default function QRCodeGen() {
   const [text, setText] = useState('');
@@ -38,21 +39,21 @@ export default function QRCodeGen() {
     <div className="space-y-6">
       {/* 输入区域 */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="lbl">
           二维码内容
         </label>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="输入网址、文本、WiFi信息等..."
-          className="w-full h-24 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 resize-none"
+          className="w-full h-24 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft focus:border-accent resize-none"
         />
       </div>
 
       {/* 设置选项 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             尺寸: {size}px
           </label>
           <input
@@ -62,12 +63,12 @@ export default function QRCodeGen() {
             step="50"
             value={size}
             onChange={(e) => setSize(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            className="slider"
           />
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             前景色
           </label>
           <div className="flex items-center gap-2">
@@ -75,19 +76,19 @@ export default function QRCodeGen() {
               type="color"
               value={foregroundColor}
               onChange={(e) => setForegroundColor(e.target.value)}
-              className="w-10 h-10 rounded cursor-pointer"
+              className="swatch"
             />
             <input
               type="text"
               value={foregroundColor}
               onChange={(e) => setForegroundColor(e.target.value)}
-              className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+              className="flex-1 px-3 py-2 bg-paper border border-line rounded-lg text-ink text-sm"
             />
           </div>
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="lbl">
             背景色
           </label>
           <div className="flex items-center gap-2">
@@ -95,13 +96,13 @@ export default function QRCodeGen() {
               type="color"
               value={backgroundColor}
               onChange={(e) => setBackgroundColor(e.target.value)}
-              className="w-10 h-10 rounded cursor-pointer"
+              className="swatch"
             />
             <input
               type="text"
               value={backgroundColor}
               onChange={(e) => setBackgroundColor(e.target.value)}
-              className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+              className="flex-1 px-3 py-2 bg-paper border border-line rounded-lg text-ink text-sm"
             />
           </div>
         </div>
@@ -111,7 +112,7 @@ export default function QRCodeGen() {
       <button
         onClick={generateQR}
         disabled={!text.trim() || loading}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        className="btn-a w-full disabled:cursor-not-allowed transition-colors"
       >
         {loading ? '生成中...' : '生成二维码'}
       </button>
@@ -119,20 +120,20 @@ export default function QRCodeGen() {
       {/* 结果展示 */}
       {qrCode && (
         <div className="space-y-4">
-          <div className="flex justify-center p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+          <div className="card flex justify-center p-4">
             <img src={qrCode} alt="QR Code" className="max-w-full h-auto" />
           </div>
           
           <div className="flex gap-3">
             <button
               onClick={handleDownload}
-              className="flex-1 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+              className="btn-a flex-1 transition-colors"
             >
               下载二维码
             </button>
             <button
               onClick={() => { setText(''); setQrCode(null); }}
-              className="flex-1 py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+              className="flex-1 py-3 bg-surface-2 text-ink-2 font-semibold rounded-card hover:bg-surface-3 transition-all"
             >
               重新生成
             </button>
@@ -141,8 +142,8 @@ export default function QRCodeGen() {
       )}
 
       {/* 说明 */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-gray-200 mb-2">💡 使用提示</div>
+      <div className="bg-accent-soft border border-line rounded-card p-4 text-sm text-ink-2">
+        <div className="flex items-center gap-2 font-medium text-ink mb-2 text-sm"><Icon name="bulb" /><span>使用提示</span></div>
         <ul className="space-y-1 text-xs">
           <li>• 支持生成网址、文本、WiFi信息、邮箱等各种内容的二维码</li>
           <li>• 可以使用手机扫描生成的二维码查看内容</li>

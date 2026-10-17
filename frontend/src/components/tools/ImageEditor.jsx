@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import Icon from '../Icons';
 export default function ImageEditor() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -15,15 +16,15 @@ export default function ImageEditor() {
 
   return (
     <div className="space-y-6">
-      <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer" onClick={() => document.getElementById('ef')?.click()}>
+      <div className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer" onClick={() => document.getElementById('ef')?.click()}>
         <input id="ef" type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">🎨</div>
-        <p className="text-gray-600 dark:text-gray-400">{preview ? '点击更换图片' : '上传图片开始编辑'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="palette" /></span></div>
+        <p className="text-ink-2">{preview ? '点击更换图片' : '上传图片开始编辑'}</p>
       </div>
       {preview && (
         <>
           <div className="text-center">
-            <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-xl" style={{ filter: cssFilter }} />
+            <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-card" style={{ filter: cssFilter }} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[
@@ -33,14 +34,14 @@ export default function ImageEditor() {
               { label: '模糊', val: blur, set: setBlur, min: 0, max: 20 },
             ].map(({ label, val, set, min, max }) => (
               <div key={label}>
-                <div className="flex justify-between text-sm mb-1"><span className="text-gray-600 dark:text-gray-400">{label}</span><span className="font-mono text-gray-900 dark:text-white">{val}</span></div>
-                <input type="range" min={min} max={max} value={val} onChange={e => set(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                <div className="flex justify-between text-sm mb-1"><span className="text-ink-2">{label}</span><span className="font-mono text-ink">{val}</span></div>
+                <input type="range" min={min} max={max} value={val} onChange={e => set(Number(e.target.value))} className="slider" />
               </div>
             ))}
           </div>
           <div className="flex gap-3">
-            <button onClick={reset} className="flex-1 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl">重置</button>
-            <button onClick={() => { const a = document.createElement('a'); a.href = preview; a.download = 'edited.png'; a.click(); }} className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg">保存</button>
+            <button onClick={reset} className="flex-1 py-3 bg-surface-2 text-ink-2 font-semibold rounded-card">重置</button>
+            <button onClick={() => { const a = document.createElement('a'); a.href = preview; a.download = 'edited.png'; a.click(); }} className="btn-a flex-1">保存</button>
           </div>
         </>
       )}

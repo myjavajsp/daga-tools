@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Icon from '../Icons';
 import { fmtSize, downloadBlob, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
 
 export default function ImageBgRemove() {
@@ -67,30 +68,30 @@ export default function ImageBgRemove() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('bf')?.click()}
       >
         <input id="bf" type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">🖼️</div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="image" /></span></div>
+        <p className="text-ink-2">
           {preview ? '点击更换图片' : '上传图片去除背景'}
         </p>
-        <p className="text-xs text-gray-400 mt-1">支持 JPG、PNG、WebP</p>
+        <p className="text-xs text-ink-3 mt-1">支持 JPG、PNG、WebP</p>
       </div>
 
       {preview && !(resultUrl || busy) && (
         <div className="text-center">
-          <img src={preview} alt="原图" className="max-h-48 mx-auto rounded-xl" />
+          <img src={preview} alt="原图" className="max-h-48 mx-auto rounded-card" />
         </div>
       )}
 
       {busy && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 text-center">
-          <div className="text-sm text-blue-700 dark:text-blue-300 mb-3">
+        <div className="bg-accent-soft border border-line rounded-card p-6 text-center">
+          <div className="text-sm text-accent mb-3">
             {progress ? `正在处理 ${progress}%` : '首次使用需下载模型（约 5-10MB），请稍候…'}
           </div>
-          <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-2 overflow-hidden">
-            <div className="bg-blue-500 h-full transition-all" style={{ width: `${Math.max(8, progress)}%` }} />
+          <div className="w-full bg-accent-soft rounded-full h-2 overflow-hidden">
+            <div className="bg-accent h-full transition-all" style={{ width: `${Math.max(8, progress)}%` }} />
           </div>
         </div>
       )}
@@ -98,16 +99,16 @@ export default function ImageBgRemove() {
       {resultUrl && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <div className="text-sm text-gray-500 mb-2 text-center">原始图片</div>
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-2">
+            <div className="text-sm text-ink-3 mb-2 text-center">原始图片</div>
+            <div className="bg-paper rounded-card p-2">
               <img src={preview} alt="原图" className="w-full object-contain rounded-lg" />
             </div>
           </div>
           <div>
-            <div className="text-sm text-gray-500 mb-2 text-center">去背景后</div>
+            <div className="text-sm text-ink-3 mb-2 text-center">去背景后</div>
             {/* 棋盘格底衬，直观展示透明区域 */}
             <div
-              className="rounded-xl p-2"
+              className="rounded-card p-2"
               style={{
                 backgroundImage:
                   'linear-gradient(45deg,#d1d5db 25%,transparent 25%),linear-gradient(-45deg,#d1d5db 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#d1d5db 75%),linear-gradient(-45deg,transparent 75%,#d1d5db 75%)',
@@ -126,19 +127,19 @@ export default function ImageBgRemove() {
       </button>
 
       {resultUrl && (
-        <button onClick={download} className="w-full py-3 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600">
+        <button onClick={download} className="btn-a ok w-full">
           下载透明背景图片（PNG）
         </button>
       )}
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {resultUrl && (
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-ink-3">
           AI 抠图在你的浏览器本地完成，图片不会上传到任何服务器。复杂图片可能耗时较久。
         </p>
       )}

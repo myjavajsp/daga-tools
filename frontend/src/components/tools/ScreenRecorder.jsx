@@ -1,63 +1,80 @@
-﻿import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
 export default function ScreenRecorder() {
   const [recording, setRecording] = useState(false);
   const [duration, setDuration] = useState(0);
-  const [chunks, setChunks] = useState([]);
-  const mediaRecorderRef = useState(null)[1];
-  const timerRef = useState(null)[1];
+  const [urls, setUrls] = useState([]);
+  const [error, setError] = useState(null);
+  /* recorder 必须放在 ref 里：放 state 会每次推流都整个组件重渲染一遍。
+     原来还有个 mediaRecorderRef 建了没用、stop 时只清 timer 不调 recorder.stop()，
+     于是 onstop 永远不触发 —— 点「停止录制」后既没有预览也没有下载。 */
+  const recorderRef = useRef(null);
+  const timerRef = useRef(null);
+
+  useEffect(() => () => {
+    clearInterval(timerRef.current);
+    recorderRef.current?.stream?.getTracks().forEach((t) => t.stop());
+  }, []);
 
   const startRecording = async () => {
+    setError(null);
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      const chunks = [];
-      mediaRecorder.ondataavailable = e => chunks.push(e.data);
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        setChunks([url]);
+      const recorder = new MediaRecorder(stream);
+      const parts = [];
+      recorder.ondataavailable = (e) => { if (e.data.size) parts.push(e.data); };
+      recorder.onstop = () => {
+        const url = URL.createObjectURL(new Blob(parts, { type: recorder.mimeType || 'video/webm' }));
+        setUrls([url]);
+        stream.getTracks().forEach((t) => t.stop());
       };
-      mediaRecorder.start();
+      recorder.start();
+      // 用户在浏览器顶栏点「停止分享」时也要收束计时器和按钮状态
+      stream.getVideoTracks()[0]?.addEventListener('ended', stopRecording);
+      recorderRef.current = recorder;
       setRecording(true);
       setDuration(0);
-      timerRef.current = setInterval(() => setDuration(d => d + 1), 1000);
+      timerRef.current = setInterval(() => setDuration((d) => d + 1), 1000);
     } catch (e) {
-      console.error(e);
+      setRecording(false);
+      setError(e?.name === 'NotAllowedError' ? '没有获得录屏权限，请在浏览器弹窗里重新选择' : '当前浏览器不支持屏幕录制');
     }
   };
 
-  const stopRecording = () => {
-    setRecording(false);
+  function stopRecording() {
     clearInterval(timerRef.current);
-    chunks.forEach(c => c.stop?.());
-  };
+    recorderRef.current?.stop();
+    setRecording(false);
+  }
 
   const formatTime = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 
   return (
-    <div className="space-y-6">
-      <div className="text-center py-8">
-        <div className="w-24 h-24 mx-auto rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
-          <div className={`w-12 h-12 rounded-full ${recording ? 'bg-red-500 animate-pulse' : 'bg-gray-300 dark:bg-gray-600'}`} />
+    <div className="space-y-5">
+      <div className="flex items-center gap-4">
+        <div className="w-11 h-11 rounded-full border border-line-2 flex items-center justify-center flex-none">
+          <span className={`w-4 h-4 rounded-full ${recording ? 'bg-danger' : 'bg-line-2'}`} />
         </div>
-        <div className="text-3xl font-mono font-bold text-gray-900 dark:text-white mb-2">
-          {formatTime(duration)}
-        </div>
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          {recording ? '录制中...' : '准备录制'}
+        <div>
+          <div className="mono text-2xl font-bold text-ink leading-none">{formatTime(duration)}</div>
+          <div className="text-sm text-ink-3 mt-1">{recording ? '正在录制屏幕' : urls.length ? '录制完成' : '准备录制'}</div>
         </div>
       </div>
+
+      {error && <p className="text-sm bg-danger-soft text-danger rounded-lg px-3 py-2">{error}</p>}
+
       <div className="flex gap-3">
         {!recording ? (
-          <button onClick={startRecording} className="flex-1 py-3 bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">开始录制</button>
+          <button onClick={startRecording} className="btn-a flex-1">开始录制</button>
         ) : (
-          <button onClick={stopRecording} className="flex-1 py-3 bg-gray-500 text-white font-semibold rounded-xl hover:bg-gray-600 transition-all">停止录制</button>
+          <button onClick={stopRecording} className="btn-a danger flex-1 min-h-10 transition-colors">停止录制</button>
         )}
       </div>
-      {chunks.length > 0 && !recording && (
+
+      {urls.length > 0 && !recording && (
         <div className="space-y-3">
-          <video src={chunks[0]} controls className="w-full rounded-xl max-h-64" />
-          <a href={chunks[0]} download="recording.webm" className="block text-center py-3 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600">下载录屏</a>
+          <video src={urls[0]} controls className="w-full rounded-card border border-line max-h-80 bg-black" />
+          <a href={urls[0]} download="recording.webm" className="btn-a w-full">下载录屏（WebM）</a>
         </div>
       )}
     </div>

@@ -5,7 +5,7 @@ export default function AudioConvert() {
     <MediaJob
       job="convert"
       accept="audio/*"
-      icon="🔄"
+      icon="swap"
       hint="支持 MP3 / WAV / M4A / OGG / FLAC 等"
       buttonText="转换格式"
       defaultOptions={{ format: 'mp3' }}

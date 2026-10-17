@@ -9,24 +9,27 @@ export default function TestsPage() {
   ]);
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-paper">
       <Header />
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">在线测试</h1>
-        <div className="max-w-2xl mx-auto space-y-4">
+      <main className="wrap py-8 col-sm">
+        <div className="phead">
+          <h1>在线测试</h1>
+          <span className="note">结果仅供参考</span>
+        </div>
+        <div className="space-y-3">
           {tests.map(test => (
-            <div key={test.id} className="bg-gray-800 rounded-xl p-6 flex justify-between items-center">
+            <div key={test.id} className="card p-6 flex justify-between items-center">
               <div>
-                <h3 className="text-white font-medium">{test.name}</h3>
-                <p className="text-gray-400 text-sm">点击开始测试</p>
+                <h3 className="text-ink font-medium">{test.name}</h3>
+                <p className="text-ink-3 text-sm">点击开始测试</p>
               </div>
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+              <button className="btn-a px-4">
                 开始
               </button>
             </div>
           ))}
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

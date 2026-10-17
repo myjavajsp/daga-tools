@@ -39,24 +39,24 @@ export default function HtmlToMarkdown() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[calc(100vh-200px)]">
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">HTML</label>
+        <label className="lbl">HTML</label>
         <textarea
           value={html}
           onChange={(e) => setHtml(e.target.value)}
-          className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none font-mono text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Markdown</label>
+        <label className="lbl">Markdown</label>
         <textarea
           value={md}
           readOnly
-          className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none font-mono text-sm focus:outline-none"
+          className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none font-mono text-sm focus:outline-none"
         />
       </div>
       <button
         onClick={convert}
-        className="self-start px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl hover:shadow-lg transition-all"
+        className="btn-a self-start px-6 transition-colors"
       >
         转换
       </button>

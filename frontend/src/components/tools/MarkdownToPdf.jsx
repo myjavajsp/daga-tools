@@ -79,17 +79,17 @@ export default function MarkdownToPdf() {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-96">
         <div className="flex flex-col">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Markdown</label>
+          <label className="lbl">Markdown</label>
           <textarea
             value={md}
             onChange={(e) => setMd(e.target.value)}
-            className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
         </div>
         <div className="flex flex-col">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">预览</label>
+          <label className="lbl">预览</label>
           <div
-            className="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-auto prose prose-sm dark:prose-invert max-w-none"
+            className="flex-1 px-4 py-3 bg-surface border border-line rounded-card overflow-auto article max-w-none"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>
@@ -100,15 +100,15 @@ export default function MarkdownToPdf() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
-          <div className="text-green-700 dark:text-green-400 font-medium text-center">已唤起打印窗口</div>
-          <p className="text-xs text-gray-500 mt-2 text-center">
+        <div className="bg-success-soft border border-line rounded-card p-4">
+          <div className="text-success font-medium text-center">已唤起打印窗口</div>
+          <p className="text-xs text-ink-3 mt-2 text-center">
             在打印窗口中选择目标为「另存为 PDF」即可保存。中文由浏览器原生渲染，不会出现乱码或方块字。
           </p>
         </div>

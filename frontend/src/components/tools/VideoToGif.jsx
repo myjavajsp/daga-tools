@@ -5,7 +5,7 @@ export default function VideoToGif() {
     <MediaJob
       job="video-to-gif"
       accept="video/*"
-      icon="🎞️"
+      icon="filmstrip"
       hint="截取视频片段生成 GIF（最长 30 秒）"
       buttonText="转换为GIF"
       defaultOptions={{ start: 0, duration: 3, fps: 12, width: 480 }}

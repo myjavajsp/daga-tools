@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import Icon from '../Icons';
 export default function ImageWatermark() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -58,37 +59,37 @@ export default function ImageWatermark() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('fileInput')?.click()}
       >
         <input id="fileInput" type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">💧</div>
-        <p className="text-gray-600 dark:text-gray-400">{preview ? '点击更换图片' : '点击上传图片'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="droplet" /></span></div>
+        <p className="text-ink-2">{preview ? '点击更换图片' : '点击上传图片'}</p>
       </div>
 
       {preview && (
         <>
-          <img src={preview} alt="Preview" className="max-h-48 mx-auto rounded-xl" />
+          <img src={preview} alt="Preview" className="max-h-48 mx-auto rounded-card" />
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">水印文字</label>
+              <label className="lbl">水印文字</label>
               <input
                 type="text"
                 value={text}
                 onChange={e => setText(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">位置</label>
+              <label className="lbl">位置</label>
               <div className="grid grid-cols-3 gap-1">
                 {positions.map(p => (
                   <button
                     key={p}
                     onClick={() => setPosition(p)}
                     className={`px-2 py-2 text-xs rounded-lg transition-all ${
-                      position === p ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                      position === p ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'
                     }`}
                   >
                     {p.replace('-', ' ')}
@@ -101,28 +102,28 @@ export default function ImageWatermark() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-600 dark:text-gray-400">字体大小</span>
-                <span className="font-mono text-gray-900 dark:text-white">{size}px</span>
+                <span className="text-ink-2">字体大小</span>
+                <span className="font-mono text-ink">{size}px</span>
               </div>
-              <input type="range" min="12" max="120" value={size} onChange={e => setSize(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+              <input type="range" min="12" max="120" value={size} onChange={e => setSize(Number(e.target.value))} className="slider" />
             </div>
             <div>
               <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-600 dark:text-gray-400">透明度</span>
-                <span className="font-mono text-gray-900 dark:text-white">{opacity}%</span>
+                <span className="text-ink-2">透明度</span>
+                <span className="font-mono text-ink">{opacity}%</span>
               </div>
-              <input type="range" min="5" max="100" value={opacity} onChange={e => setOpacity(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+              <input type="range" min="5" max="100" value={opacity} onChange={e => setOpacity(Number(e.target.value))} className="slider" />
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-10 h-10 rounded cursor-pointer" />
-            <span className="text-sm text-gray-600 dark:text-gray-400">水印颜色</span>
+            <input type="color" value={color} onChange={e => setColor(e.target.value)} className="swatch" />
+            <span className="text-sm text-ink-2">水印颜色</span>
           </div>
 
           <button
             onClick={addWatermark}
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+            className="btn-a w-full transition-colors"
           >
             添加水印并下载
           </button>

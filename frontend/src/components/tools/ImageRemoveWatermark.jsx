@@ -1,5 +1,6 @@
 ﻿import { useState, useRef, useEffect } from 'react';
 import { fmtSize, downloadBlob, loadImage, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
+import Icon from '../Icons';
 
 /**
  * 去水印：框选水印区域后做修复填充。
@@ -165,13 +166,13 @@ export default function ImageRemoveWatermark() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('wm')?.click()}
       >
         <input id="wm" type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">✨</div>
-        <p className="text-gray-600 dark:text-gray-400">{file ? `已选择: ${file.name}` : '上传带水印的图片'}</p>
-        <p className="text-xs text-gray-400 mt-1">上传后在图片上拖拽框选水印区域</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="sparkles" /></span></div>
+        <p className="text-ink-2">{file ? `已选择: ${file.name}` : '上传带水印的图片'}</p>
+        <p className="text-xs text-ink-3 mt-1">上传后在图片上拖拽框选水印区域</p>
       </div>
 
       {preview && !result && (
@@ -185,10 +186,10 @@ export default function ImageRemoveWatermark() {
           onTouchMove={onMove}
           onTouchEnd={onUp}
         >
-          <img ref={imgRef} src={preview} alt="原图" draggable={false} className="max-h-72 rounded-xl block" />
+          <img ref={imgRef} src={preview} alt="原图" draggable={false} className="max-h-72 rounded-card block" />
           {rect && rect.w > 1 && rect.h > 1 && (
             <div
-              className="absolute border-2 border-red-500 bg-red-500/20 pointer-events-none"
+              className="absolute border-2 border-danger bg-danger pointer-events-none"
               style={{ left: rect.x, top: rect.y, width: rect.w, height: rect.h }}
             />
           )}
@@ -196,15 +197,15 @@ export default function ImageRemoveWatermark() {
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">处理完成！</div>
-          <div className="text-sm text-gray-500 mt-1">
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">处理完成！</div>
+          <div className="text-sm text-ink-3 mt-1">
             {result.name} · {fmtSize(result.size)}
           </div>
-          <div className="mt-3 bg-white/60 dark:bg-gray-800/60 rounded-lg p-2">
+          <div className="mt-3 bg-surface-2 rounded-lg p-2">
             <img src={result.url} alt="去水印结果" className="max-h-48 mx-auto object-contain rounded-lg" />
           </div>
-          <button onClick={download} className="mt-3 w-full py-2.5 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600">
+          <button onClick={download} className="btn-a ok mt-3 w-full">
               下载图片
           </button>
         </div>
@@ -215,13 +216,13 @@ export default function ImageRemoveWatermark() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-ink-3">
           当前为传统图像修复（边缘像素延伸 + 模糊）。对纯色/渐变背景上的水印效果较好；复杂背景可能残留痕迹，这类场景需要 AI inpainting 模型。
         </p>
       )}

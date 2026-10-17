@@ -38,23 +38,23 @@ export default function TextToSpeech() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">输入文本</label>
+        <label className="lbl">输入文本</label>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="输入要朗读的文字..."
-          className="w-full h-40 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+          className="w-full h-40 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft resize-none"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">语速: {rate}</label>
-          <input type="range" min="0.5" max="2" step="0.1" value={rate} onChange={(e) => setRate(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+          <label className="lbl">语速: {rate}</label>
+          <input type="range" min="0.5" max="2" step="0.1" value={rate} onChange={(e) => setRate(Number(e.target.value))} className="slider" />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">音调: {pitch}</label>
-          <input type="range" min="0.5" max="2" step="0.1" value={pitch} onChange={(e) => setPitch(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+          <label className="lbl">音调: {pitch}</label>
+          <input type="range" min="0.5" max="2" step="0.1" value={pitch} onChange={(e) => setPitch(Number(e.target.value))} className="slider" />
         </div>
       </div>
 
@@ -62,14 +62,14 @@ export default function TextToSpeech() {
         <button
           onClick={speak}
           disabled={!text.trim() || speaking}
-          className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+          className="btn-a flex-1 transition-colors"
         >
           {speaking ? '播放中...' : '开始朗读'}
         </button>
         <button
           onClick={stop}
           disabled={!speaking}
-          className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 transition-all"
+          className="btn-ghost"
         >
           停止
         </button>
@@ -77,10 +77,10 @@ export default function TextToSpeech() {
 
       {voices.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">可用语音</label>
+          <label className="lbl">可用语音</label>
           <div className="flex flex-wrap gap-2">
             {voices.filter(v => v.lang.startsWith('zh') || v.lang.startsWith('en')).slice(0, 8).map((v, i) => (
-              <button key={i} className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-colors">
+              <button key={i} className="px-3 py-1 text-xs bg-surface-2 rounded-lg text-ink-2 hover:bg-accent-soft hover:text-accent transition-colors">
                 {v.name.split(' ').pop()} ({v.lang})
               </button>
             ))}

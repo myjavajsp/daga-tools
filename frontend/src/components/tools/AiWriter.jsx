@@ -70,29 +70,29 @@ export default function AiWriter() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">写作主题</label>
+        <label className="lbl">写作主题</label>
         <input
           type="text"
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && generate()}
           placeholder="输入写作主题，如：如何用三个月入门摄影"
-          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">文章类型</label>
+        <label className="lbl">文章类型</label>
         <div className="flex gap-2 flex-wrap">
           {TYPES.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setType(t.id)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-card text-sm font-medium transition-all ${
                 type === t.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                  ? 'bg-accent text-accent-fg'
+                  : 'bg-surface-2 text-ink-2'
               }`}
             >
               {t.label}
@@ -102,7 +102,7 @@ export default function AiWriter() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">语气风格</label>
+        <label className="lbl">语气风格</label>
         <div className="flex gap-2 flex-wrap">
           {TONES.map((t) => (
             <button
@@ -111,8 +111,8 @@ export default function AiWriter() {
               onClick={() => setTone(t.id)}
               className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
                 tone === t.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                  ? 'bg-accent text-accent-fg'
+                  : 'bg-surface-2 text-ink-2'
               }`}
             >
               {t.label}
@@ -122,7 +122,7 @@ export default function AiWriter() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">篇幅</label>
+        <label className="lbl">篇幅</label>
         <div className="flex gap-2 flex-wrap">
           {LENGTHS.map((l) => (
             <button
@@ -131,8 +131,8 @@ export default function AiWriter() {
               onClick={() => setLength(l.id)}
               className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
                 length === l.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                  ? 'bg-accent text-accent-fg'
+                  : 'bg-surface-2 text-ink-2'
               }`}
             >
               {l.label}
@@ -146,7 +146,7 @@ export default function AiWriter() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
@@ -154,15 +154,15 @@ export default function AiWriter() {
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">生成结果</label>
+            <label className="lbl">生成结果</label>
             <button
               onClick={copyText}
-              className="px-2 py-1 text-xs rounded bg-blue-500 text-white hover:bg-blue-600"
+              className="px-2 py-1 text-xs rounded bg-accent text-accent-fg hover:bg-accent-press"
             >
-              {copied ? '✓ 已复制' : '复制'}
+              {copied ? '已复制' : '复制'}
             </button>
           </div>
-          <pre className="whitespace-pre-wrap bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-sm text-gray-800 dark:text-gray-200">
+          <pre className="whitespace-pre-wrap bg-paper rounded-card p-4 text-sm text-ink">
             {output}
           </pre>
         </div>

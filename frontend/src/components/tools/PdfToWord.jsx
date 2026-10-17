@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
+import Icon from '../Icons';
 import { fmtSize, downloadBlob, readAsArrayBuffer, stripExt, safeName, BTN_PRIMARY } from '../../lib/file-utils';
 
 export default function PdfToWord() {
@@ -95,12 +96,12 @@ export default function PdfToWord() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('wf')?.click()}
       >
         <input id="wf" type="file" accept=".pdf,application/pdf" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">📄</div>
-        <p className="text-gray-600 dark:text-gray-400">{file ? `已选择: ${file.name}` : '上传PDF转Word'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="doc" /></span></div>
+        <p className="text-ink-2">{file ? `已选择: ${file.name}` : '上传PDF转Word'}</p>
       </div>
 
       <button onClick={convert} disabled={!file || busy} className={BTN_PRIMARY}>
@@ -108,24 +109,24 @@ export default function PdfToWord() {
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-          <div className="text-green-700 dark:text-green-400 font-medium">转换成功！已开始下载</div>
-          <div className="text-sm text-gray-500 mt-1">
+        <div className="bg-success-soft border border-line rounded-card p-4 text-center">
+          <div className="text-success font-medium">转换成功！已开始下载</div>
+          <div className="text-sm text-ink-3 mt-1">
             提取 {result.lines} 段文字 · {fmtSize(result.size)}
           </div>
           {preview && (
-            <div className="mt-3 text-left text-xs text-gray-500 bg-white/60 dark:bg-gray-800/60 rounded-lg p-3 whitespace-pre-wrap break-words">
+            <div className="mt-3 text-left text-xs text-ink-3 bg-surface-2 rounded-lg p-3 whitespace-pre-wrap break-words">
               {preview}
               {result.lines > 3 ? '\n…' : ''}
             </div>
           )}
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-ink-3 mt-2">
             说明：导出的是文字内容（.docx），原始版式与图片不会保留。
           </p>
         </div>

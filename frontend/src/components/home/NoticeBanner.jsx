@@ -1,37 +1,20 @@
 import React from 'react';
-import { Box, Paper, Typography } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import Icon from '../Icons';
 
-export default function NoticeBanner({ message }) {
+/**
+ * NoticeBanner — 公告条（后台 announcement 开启且非空时由 HomePage 调用）
+ * 版式＝demo 的 .notice：灰底、发丝线、警示线性图标，不标红不放大。
+ */
+export default function NoticeBanner({ message, title }) {
   if (!message) return null;
 
   return (
-    <Box sx={{ mb: 3 }}>
-      <Paper
-        elevation={0}
-        sx={{
-          p: 2.5,
-          borderRadius: 3,
-          border: '1px solid #f0c0c0',
-          bgcolor: '#fff5f5',
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: 1.5,
-        }}
-      >
-        <InfoOutlinedIcon sx={{ color: '#d32f2f', mt: 0.3, flexShrink: 0 }} />
-        <Box>
-          <Typography
-            variant="subtitle2"
-            sx={{ color: '#d32f2f', fontWeight: 700, mb: 0.5 }}
-          >
-            重要公告
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#5f2120', lineHeight: 1.7 }}>
-            {message}
-          </Typography>
-        </Box>
-      </Paper>
-    </Box>
+    <div className="notice">
+      <Icon name="alert" />
+      <p>
+        <b>{title || '公告'}</b>
+        {message}
+      </p>
+    </div>
   );
 }

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>全民影视 · Logo 概念稿（三个方向）</title>
+<meta name="description" content="全民影视VIP解析 站标概念稿：轨道、三线、影字标三个方向的几何构造、多尺寸与多底色验证。" />
+<style>
+/* 与首页 demo 同一套 token —— 站标不能脱离页面材质单独长一套颜色 */
+:root{
+  --paper:#f7f8f9; --surface:#ffffff; --surface-2:#eef0f2;
+  --ink:#0e1116; --ink-2:#535a63; --ink-3:#656c75;
+  --line:#e2e5e9; --line-2:#cdd2d8;
+  --accent:#1c47d6; --accent-press:#1638ac; --accent-soft:#eaeefc;
+  --accent-on-ink:#7c96ef;   /* 深底专用亮钴蓝：#1c47d6 压在 #0e1116 上只有 2.63:1，过不了非文字 3:1 */
+  --r:12px; --r-sm:9px;
+  --sh:0 1px 2px rgba(14,17,22,.05), 0 6px 16px -10px rgba(14,17,22,.10);
+  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:64px;
+  --fs-label:13px; --fs-body:15px;
+  --fs-h2:clamp(20px,2.2vw,25px); --fs-h1:clamp(28px,3.6vw,40px);
+  --ease:cubic-bezier(.22,.61,.36,1); --maxw:1080px;
+  --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:var(--fs-body);line-height:1.65;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4,p{margin:0;overflow-wrap:break-word;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:max(var(--s3),env(safe-area-inset-left),env(safe-area-inset-right));}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+
+/* ===== 站标本体：结构色 = --f，强调色 = --d，全部挂在宿主上，几何不重复声明 ===== */
+.mk{display:block;color:var(--f);}
+.mk .box{fill:none;stroke:var(--f);stroke-width:2.4;}
+.mk .ln{fill:none;stroke:var(--f);stroke-width:2.6;stroke-linecap:round;}
+.mk .ln.acc{stroke:var(--d);}
+.mk .tile{fill:var(--f);}
+.mk .knob{fill:var(--d);}
+.mk-host{--f:var(--ink);--d:var(--accent);}         /* 浅底常规（纸白同此） */
+.mk-host.mono{--d:var(--f);}                         /* 单色：印刷/水印/蚀刻 */
+.mk-host.on-ink{--f:#ffffff;--d:var(--accent-on-ink);} /* 墨底反白：强调色同时提亮一档 */
+.mk-host.on-accent{--f:#ffffff;--d:#ffffff;}         /* 钴底全反白 */
+/* —— 只给 B 用的颜色变体：几何一字不动，改的只是两个变量 —— */
+.mk-host.v-dim{--f:var(--ink-3);--d:var(--accent);}  /* 结构降一档灰，蓝更跳 */
+.mk-host.v-blue{--f:var(--accent);--d:var(--accent);}/* 全蓝单色 */
+.mk-host.v-teal{--f:var(--ink-3);--d:#0f5f57;}        /* 换强调色试验：深青 */
+.mk-host.v-verm{--f:var(--ink-3);--d:#b23a22;}        /* 换强调色试验：朱红 */
+
+/* ===== 页面骨架 ===== */
+.pagehead{padding:var(--s6) 0 var(--s4);}
+.pagehead h1{font-size:var(--fs-h1);font-weight:600;letter-spacing:-.02em;line-height:1.3;}
+.pagehead .lead{color:var(--ink-2);margin-top:var(--s2);max-width:56ch;}
+.spec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s2);margin-top:var(--s4);
+  padding:var(--s3);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);}
+.spec div{min-width:0;}
+.spec dt{font-size:12px;color:var(--ink-3);font-family:var(--mono);}
+.spec dd{margin:6px 0 0;font-size:var(--fs-label);color:var(--ink-2);line-height:1.7;}
+.swatches{display:flex;gap:6px;margin-top:8px;}
+.sw{width:20px;height:20px;border-radius:5px;border:1px solid var(--line-2);}
+
+.concept{padding:var(--s6) 0;border-top:1px solid var(--line);}
+.chead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+.chead .idx{font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+.chead h2{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.015em;}
+.chead .tag{font-size:12px;color:var(--ink-3);border:1px solid var(--line-2);border-radius:6px;padding:2px 8px;}
+.chead .rec{margin-left:auto;font-size:12px;color:var(--accent-press);background:var(--accent-soft);
+  border-radius:6px;padding:4px 10px;font-weight:600;}
+.why{color:var(--ink-2);margin-top:12px;max-width:60ch;line-height:1.8;font-size:var(--fs-body);}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:var(--s3);margin-top:var(--s4);align-items:start;}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:var(--s3);}
+.panel h3{font-size:12px;color:var(--ink-3);font-family:var(--mono);font-weight:400;margin-bottom:var(--s2);}
+.hero-mk{display:grid;place-items:center;padding:var(--s4) 0 var(--s2);}
+.scale{display:flex;align-items:flex-end;gap:var(--s3);flex-wrap:wrap;padding-top:var(--s2);border-top:1px solid var(--line);}
+.scale figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.scale figcaption{font-size:11px;color:var(--ink-3);font-family:var(--mono);}
+.micro{display:flex;gap:var(--s3);align-items:flex-end;flex-wrap:wrap;}
+.micro figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.micro figcaption{font-size:11px;color:var(--ink-3);font-family:var(--mono);}
+.micro [data-slot]{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;display:grid;place-items:center;}
+.variants{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.vt{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper);}
+.vt .vs{width:64px;height:56px;flex:none;border-radius:8px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);}
+.vt .vs.deep{background:var(--ink);border-color:var(--ink);}
+.vt .vs.blue{background:var(--accent);border-color:var(--accent);}
+.vt .vs.gray{background:var(--paper);border-color:var(--line);}
+.vt p{min-width:0;}
+.vt b{display:block;font-size:var(--fs-label);font-weight:600;}
+.vt span{display:block;font-size:11px;color:var(--ink-3);font-family:var(--mono);margin-top:3px;line-height:1.6;overflow-wrap:break-word;}
+.surfaces{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.cell{border-radius:var(--r-sm);padding:var(--s3) 10px;display:grid;place-items:center;gap:8px;border:1px solid var(--line);}
+.cell small{font-size:10px;font-family:var(--mono);letter-spacing:-.01em;opacity:.62;}
+.cell.paper{background:var(--paper);color:var(--ink);}
+.cell.white{background:var(--surface);color:var(--ink);}
+.cell.ink{background:var(--ink);color:#fff;border-color:var(--ink);}
+.cell.blue{background:var(--accent);color:#fff;border-color:var(--accent);}
+.cell.mono{background:var(--surface);color:var(--ink);}
+
+/* 迷你导航 mock：站标最终就是活在这条 63px 的带子里 */
+.mocknav{background:var(--surface);border:1px solid var(--line);border-bottom-width:1px;border-radius:var(--r-sm);}
+.mocknav .row{display:flex;align-items:center;gap:var(--s3);min-height:62px;padding:0 var(--s2);}
+.mocknav .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:-.01em;}
+.mocknav .links{margin-left:auto;display:flex;gap:var(--s3);font-size:var(--fs-label);color:var(--ink-2);}
+.mocknav .links i{font-style:normal;}
+.mocknav .links i.on{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent);padding-bottom:2px;}
+.mocknav .note{font-size:11px;font-family:var(--mono);color:var(--ink-3);padding:6px var(--s2);border-top:1px solid var(--line);}
+.tabmock{display:flex;gap:var(--s1);align-items:flex-end;padding:var(--s2);background:var(--surface-2);border-radius:var(--r-sm);border:1px solid var(--line);}
+.tab{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-bottom-color:var(--surface);
+  border-radius:8px 8px 0 0;padding:8px 12px;font-size:12px;color:var(--ink-2);max-width:230px;min-width:0;}
+.tab.active{color:var(--ink);}
+.tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.tab svg{flex:none;}
+@media(max-width:400px){.tabmock{gap:6px;padding:var(--s1);}.tab{padding:8px 9px;gap:6px;}}
+
+.lockup{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;padding:var(--s3) 0;border-top:1px solid var(--line);}
+.lockup+.lockup{border-top:1px solid var(--line);}
+.lockup .name{font-weight:600;letter-spacing:-.01em;}
+.lockup .name small{display:block;font-weight:400;font-size:12px;color:var(--ink-3);letter-spacing:0;margin-top:3px;}
+.lockup .k18{font-size:18px;}.lockup .k22{font-size:22px;}
+.caveat{font-size:var(--fs-label);color:var(--ink-3);margin-top:var(--s2);line-height:1.8;max-width:62ch;}
+.caveat b{color:var(--ink-2);font-weight:600;}
+
+.next{padding:var(--s6) 0;border-top:1px solid var(--line);}
+.next ol{display:grid;gap:var(--s1);margin-top:var(--s3);}
+.next li{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);font-size:var(--fs-body);color:var(--ink-2);}
+.next li:last-child{border-bottom:none;}
+.next li .n{font-family:var(--mono);font-size:12px;color:var(--ink-3);flex:none;width:20px;padding-top:3px;}
+.next li b{color:var(--ink);font-weight:600;}
+footer{border-top:1px solid var(--line);padding:var(--s4) 0 var(--s5);font-size:12px;color:var(--ink-3);}
+
+@media(max-width:860px){
+  .spec{grid-template-columns:1fr 1fr;}
+  .grid{grid-template-columns:minmax(0,1fr);}
+  .surfaces{grid-template-columns:1fr 1fr;}
+  .mocknav .links{display:none;}
+}
+@media(max-width:520px){
+  :root{--s6:40px;--s5:28px;--s4:20px;}
+  .spec{grid-template-columns:1fr;}
+  .variants{grid-template-columns:1fr;}
+  .vt{gap:12px;padding:11px;}
+  .wrap{padding-inline:max(var(--s2),env(safe-area-inset-left),env(safe-area-inset-right));}
+}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+
+<!-- 共用 defs：镂空 mask 只声明一次，实例全部引用它，避免重复 id -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <mask id="cutYing" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="28">
+      <rect width="28" height="28" fill="#fff"/>
+      <!-- 右下角咬出一圈，让蓝点和墨块之间永远留一条透明缝，任何底色都不糊 -->
+      <circle cx="23.2" cy="23.2" r="5.3" fill="#000"/>
+      <!-- 「影」字镂空：透出的是所在底色，不是画上去的白字 -->
+      <text x="13.2" y="14" fill="#000" font-family="PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif"
+            font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="central">影</text>
+    </mask>
+    <!-- 微标用：笔画少的「片」，16px 下镂空还站得住 -->
+    <mask id="cutPian" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="28">
+      <rect width="28" height="28" fill="#fff"/>
+      <circle cx="23.2" cy="23.2" r="5.3" fill="#000"/>
+      <text x="13.6" y="14" fill="#000" font-family="PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif"
+            font-size="16.5" font-weight="700" text-anchor="middle" dominant-baseline="central">片</text>
+    </mask>
+    <!-- 微标用：只咬缺口，不放字 -->
+    <mask id="cutNotch" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="28">
+      <rect width="28" height="28" fill="#fff"/>
+      <circle cx="23.2" cy="23.2" r="5.3" fill="#000"/>
+    </mask>
+  </defs>
+</svg>
+
+<header class="pagehead">
+  <div class="wrap">
+    <h1>全民影视 · 站标概念稿</h1>
+    <p class="lead">三个方向：一个新造的抽象标（轨道）、一个结构标（三线）、一个把现有方向做成正式资产的镂空字标（影）。全部只用两个颜色——墨 <span class="mono">#0e1116</span> 与钴蓝 <span class="mono">#1c47d6</span>，和首页 demo 同一套 token，不另起炉灶。</p>
+    <dl class="spec">
+      <div><dt>约束</dt><dd>16px 必须可辨；单色可印；透明底；不用播放三角、不用渐变、不用 emoji。</dd></div>
+      <div><dt>尺寸</dt><dd class="mono">128 / 48 / 28 / 16 px，同一 viewBox 0 0 28 28。</dd></div>
+      <div><dt>色板</dt><dd class="sw"><i class="sw" style="background:#0e1116"></i><i class="sw" style="background:#1c47d6"></i><i class="sw" style="background:#ffffff"></i><i class="sw" style="background:#f7f8f9"></i></dd></div>
+      <div><dt>层级语言</dt><dd>结构走线，强调只留一颗点；深浅靠反白，不靠换色相。</dd></div>
+    </dl>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===================== A 轨道 ===================== -->
+  <section class="concept" data-c="A">
+    <div class="chead"><span class="idx">A</span><h2>轨道</h2><span class="tag">抽象几何 · 新造</span></div>
+    <p class="why">一个圆角方框＝一块画面；底边是一颗蓝点，停在轨道的偏左位置＝进度／当前线路。框是闭合的，所以 16px 下不碎；点压在线上，让"静止的方框"有一个动作。含义直接落在"换线路、看到哪"这两件事上。</p>
+    <div class="grid">
+      <div class="panel">
+        <h3>构造</h3>
+        <div class="hero-mk" data-slot="hero" data-size="128"></div>
+        <div class="scale">
+          <figure><div data-slot="scale" data-size="48"></div><figcaption>48</figcaption></figure>
+          <figure><div data-slot="scale" data-size="28"></div><figcaption>28 导航</figcaption></figure>
+          <figure><div data-slot="scale" data-size="16"></div><figcaption>16 标签页</figcaption></figure>
+          <figure><div data-slot="scale" data-size="48" data-variant="mono"></div><figcaption>单色</figcaption></figure>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>四种底色</h3>
+          <div class="surfaces">
+            <div class="cell paper" data-slot="surf" data-size="40" data-variant="paper"><small>纸白</small></div>
+            <div class="cell white" data-slot="surf" data-size="40" data-variant="mono"><small>纯白·单色</small></div>
+            <div class="cell ink" data-slot="surf" data-size="40" data-variant="ink"><small>墨底反白</small></div>
+            <div class="cell blue" data-slot="surf" data-size="40" data-variant="accent"><small>钴底全反白</small></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:var(--s2);padding:0;overflow:hidden">
+          <div class="mocknav">
+            <div class="row">
+              <span class="brand" data-slot="nav" data-size="28"></span>
+              <span class="links"><i class="on">视频解析</i><i>实用工具</i><i>影视推荐</i></span>
+            </div>
+            <div class="note">A · 28px + 15px 站名，站在白底导航带上</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== B 三线 ===================== -->
+  <section class="concept" data-c="B">
+    <div class="chead"><span class="idx">B</span><h2>三线</h2><span class="tag">结构抽象 · 新造</span></div>
+    <p class="why">三条圆头短线＝站点的三条线路，中间那条钴蓝走到一半、末端一颗点＝当前这条正在解析。它同时也是"列表"的形状，和首页那种细线列表的语言同源。缺点是三个字面一点，气场上更工具、 Less brand-y。</p>
+    <div class="grid">
+      <div class="panel">
+        <h3>构造</h3>
+        <div class="hero-mk" data-slot="hero" data-size="128" data-variant="v-dim"></div>
+        <div class="scale">
+          <figure><div data-slot="scale" data-size="48" data-variant="v-dim"></div><figcaption>48</figcaption></figure>
+          <figure><div data-slot="scale" data-size="28" data-variant="v-dim"></div><figcaption>28 导航</figcaption></figure>
+          <figure><div data-slot="scale" data-size="16" data-variant="v-dim"></div><figcaption>16 标签页</figcaption></figure>
+          <figure><div data-slot="scale" data-size="48" data-variant="mono"></div><figcaption>单色</figcaption></figure>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>四种底色</h3>
+          <div class="surfaces">
+            <div class="cell paper" data-slot="surf" data-size="40" data-variant="v-dim"><small>纸白·推荐配色</small></div>
+            <div class="cell white" data-slot="surf" data-size="40" data-variant="mono"><small>纯白·单色</small></div>
+            <div class="cell ink" data-slot="surf" data-size="40" data-variant="ink"><small>墨底反白</small></div>
+            <div class="cell blue" data-slot="surf" data-size="40" data-variant="accent"><small>钴底全反白</small></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:var(--s2);padding:0;overflow:hidden">
+          <div class="mocknav">
+            <div class="row">
+              <span class="brand" data-slot="nav" data-size="28" data-variant="v-dim"></span>
+              <span class="links"><i class="on">视频解析</i><i>实用工具</i><i>影视推荐</i></span>
+            </div>
+            <div class="note">B · 线宽 2.6／28 网格，16px 下线宽约 1.5px。上面主展示已按推荐配色 v-dim（结构灰 #656c75 ＋ 钴蓝 #1c47d6）</div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:var(--s2)">
+          <h3>颜色变体 · 几何一字未动，只换 --f / --d</h3>
+          <div class="variants">
+            <div class="vt"><div class="vs" data-slot="v" data-variant="default" data-size="40"></div>
+              <p><b>现：两墨一蓝</b><span>--f #0e1116<br>--d #1c47d6</span></p></div>
+            <div class="vt"><div class="vs" data-slot="v" data-variant="v-dim" data-size="40"></div>
+              <p><b>结构降一档（推荐）</b><span>--f #656c75<br>--d #1c47d6</span></p></div>
+            <div class="vt"><div class="vs gray" data-slot="v" data-variant="v-dim" data-size="40"></div>
+              <p><b>同一版压在灰纸底上</b><span>纸白 #f7f8f9 环境</span></p></div>
+            <div class="vt"><div class="vs" data-slot="v" data-variant="mono" data-size="40"></div>
+              <p><b>全墨单色</b><span>印刷／蚀刻／水印<br>#0e1116 一色到底</span></p></div>
+            <div class="vt"><div class="vs" data-slot="v" data-variant="v-blue" data-size="40"></div>
+              <p><b>全蓝单色</b><span>--f = --d #1c47d6<br>更亮，但"选中"含义没了</span></p></div>
+            <div class="vt"><div class="vs deep" data-slot="v" data-variant="on-ink" data-size="40"></div>
+              <p><b>深底反白</b><span>--f #ffffff／--d #7c96ef<br>页脚、遮罩用；蓝需提亮一档</span></p></div>
+            <div class="vt"><div class="vs blue" data-slot="v" data-variant="on-accent" data-size="40"></div>
+              <p><b>钴底全反白</b><span>单色反白，最强对比</span></p></div>
+            <div class="vt"><div class="vs" data-slot="v" data-variant="v-teal" data-size="40"></div>
+              <p><b>换强调色试验 · 深青</b><span>--d #0f5f57<br>改的是全站 --accent</span></p></div>
+            <div class="vt"><div class="vs" data-slot="v" data-variant="v-verm" data-size="40"></div>
+              <p><b>换强调色试验 · 朱红</b><span>--d #b23a22<br>改的是全站 --accent</span></p></div>
+          </div>
+          <p class="caveat">前七个只动标内部的颜色配比，站其余部分不受影响；后两个是在试<strong>整站强调色</strong>——<span class="mono">--accent</span> 是一个 token，按钮、选中态、悬停、蓝点会一起变，所以真要换得连首页一起看。图形色对底按 WCAG 非文字 3:1 卡（实测值，不是估的）：结构色降到 <span class="mono">#656c75</span> 对白底 <b>5.31:1</b>、对纸白 #f7f8f9 <b>4.99:1</b>，仍过得去；再浅一档到 <span class="mono">#cdd2d8</span> 只剩 <b>1.52:1</b>，2.6px 的线会直接看不见，所以下限就停在 <span class="mono">#656c75</span>。蓝点侧：<span class="mono">#1c47d6</span> 对白底 7.19:1、对纸白 6.76:1，够；但压深底时必须换 <span class="mono">#7c96ef</span>（对 #0e1116 6.72:1；<span class="mono">#1c47d6</span> 直接压在墨底上只有 2.63:1，过不了线）。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== C 影 ===================== -->
+  <section class="concept" data-c="C">
+    <div class="chead"><span class="idx">C</span><h2>影 · 字标</h2><span class="tag">现有方向精修</span><span class="rec">我的推荐</span></div>
+    <p class="why">把 demo 里那颗墨块升级成真正的资产：「影」不再是画在上面的白字，而是<b>镂空</b>——透出所在底色，所以放在纸上、白卡上、照片上都不会出现"贴了一块白"的廉价感；右下角咬出一条透明缝，蓝点悬在缺口里，任何底色都不糊。单色场景直接用整块镂空，不依赖第二个颜色。</p>
+    <div class="grid">
+      <div class="panel">
+        <h3>构造</h3>
+        <div class="hero-mk" data-slot="hero" data-size="128"></div>
+        <div class="scale">
+          <figure><div data-slot="scale" data-size="48"></div><figcaption>48</figcaption></figure>
+          <figure><div data-slot="scale" data-size="28"></div><figcaption>28 导航</figcaption></figure>
+          <figure><div data-slot="scale" data-size="16"></div><figcaption>16 标签页</figcaption></figure>
+          <figure><div data-slot="scale" data-size="48" data-variant="mono"></div><figcaption>单色</figcaption></figure>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>四种底色</h3>
+          <div class="surfaces">
+            <div class="cell paper" data-slot="surf" data-size="40" data-variant="paper"><small>纸白</small></div>
+            <div class="cell white" data-slot="surf" data-size="40" data-variant="mono"><small>纯白·单色</small></div>
+            <div class="cell ink" data-slot="surf" data-size="40" data-variant="ink"><small>墨底反白</small></div>
+            <div class="cell blue" data-slot="surf" data-size="40" data-variant="accent"><small>钴底全反白</small></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:var(--s2);padding:0;overflow:hidden">
+          <div class="mocknav">
+            <div class="row">
+              <span class="brand" data-slot="nav" data-size="28"></span>
+              <span class="links"><i class="on">视频解析</i><i>实用工具</i><i>影视推荐</i></span>
+            </div>
+            <div class="note">C · 与现版 demo 同尺寸，直接可替换</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caveat"><b>一个必须说清楚的限制：</b>中文字标的字形依赖字体。这里的「影」用的是系统字体（苹方／微软雅黑）实时渲染，作为概念稿成立；正式交付必须选一款可商用的中文字体，把字<b>转曲成 path</b> 再出 SVG，否则换一台机器、换一个浏览器笔画会抖。要走到那一步，我需要一个字体授权方向（思源黑体免授权，站体气质偏软；阿里巴巴普惠体免授权但字形偏圆；要更硬朗得买方正／汉仪的字库授权）。</p>
+    <div class="panel" style="margin-top:var(--s2)">
+      <h3>标签页里的 16px</h3>
+      <div class="tabmock">
+        <div class="tab active" data-slot="tab" data-size="16"><span>全民影视VIP解析</span></div>
+        <div class="tab" data-slot="tab" data-size="16"><span>抖音去水印</span></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:var(--s2)">
+      <h3>微标：16px 放不下「影」，换笔画</h3>
+      <div class="micro">
+        <figure><div data-slot="micro" data-mk="C" data-size="28"></div><figcaption>影 · 28 主标</figcaption></figure>
+        <figure><div data-slot="micro" data-mk="C" data-size="16"></div><figcaption>影 · 16 并墨</figcaption></figure>
+        <figure><div data-slot="micro" data-mk="Mpian" data-size="16"></div><figcaption>片 · 16</figcaption></figure>
+        <figure><div data-slot="micro" data-mk="Mnotch" data-size="16"></div><figcaption>纯块 · 16</figcaption></figure>
+      </div>
+      <p class="caveat">扫描线实测：同一条横线在 112px 下能数出 <b>4 / 4 / 3 / 3 / 6</b> 段「影」的笔画，压到 16px 只剩 <b>2 / 2 / 2 / 2 / 3</b> 段——镂空并成一块墨，认不出是字。所以正式交付里 16px（favicon、App 图标、视频水印）用微标，28px 以上才用「影」。微标二选一：<b>片</b>（承接"影片"，笔画少但仍是个字）或 <b>纯块缺口</b>（只留墨块＋蓝点，最小也最稳）。</p>
+    </div>
+    <div class="lockup">
+      <span data-slot="lock" data-size="40"></span>
+      <span class="name k22">全民影视<small>VIP 解析 · 免费线路</small></span>
+    </div>
+    <div class="lockup">
+      <span data-slot="lock" data-size="28"></span>
+      <span class="name k18">全民影视解析</span>
+    </div>
+  </section>
+
+  <section class="next">
+    <div class="chead"><h2>接下来</h2></div>
+    <ol>
+      <li><span class="n">01</span><div>你挑一个方向（或指出 A/B/C 的哪一处不对味），我按反馈改几何，不用重画三版。</div></li>
+      <li><span class="n">02</span><div><b>选定后我直接接进 demo</b>：导航 inline SVG、<span class="mono">favicon</span> 换成同一张图、深色态走反白变体，并把 16/28px 的几何与对比实测一遍再报数。</div></li>
+      <li><span class="n">03</span><div>需要独立资产时我再落 <span class="mono">logo.svg</span>／<span class="mono">logo-mono.svg</span>／<span class="mono">logo-reverse.svg</span> 三个透明底文件，尺寸与颜色只改 CSS，不改几何。</div></li>
+    </ol>
+  </section>
+</main>
+
+<footer><div class="wrap">概念稿 · 与 <span class="mono">ui-redesign-demo/index.html</span> 共用 token；本页只是站标评审板，不动首页文件。</div></footer>
+
+<script>
+/* 几何单点定义：一份 path 数据，多处复用（尺寸/底色只换 CSS 变量，不改几何） */
+const MARKS = {
+  /* A 轨道：闭合圆角方框 + 底边一颗蓝点 */
+  A: `<svg class="mk" viewBox="0 0 28 28" role="img" aria-label="全民影视 站标 A 轨道">
+        <rect class="box" x="3.8" y="3.4" width="20.4" height="19.2" rx="5.8"/>
+        <circle class="knob" cx="11.8" cy="22.6" r="3.15"/>
+      </svg>`,
+  /* B 三线：三条圆头线，中间那条是钴蓝且末端带点 */
+  B: `<svg class="mk" viewBox="0 0 28 28" role="img" aria-label="全民影视 站标 B 三线">
+        <path class="ln" d="M5 8.4H23"/>
+        <path class="ln acc" d="M5 14h9.8"/>
+        <path class="ln" d="M5 19.6H20"/>
+        <circle class="knob" cx="20.4" cy="14" r="2.9"/>
+      </svg>`,
+  /* C 影：墨块 + 「影」与右下角同时镂空，蓝点悬在咬出的缝里 */
+  C: `<svg class="mk" viewBox="0 0 28 28" role="img" aria-label="全民影视 站标 C 影字标">
+        <rect class="tile" width="28" height="28" rx="8" mask="url(#cutYing)"/>
+        <circle class="knob" cx="23.2" cy="23.2" r="3"/>
+      </svg>`,
+  /* 微标：同一种材质，换掉撑不住 16px 的笔画 */
+  Mpian: `<svg class="mk" viewBox="0 0 28 28" role="img" aria-label="全民影视 微标 片">
+        <rect class="tile" width="28" height="28" rx="8" mask="url(#cutPian)"/>
+        <circle class="knob" cx="23.2" cy="23.2" r="3"/>
+      </svg>`,
+  Mnotch: `<svg class="mk" viewBox="0 0 28 28" role="img" aria-label="全民影视 微标 纯块缺口">
+        <rect class="tile" width="28" height="28" rx="8" mask="url(#cutNotch)"/>
+        <circle class="knob" cx="23.2" cy="23.2" r="3"/>
+      </svg>`
+};
+const VAR = { paper:'on-paper', mono:'mono', ink:'on-ink', accent:'on-accent' };
+
+function stamp(host, key, size, variant) {
+  host.classList.add('mk-host');
+  if (variant) host.classList.add(VAR[variant] || variant);
+  const svg = MARKS[key].trim();
+  /* 一律插到最前面：slot 里原有的 <small> 标注、站名文字都保留 */
+  host.insertAdjacentHTML('afterbegin', svg);
+  if (host.classList.contains('brand')) host.insertAdjacentHTML('beforeend', '<span>全民影视VIP解析</span>');
+  const el = host.querySelector('svg');
+  el.style.width = el.style.height = size + 'px';
+  if (host.classList.contains('brand') || host.classList.contains('tab')) el.style.flex = 'none';
+}
+
+document.querySelectorAll('.concept').forEach(sec => {
+  sec.querySelectorAll('[data-slot]').forEach(host => {
+    const key = host.dataset.mk || sec.dataset.c;
+    stamp(host, key, +host.dataset.size || 40, host.dataset.variant);
+  });
+});
+</script>
+</body>
+</html>

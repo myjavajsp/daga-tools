@@ -17,10 +17,10 @@ export default function BoxShadowGenerator() {
   return (
     <div className="space-y-6">
       <div
-        className="w-full h-40 rounded-xl flex items-center justify-center transition-all"
+        className="w-full h-40 rounded-card flex items-center justify-center transition-all"
         style={{ boxShadow: shadow, background: '#f9fafb' }}
       >
-        <div className="w-20 h-20 bg-white dark:bg-gray-800 rounded-lg shadow-sm"></div>
+        <div className="w-20 h-20 bg-surface rounded-lg shadow-sm"></div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -32,43 +32,43 @@ export default function BoxShadowGenerator() {
         ].map(({ label, val, set, min, max }) => (
           <div key={label}>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-600 dark:text-gray-400">{label}</span>
-              <span className="font-mono text-gray-900 dark:text-white">{val}px</span>
+              <span className="text-ink-2">{label}</span>
+              <span className="font-mono text-ink">{val}px</span>
             </div>
-            <input type="range" min={min} max={max} value={val} onChange={e=>set(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+            <input type="range" min={min} max={max} value={val} onChange={e=>set(Number(e.target.value))} className="slider" />
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">颜色</label>
+          <label className="lbl">颜色</label>
           <div className="flex items-center gap-2">
-            <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-10 h-10 rounded cursor-pointer" />
-            <input type="text" value={color} onChange={e=>setColor(e.target.value)} className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white font-mono text-sm" />
+            <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="swatch" />
+            <input type="text" value={color} onChange={e=>setColor(e.target.value)} className="flex-1 px-3 py-2 bg-paper border border-line rounded-lg text-ink font-mono text-sm" />
           </div>
         </div>
         <div>
           <div className="flex justify-between text-sm mb-1">
-            <span className="text-gray-600 dark:text-gray-400">透明度</span>
-            <span className="font-mono text-gray-900 dark:text-white">{opacity}%</span>
+            <span className="text-ink-2">透明度</span>
+            <span className="font-mono text-ink">{opacity}%</span>
           </div>
-          <input type="range" min="0" max="100" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+          <input type="range" min="0" max="100" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} className="slider" />
         </div>
       </div>
 
       <button
         onClick={() => setInset(!inset)}
-        className={`w-full py-2 rounded-xl text-sm font-medium transition-all ${inset ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
+        className={`w-full py-2 rounded-card text-sm font-medium transition-all ${inset ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'}`}
       >
         {inset ? '内置阴影' : '外置阴影'}
       </button>
 
-      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl p-3">
-        <code className="text-sm font-mono text-gray-700 dark:text-gray-300 break-all">{cssCode}</code>
+      <div className="flex items-center justify-between bg-paper rounded-card p-3">
+        <code className="text-sm font-mono text-ink-2 break-all">{cssCode}</code>
         <button
           onClick={() => navigator.clipboard.writeText(cssCode)}
-          className="ml-2 text-xs text-blue-500 hover:text-blue-600 shrink-0"
+          className="act ml-2 shrink-0"
         >
           复制
         </button>

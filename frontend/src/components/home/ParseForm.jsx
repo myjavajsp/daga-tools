@@ -1,185 +1,139 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Box,
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Paper,
-  Typography,
-  Alert,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import Icon from '../Icons';
+
+/** 线路胶囊超过这个数量就折起来，避免首屏变成一墙标签 */
+const LINE_LIMIT = 6;
 
 /**
- * ParseForm — 视频解析表单（核心组件）
+ * ParseForm — 首屏解析表单（明亮清爽 v5）
  *
- * @param {Array} interfaces — 解析接口列表 [{ id, name, url }]
- * @param {Function} onParse — 回调 (videoUrl, selectedInterface)
- * @param {boolean} loading — 外部 loading 状态
- * @param {number|null} remaining — 今日剩余解析次数（解析响应带回时展示）
- * @param {boolean} quotaExceeded — 今日配额已用完（展示注册/会员引导框）
+ * 三件事：输入框（.field，内含链接图标 + 16px 输入 + 主 CTA）、
+ * 线路单选胶囊（.lines，键盘可达：真 radio + :focus-visible 描边）、
+ * 底部辅助行（.after：线路数 + 示例域名一键填入）。
+ * 数字只报「几条线路可用」这种当场可验证的，不放假统计。
+ *
+ * @param {Array}    interfaces   [{ id, name }] 已按 type 过滤的线路
+ * @param {Function} onParse      (url, interfaceObj) => void
+ * @param {boolean}  loading      外部解析中（禁用提交）
+ * @param {number}   remaining    今日剩余次数（有值才显示）
+ * @param {boolean}  quotaExceeded 今日配额用尽
  */
-export default function ParseForm({ interfaces = [], onParse, loading = false, remaining = null, quotaExceeded = false }) {
-  const [videoUrl, setVideoUrl] = useState('');
-  const [selectedId, setSelectedId] = useState('');
+export default function ParseForm({
+  interfaces = [],
+  onParse,
+  loading = false,
+  remaining = null,
+  quotaExceeded = false,
+}) {
+  const [url, setUrl] = useState('');
+  const [ifaceId, setIfaceId] = useState('');
+  const [allLines, setAllLines] = useState(false);
+  const [bad, setBad] = useState(false);
 
-  const effectiveId = selectedId || (interfaces.length > 0 ? String(interfaces[0].id) : '');
-  const selectedInterface = interfaces.find((iface) => String(iface.id) === effectiveId) || null;
+  const effectiveId = ifaceId || (interfaces.length ? String(interfaces[0].id) : '');
+  const selected = useMemo(
+    () => interfaces.find((i) => String(i.id) === effectiveId) || null,
+    [interfaces, effectiveId]
+  );
 
-  const doParse = useCallback(() => {
-    const url = videoUrl.trim();
-    if (!url) return;
-    if (!selectedInterface) return;
-    console.log('[ParseForm] doParse:', { url: url.substring(0, 50), iface: selectedInterface.name });
-    if (onParse) onParse(url, selectedInterface);
-  }, [videoUrl, selectedInterface, onParse]);
+  const visibleLines = allLines ? interfaces : interfaces.slice(0, LINE_LIMIT);
+
+  const submit = useCallback(() => {
+    const target = url.trim();
+    if (!target) {
+      setBad(true);
+      setTimeout(() => setBad(false), 500);
+      return;
+    }
+    if (!selected || loading) return;
+    onParse?.(target, selected);
+  }, [url, selected, loading, onParse]);
 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      doParse();
+      submit();
     },
-    [doParse]
+    [submit]
   );
 
-  // 输入框回车键触发解析
-  const handleKeyDown = useCallback(
-    (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        doParse();
-      }
-    },
-    [doParse]
-  );
+  const fill = (value) => {
+    setUrl(value);
+    setBad(false);
+  };
 
   return (
-    <Paper
-      component="form"
-      onSubmit={handleSubmit}
-      elevation={0}
-      sx={{
-        p: { xs: 2, md: 3 },
-        borderRadius: 3,
-        border: '1px solid #e0e0e0',
-        mb: 3,
-      }}
-    >
-      {/* 频道选择器 */}
-      <FormControl fullWidth size="medium" sx={{ mb: 2 }}>
-        <InputLabel id="parse-interface-label">选择解析频道</InputLabel>
-        <Select
-          labelId="parse-interface-label"
-          value={effectiveId}
-          label="选择解析频道"
-          onChange={(e) => setSelectedId(e.target.value)}
-        >
-          {interfaces.length > 0 ? (
-            interfaces.map((iface) => (
-              <MenuItem key={iface.id} value={String(iface.id)}>
-                {iface.name}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem value="" disabled>
-              暂无可用接口
-            </MenuItem>
-          )}
-        </Select>
-      </FormControl>
+    <form className="parse" onSubmit={handleSubmit} autoComplete="off">
+      <div className={`field${bad ? ' bad' : ''}`}>
+        <div className="link">
+          <Icon name="link" />
+          <input
+            type="text"
+            value={url}
+            onChange={(e) => { setUrl(e.target.value); setBad(false); }}
+            inputMode="url"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+            aria-label="视频链接"
+            placeholder="粘贴视频播放页链接…"
+          />
+        </div>
+        <button className="btn-cta" type="submit" disabled={loading || !url.trim() || !selected}>
+          <Icon name="play" className="fill" />
+          <span>{loading ? '解析中…' : '解析播放'}</span>
+        </button>
+      </div>
 
-      {/* 视频地址输入 */}
-      <Box sx={{ display: 'flex', gap: 1, flexDirection: { xs: 'column', sm: 'row' } }}>
-        <TextField
-          fullWidth
-          placeholder="粘贴视频链接，例如 https://v.qq.com/x/cover/xxx.html"
-          value={videoUrl}
-          onChange={(e) => setVideoUrl(e.target.value)}
-          onKeyDown={handleKeyDown}
-          size="medium"
-          autoFocus
-          InputProps={{
-            startAdornment: (
-              <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
-            ),
-          }}
-          helperText="支持腾讯视频、优酷、爱奇艺、PPTV 等平台"
-          sx={{ flexGrow: 1 }}
-        />
+      <div className="lines" role="radiogroup" aria-label="解析线路">
+        <span className="lines-lbl">线路</span>
+        {interfaces.length === 0 && <span className="lines-lbl">暂无可用线路</span>}
+        {visibleLines.map((iface) => (
+          <label className="ln" key={iface.id}>
+            <input
+              type="radio"
+              name="parse-line"
+              value={String(iface.id)}
+              checked={String(iface.id) === effectiveId}
+              onChange={() => setIfaceId(String(iface.id))}
+            />
+            <span>{iface.name}</span>
+          </label>
+        ))}
+        {interfaces.length > LINE_LIMIT && (
+          <button type="button" className="btn-ghost" onClick={() => setAllLines((v) => !v)}>
+            {allLines ? '收起' : `其余 ${interfaces.length - LINE_LIMIT} 条`}
+          </button>
+        )}
+      </div>
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="secondary"
-          size="medium"
-          disabled={loading || !videoUrl.trim() || !selectedInterface}
-          startIcon={<PlayArrowIcon />}
-          sx={{
-            minWidth: { xs: '100%', sm: 160 },
-            py: 1.5,
-            fontWeight: 700,
-            fontSize: '1rem',
-            background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-            color: '#1a1a2e',
-            '&:hover': {
-              background: 'linear-gradient(135deg, #3dd472 0%, #30e8c6 100%)',
-            },
-            '&.Mui-disabled': {
-              color: 'rgba(26,26,46,0.4)',
-              background: '#e0e0e0',
-            },
-          }}
-        >
-          Go - 解析播放
-        </Button>
-      </Box>
+      <div className="after">
+        <span className="stats">{interfaces.length} 条线路可用</span>
+        <span className="dot" />
+        <span>试试：</span>
+        {['v.qq.com', 'www.iqiyi.com', 'www.youku.com'].map((site) => (
+          <button type="button" key={site} onClick={() => fill(`https://${site}/`)}>
+            {site}
+          </button>
+        ))}
+      </div>
 
-      {/* 当前频道提示 */}
-      {selectedInterface && (
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ display: 'block', mt: 1.5, textAlign: 'center' }}
-        >
-          当前频道：{selectedInterface.name} — 点击按钮或按 Enter 开始解析
-        </Typography>
-      )}
-
-      {/* 今日剩余次数 */}
       {remaining != null && !quotaExceeded && (
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ display: 'block', mt: 1, textAlign: 'center' }}
-        >
-          今日剩余 {remaining} 次解析
-        </Typography>
+        <p className="player-cap">今日剩余 {remaining} 次解析</p>
       )}
-
-      {/* 配额用尽引导框 */}
       {quotaExceeded && (
-        <Alert
-          severity="warning"
-          sx={{ mt: 2, borderRadius: 2 }}
-          action={
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button component={Link} to="/register" size="small" color="inherit" variant="outlined">
-                免费注册
-              </Button>
-              <Button component={Link} to="/member" size="small" color="inherit" variant="outlined">
-                我的会员
-              </Button>
-            </Box>
-          }
-        >
-          今日免费次数已用完，注册或升级会员可获得更多次数
-        </Alert>
+        <div className="notice mtop">
+          <Icon name="alert" />
+          <p>
+            <b>今日免费次数已用完。</b>注册或升级会员可以获得更多次数：
+            <Link to="/register" className="lnk">免费注册</Link>
+            {' / '}
+            <Link to="/member" className="lnk">我的会员</Link>
+          </p>
+        </div>
       )}
-    </Paper>
+    </form>
   );
 }

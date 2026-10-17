@@ -1,70 +1,29 @@
 import React from 'react';
-import { Box, Paper, Typography } from '@mui/material';
 
 /**
- * AdBanner — 广告位组件
+ * AdBanner — 广告位（后台 ads 表投放的第三方代码）
  *
- * @param {Array} ads — 广告列表 [{ id, position, name, code }]
+ * 版式跟着 demo 走：灰底 + 虚线发丝边框，明确是广告位而不是内容；
+ * 广告标签用等宽小字，压在内容上方一条分隔线下面。
+ * 第三方 code 仍用 dangerouslySetInnerHTML 原样注入（与线上一致），
+ * 内容由后台运营写入，前端不做解析。
+ *
+ * @param {Array} ads  [{ id, name, code, position }]
+ * @param {boolean} row 多广告并排（2/3/5 列，随宽度递进）
  */
 export default function AdBanner({ ads = [], row = false }) {
   if (ads.length === 0) return null;
 
-  const containerSx = row
-    ? {
-        mb: 3,
-        display: 'grid',
-        gridTemplateColumns: {
-          xs: 'repeat(2, 1fr)',
-          sm: 'repeat(3, 1fr)',
-          md: 'repeat(5, 1fr)',
-        },
-        gap: 2,
-        '& > *': { minWidth: 0 },
-      }
-    : { mb: 3 };
+  const cls = row ? 'ad-row' : 'ad-col';
 
   return (
-    <Box sx={containerSx}>
+    <div className={cls}>
       {ads.map((ad) => (
-        <Paper
-          key={ad.id}
-          elevation={0}
-          sx={{
-            mb: row ? 0 : 2,
-            borderRadius: 3,
-            border: '1px solid #e0e0e0',
-            overflow: 'hidden',
-            height: row ? '100%' : 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          {/* 广告标签 */}
-          {ad.name && (
-            <Typography
-              variant="caption"
-              sx={{
-                display: 'block',
-                textAlign: 'center',
-                py: 0.5,
-                bgcolor: '#f5f5f5',
-                color: 'text.disabled',
-                fontSize: '0.7rem',
-              }}
-            >
-              广告 · {ad.name}
-            </Typography>
-          )}
-
-          {/* 广告内容 */}
-          <Box
-            dangerouslySetInnerHTML={{ __html: ad.code }}
-            sx={{
-              '& > *': { maxWidth: '100%' },
-            }}
-          />
-        </Paper>
+        <div className="ad-slot" key={ad.id}>
+          {ad.name && <span className="tag">广告 · {ad.name}</span>}
+          <div className="ad-body" dangerouslySetInnerHTML={{ __html: ad.code }} />
+        </div>
       ))}
-    </Box>
+    </div>
   );
 }

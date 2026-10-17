@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Icon from '../components/Icons';
 import FullscreenFrame from '../components/common/FullscreenFrame';
-import { fmtSize, downloadBlob, safeName, BTN_PRIMARY } from '../lib/file-utils';
+import { downloadBlob, safeName } from '../lib/file-utils';
 
 /**
  * 视频在线播放页
@@ -103,69 +104,43 @@ export default function VideoParserPage() {
   const isVip = result?.platform === 'vip';
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-paper">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <main className="wrap py-8 col-md">
         {/* Page Header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-1 h-6 rounded-full bg-gradient-to-b from-green-500 to-teal-500"></div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">视频在线播放</h1>
-          </div>
-          <p className="text-gray-500 dark:text-gray-400 text-sm ml-3">
-            支持腾讯视频、优酷、爱奇艺等长视频解析，以及抖音、快手等短视频去水印下载
-          </p>
+        <div className="phead">
+          <h1>视频在线播放</h1>
+          <span className="note">支持腾讯视频、优酷、爱奇艺等长视频解析，以及抖音、快手等短视频去水印下载</span>
         </div>
 
         {/* Input Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 md:p-6 mb-6">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 relative">
-              <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                ></path>
-              </svg>
+        <div className="card p-4 md:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            <div className="flex-1 relative min-w-0">
+              <Icon name="link" className="sz15 absolute left-3 top-1/2 -translate-y-1/2 text-ink-3" />
               <input
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleParse()}
                 placeholder="粘贴视频链接，如 https://v.douyin.com/xxxx/"
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500/50 transition-all"
+                className="input pl-10"
               />
             </div>
             <button
               onClick={handleParse}
               disabled={loading || !url.trim()}
-              className="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2"
+              className="btn-a px-6"
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
+                  <span className="animate-spin spin sm inv" />
                   <span>解析中…</span>
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                  </svg>
+                  <Icon name="play" />
                   <span>解析</span>
                 </>
               )}
@@ -173,36 +148,34 @@ export default function VideoParserPage() {
           </div>
 
           {error && (
-            <p className="mt-3 text-red-500 text-sm flex items-center gap-1">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
+            <p className="mt-3 text-danger text-sm flex items-center gap-2">
+              <Icon name="alert" className="sz15" />
               {error}
             </p>
           )}
 
           {/* 今日剩余次数 */}
           {remaining != null && !quotaExceeded && (
-            <p className="mt-3 text-gray-500 dark:text-gray-400 text-sm">今日剩余 {remaining} 次解析</p>
+            <p className="mt-3 text-ink-3 text-sm">今日剩余 {remaining} 次解析</p>
           )}
 
           {/* 配额用尽引导框 */}
           {quotaExceeded && (
-            <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700 p-4">
-              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">今日免费次数已用完</p>
-              <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
+            <div className="mt-3 rounded-card border border-line bg-warning-soft p-4">
+              <p className="text-sm font-semibold text-warning">今日免费次数已用完</p>
+              <p className="mt-1 text-xs text-warning">
                 注册账号或升级会员，即刻获得更多每日解析次数。
               </p>
-              <div className="mt-3 flex gap-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 <Link
                   to="/register"
-                  className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium transition-colors"
+                  className="btn-a warn px-4"
                 >
                   免费注册
                 </Link>
                 <Link
                   to="/member"
-                  className="px-4 py-2 rounded-lg border border-amber-400 text-amber-700 dark:text-amber-300 text-sm font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
+                  className="btn-ghost px-4"
                 >
                   我的会员
                 </Link>
@@ -213,7 +186,7 @@ export default function VideoParserPage() {
 
         {/* 解析结果 */}
         {result && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 md:p-6 mb-6">
+          <div className="card p-4 md:p-6 mb-6">
             {/* 短视频：封面 + 文案 + 下载 */}
             {!isVip && (
               <div className="space-y-4">
@@ -222,21 +195,21 @@ export default function VideoParserPage() {
                     <img
                       src={result.thumbnail}
                       alt="封面"
-                      className="max-h-64 rounded-xl object-contain"
+                      className="max-h-64 rounded-card object-contain"
                       referrerPolicy="no-referrer"
                     />
                   </div>
                 )}
                 {result.title && (
                   <div>
-                    <div className="text-xs text-gray-400 mb-1">视频文案</div>
-                    <div className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-words">
+                    <div className="text-xs text-ink-3 mb-1">视频文案</div>
+                    <div className="text-sm text-ink-2 whitespace-pre-wrap break-words">
                       {result.title}
                     </div>
                   </div>
                 )}
                 {result.author && (
-                  <div className="text-sm text-gray-500">作者：{result.author}</div>
+                  <div className="text-sm text-ink-3">作者：{result.author}</div>
                 )}
 
                 {result.formats?.length > 0 && (
@@ -247,26 +220,29 @@ export default function VideoParserPage() {
                       return (
                         <div
                           key={i}
-                          className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3"
+                          className="flex items-center gap-3 bg-paper rounded-card p-3"
                         >
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                            <div className="text-sm font-medium text-ink">
                               {f.label}
                             </div>
-                            <div className="text-xs text-gray-400 truncate">{f.url}</div>
+                            <div className="text-xs text-ink-3 truncate">{f.url}</div>
                             {busy && (
-                              <div className="mt-2 w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 overflow-hidden">
+                              <div className="mt-2 w-full bg-surface-2 rounded-full h-1.5 overflow-hidden">
                                 <div
-                                  className="bg-green-500 h-full transition-all"
+                                  className="bg-success h-full transition-all"
                                   style={{ width: `${pct}%` }}
                                 />
                               </div>
                             )}
                           </div>
+                          {/* 下载中按钮显示百分比：它只是暂时不可点，不是「用不了」，
+                              所以把 .btn-a:disabled 的失焦材质盖回实底强调（utilities 层能盖住
+                              components 层），只换光标。 */}
                           <button
                             onClick={() => download(f)}
                             disabled={busy}
-                            className="px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white text-sm font-medium rounded-lg hover:shadow-md disabled:opacity-50 flex-shrink-0"
+                            className="btn-a px-4 flex-none disabled:bg-accent disabled:text-accent-fg disabled:cursor-wait"
                           >
                             {busy ? `${pct}%` : pct === 100 ? '完成' : '下载'}
                           </button>
@@ -282,11 +258,11 @@ export default function VideoParserPage() {
             {isVip && (
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-sm text-gray-600 dark:text-gray-300">解析线路：</span>
+                  <span className="text-sm text-ink-2">解析线路：</span>
                   <select
                     value={vipUrl}
                     onChange={(e) => setVipUrl(e.target.value)}
-                    className="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white text-sm"
+                    className="input w-auto max-w-full"
                   >
                     {result.interfaces?.map((it, i) => (
                       <option key={i} value={it.url}>
@@ -298,14 +274,14 @@ export default function VideoParserPage() {
                 <div className="rounded-lg overflow-hidden bg-black">
                   <FullscreenFrame src={vipUrl} title={result.title || 'VIP 视频解析'} />
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-ink-3">
                   全屏请点播放器右上角的全屏按钮（Esc 退出）；若画面空白请切换其他线路。
                 </p>
               </div>
             )}
           </div>
         )}
-      </div>
+      </main>
 
       <Footer />
     </div>

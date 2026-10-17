@@ -5,7 +5,7 @@ export default function AudioCut() {
     <MediaJob
       job="trim"
       accept="audio/*"
-      icon="✂️"
+      icon="scissors"
       hint="按起止时间裁剪音频（不重新编码，速度快）"
       buttonText="裁剪"
       defaultOptions={{ start: 0, duration: 30, format: 'mp3' }}

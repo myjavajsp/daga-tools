@@ -68,6 +68,9 @@ export function loadImage(src) {
   });
 }
 
-/** 统一的结果下载按钮样式类名 */
-export const BTN_PRIMARY =
-  'w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all';
+/** 统一的结果下载按钮类名。
+ *  以前这里手抄一份内联材质（py-3 / rounded-card / disabled:opacity-50），
+ *  和 src/index.css 的 .btn-a 是两套东西：圆角 12 vs 9、禁用透明度 50 vs 45，
+ *  同一页并排出现就能看出按钮不一样。现在直接引用设计系统类，
+ *  hover 压深、禁用态、字号字重全部由 .btn-a 负责。 */
+export const BTN_PRIMARY = 'btn-a w-full';

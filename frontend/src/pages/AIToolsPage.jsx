@@ -159,14 +159,14 @@ export default function AIToolsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-paper">
       <Header />
       
-      <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 sm:p-6">
-            <h1 className="text-xl font-bold text-gray-800 dark:text-white mb-1">AI 工具导航</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">精选 60+ 热门 AI 工具，分类浏览，快速找到适合你的工具</p>
+      <div className="wrap py-4 md:py-6">
+        <div>
+          <div className="card p-5 sm:p-6">
+            <h1 className="text-xl font-bold text-ink mb-1">AI 工具导航</h1>
+            <p className="text-sm text-ink-3 mb-6">精选 60+ 热门 AI 工具，分类浏览，快速找到适合你的工具</p>
             
             {/* 分类筛选 */}
             <div className="flex gap-2 mb-4 flex-wrap">
@@ -176,8 +176,8 @@ export default function AIToolsPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     selectedCategory === cat
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      ? 'bg-accent text-accent-fg'
+                      : 'bg-surface-2 text-ink-2 hover:bg-surface-3'
                   }`}
                 >
                   {cat}
@@ -191,7 +191,7 @@ export default function AIToolsPage() {
               placeholder="搜索 AI 工具名称或描述..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white mb-6"
+              className="w-full px-4 py-2.5 border border-line-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft mb-6"
             />
             
             {/* 工具列表 */}
@@ -202,21 +202,21 @@ export default function AIToolsPage() {
                   href={tool.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-sm transition-all"
+                  className="block bg-surface rounded-lg border border-line p-4 hover:border-accent hover:shadow-sm transition-all"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0 bg-gradient-to-br from-blue-500 to-indigo-500">
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center text-accent-fg text-xs font-bold shrink-0 bg-accent">
                       {tool.name.charAt(0)}
                     </div>
                     <div classMin-w-0 flex-1>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-semibold text-gray-800 dark:text-white">{tool.name}</span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400">{tool.category}</span>
+                        <span className="text-sm font-semibold text-ink">{tool.name}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-2 text-ink-3">{tool.category}</span>
                         {tool.recommended && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 font-medium">推荐</span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-success-soft text-success font-medium">推荐</span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{tool.desc}</p>
+                      <p className="text-xs text-ink-3 mt-0.5 line-clamp-2">{tool.desc}</p>
                     </div>
                   </div>
                 </a>
@@ -224,19 +224,19 @@ export default function AIToolsPage() {
             </div>
             
             {/* AI 资讯 */}
-            <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+            <div className="mt-6 pt-4 border-t border-line">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">AI 资讯</h3>
-                <a className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium" href="/recommend">查看更多 →</a>
+                <h3 className="text-sm font-semibold text-ink-3 uppercase tracking-wider">AI 资讯</h3>
+                <a className="act" href="/recommend">查看更多 →</a>
               </div>
               <div className="flex flex-wrap gap-2">
                 {['GPT‑Live‑1 in the API', 'DeepSeek v4.1 Flash Uncensor…', 'Claude is no longer availabl…', 'The Gemini app is now availa…', 'DeepSeek 4.1 Flash', 'YouTube had a bug – I used C…'].map((news, i) => (
                   <a
                     key={i}
                     href="/recommend"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-transparent rounded-full text-xs text-gray-700 dark:text-gray-300 hover:from-purple-100 dark:hover:from-purple-900 hover:text-purple-700 dark:hover:text-purple-300 transition-colors no-underline border border-purple-100/50 dark:border-purple-800/50"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-2 rounded-full text-xs text-ink-2 hover:text-accent transition-colors no-underline border border-line"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0"></span>
                     {news}
                   </a>
                 ))}
@@ -244,14 +244,14 @@ export default function AIToolsPage() {
             </div>
             
             {/* 提交工具表单 */}
-            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 text-center">发现了好用的 AI 工具？欢迎提交收录</p>
+            <div className="mt-8 pt-6 border-t border-line">
+              <p className="text-sm text-ink-3 mb-3 text-center">发现了好用的 AI 工具？欢迎提交收录</p>
               <div className="max-w-md mx-auto space-y-3">
-                <input type="text" placeholder="工具名称 *" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" />
-                <input type="url" placeholder="官网地址 *" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" />
-                <textarea placeholder="简要描述（可选）" rows="2" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white resize-none"></textarea>
+                <input type="text" placeholder="工具名称 *" className="w-full px-3 py-2 border border-line-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft" />
+                <input type="url" placeholder="官网地址 *" className="w-full px-3 py-2 border border-line-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft" />
+                <textarea placeholder="简要描述（可选）" rows="2" className="w-full px-3 py-2 border border-line-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft resize-none"></textarea>
                 <div className="flex gap-2">
-                  <select className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white">
+                  <select className="input flex-1">
                     <option value="">选择分类（可选）</option>
                     <option value="chatbot">对话聊天</option>
                     <option value="image">图像生成</option>
@@ -264,10 +264,10 @@ export default function AIToolsPage() {
                     <option value="api">免费大模型</option>
                     <option value="agent">Agent 平台</option>
                   </select>
-                  <input type="text" placeholder="你的称呼（可选）" className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" />
+                  <input type="text" placeholder="你的称呼（可选）" className="flex-1 px-3 py-2 border border-line-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft" />
                 </div>
-                <input type="text" placeholder="联系方式（微信/邮箱/链接，方便我们联系你）" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" />
-                <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50 hover:from-blue-600 hover:to-blue-700 transition-colors">
+                <input type="text" placeholder="联系方式（微信/邮箱/链接，方便我们联系你）" className="w-full px-3 py-2 border border-line-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-soft" />
+                <button className="btn-a w-full px-4 text-sm transition-colors">
                   提交 AI 工具
                 </button>
               </div>
@@ -277,25 +277,24 @@ export default function AIToolsPage() {
           {/* 广告位 */}
           <div className="mt-6">
             <div className="space-y-3">
-              <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800">
+              <div className="rounded-card border border-line overflow-hidden bg-surface">
                 <div>
-                  <a href="https://www.aliyun.com/minisite/goods?userCode=3kaw7rmd" rel="noopener noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
-                    <div style={{ background: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)', borderRadius: '12px', padding: '16px 20px', textAlign: 'center', color: '#fff' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '4px' }}>☁️ 阿里云 AI 加速 · 低至38元/年</div>
-                      <div style={{ fontSize: '12px', opacity: '0.85' }}>云服务器 ｜ OpenClaw 一键部署 ｜ AI模型限时5折</div>
-                      <div style={{ marginTop: '8px', display: 'inline-block', background: '#64ffda', color: '#0f0c29', padding: '4px 20px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>查看优惠 →</div>
+                  <a href="https://www.aliyun.com/minisite/goods?userCode=3kaw7rmd" rel="noopener noreferrer" className="block no-underline">
+                    <div className="rounded-card bg-ink px-5 py-4 text-center text-paper">
+                      <div className="text-sm font-bold mb-1">阿里云 AI 加速 · 低至 38 元/年</div>
+                      <div className="text-xs opacity-70">云服务器 ｜ OpenClaw 一键部署 ｜ AI 模型限时 5 折</div>
+                      <div className="mt-2 inline-flex items-center min-h-8 px-5 rounded-sm bg-accent text-accent-fg text-xs font-bold">
+                        查看优惠 →
+                      </div>
                     </div>
                   </a>
                 </div>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                {/* 广告位占位：旧的 via.placeholder.com 图片已经挂了，改成不请求外部的中性占位块 */}
                 {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800">
-                    <div>
-                      <a href="#" rel="noopener noreferrer" style={{ display: 'block', borderRadius: '12px', overflow: 'hidden' }}>
-                        <img src={`https://via.placeholder.com/300x200?text=Ad+${i}`} alt="广告" style={{ width: '100%', display: 'block' }} />
-                      </a>
-                    </div>
+                  <div key={i} className="card flex items-center justify-center aspect-[3/2] text-xs text-ink-3">
+                    广告位
                   </div>
                 ))}
               </div>

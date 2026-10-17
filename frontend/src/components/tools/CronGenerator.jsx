@@ -56,20 +56,20 @@ export default function CronGenerator() {
           { label: '周', val: dayOfWeek, set: setDayOfWeek, min: 0, max: 6, free: true },
         ].map(({ label, val, set, min, max, free }) => (
           <div key={label}>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1 text-center">{label}</label>
+            <label className="block text-xs text-ink-3 mb-1 text-center">{label}</label>
             {free ? (
               <input
                 type="text"
                 value={val}
                 onChange={e => set(e.target.value)}
                 placeholder="*"
-                className="w-full px-2 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-center text-sm font-mono text-gray-900 dark:text-white"
+                className="w-full px-2 py-2 bg-paper border border-line rounded-lg text-center text-sm font-mono text-ink"
               />
             ) : (
               <select
                 value={val}
                 onChange={e => set(Number(e.target.value))}
-                className="w-full px-2 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-center text-sm text-gray-900 dark:text-white"
+                className="input w-full text-center"
               >
                 {Array.from({ length: max - min + 1 }, (_, i) => min + i).map(v => (
                   <option key={v} value={v}>{v}</option>
@@ -82,25 +82,25 @@ export default function CronGenerator() {
 
       <button
         onClick={generate}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+        className="btn-a w-full transition-colors"
       >
         生成表达式
       </button>
 
       {expression && (
         <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-center">
-            <code className="text-2xl font-mono font-bold text-gray-900 dark:text-white tracking-wider">{expression}</code>
+          <div className="bg-paper rounded-card p-4 text-center">
+            <code className="text-2xl font-mono font-bold text-ink tracking-wider">{expression}</code>
           </div>
 
           {nextTimes.length > 0 && (
             <div>
-              <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">下次执行时间</div>
+              <div className="text-sm font-medium text-ink-2 mb-2">下次执行时间</div>
               <div className="space-y-1">
                 {nextTimes.map((t, i) => (
-                  <div key={i} className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm">
-                    <span className="text-xs text-gray-400 w-6">#{i + 1}</span>
-                    <code className="font-mono text-gray-700 dark:text-gray-300">{t}</code>
+                  <div key={i} className="flex items-center gap-2 bg-paper rounded-lg px-3 py-2 text-sm">
+                    <span className="text-xs text-ink-3 w-6">#{i + 1}</span>
+                    <code className="font-mono text-ink-2">{t}</code>
                   </div>
                 ))}
               </div>
@@ -109,8 +109,8 @@ export default function CronGenerator() {
         </div>
       )}
 
-      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-white mb-2">常用Cron表达式</div>
+      <div className="bg-paper rounded-card p-4 text-sm text-ink-2">
+        <div className="font-medium text-ink mb-2">常用Cron表达式</div>
         <div className="grid grid-cols-2 gap-2 text-xs">
           {[
             { expr: '* * * * * *', label: '每秒' },
@@ -123,10 +123,10 @@ export default function CronGenerator() {
             <button
               key={expr}
               onClick={() => { setExpression(expr); setNextTimes(getNextOccurrences(expr, 3)); }}
-              className="text-left px-3 py-2 bg-white dark:bg-gray-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              className="text-left px-3 py-2 bg-surface rounded-lg hover:bg-accent-soft transition-colors"
             >
-              <div className="font-medium text-gray-700 dark:text-gray-300">{label}</div>
-              <code className="text-xs text-blue-600 dark:text-blue-400">{expr}</code>
+              <div className="font-medium text-ink-2">{label}</div>
+              <code className="text-xs text-accent">{expr}</code>
             </button>
           ))}
         </div>

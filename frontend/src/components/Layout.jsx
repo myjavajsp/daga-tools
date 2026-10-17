@@ -1,28 +1,19 @@
 import React from 'react';
-import { Box, Container } from '@mui/material';
 import Header from './Header';
 import Footer from './Footer';
 
 /**
  * Layout — 前台通用布局（Header + 内容 + Footer）
+ * 容器宽度与左右留白交给 .wrap（1140px + safe-area），不再用 MUI Container。
  */
 export default function Layout({ children }) {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        bgcolor: 'background.default',
-      }}
-    >
+    <div className="flex min-h-screen flex-col bg-paper text-ink">
       <Header />
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        <Container maxWidth="lg" sx={{ py: { xs: 2, md: 3 } }}>
-          {children}
-        </Container>
-      </Box>
+      <main className="flex-1 py-5 md:py-6">
+        <div className="wrap">{children}</div>
+      </main>
       <Footer />
-    </Box>
+    </div>
   );
 }

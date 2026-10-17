@@ -54,16 +54,16 @@ export default function TimestampConverter() {
       <div className="flex gap-2">
         <button
           onClick={() => { setMode('toTimestamp'); setResult(null); }}
-          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${
-            mode === 'toTimestamp' ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+          className={`flex-1 py-2 rounded-card text-sm font-medium transition-all ${
+            mode === 'toTimestamp' ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'
           }`}
         >
           日期 → 时间戳
         </button>
         <button
           onClick={() => { setMode('fromTimestamp'); setResult(null); }}
-          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${
-            mode === 'fromTimestamp' ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+          className={`flex-1 py-2 rounded-card text-sm font-medium transition-all ${
+            mode === 'fromTimestamp' ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'
           }`}
         >
           时间戳 → 日期
@@ -71,7 +71,7 @@ export default function TimestampConverter() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="lbl">
           {mode === 'toTimestamp' ? '日期时间' : 'Unix 时间戳'}
         </label>
         <div className="flex gap-2">
@@ -80,10 +80,10 @@ export default function TimestampConverter() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={mode === 'toTimestamp' ? '选择日期时间' : '输入时间戳...'}
-            className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            className="flex-1 px-4 py-3 bg-paper border border-line rounded-card text-ink focus:outline-none focus:ring-2 focus:ring-accent-soft"
           />
           {mode === 'fromTimestamp' && (
-            <button onClick={now} className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-200">
+            <button onClick={now} className="px-4 py-3 bg-surface-2 rounded-card text-sm text-ink-2 hover:bg-surface-3">
               现在
             </button>
           )}
@@ -93,13 +93,13 @@ export default function TimestampConverter() {
       <button
         onClick={mode === 'toTimestamp' ? toTimestamp : fromTimestamp}
         disabled={!input}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50 transition-all"
+        className="btn-a w-full transition-colors"
       >
         转换
       </button>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">{error}</div>
+        <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">{error}</div>
       )}
 
       {result && (
@@ -110,11 +110,11 @@ export default function TimestampConverter() {
             { label: 'ISO 8601', value: result.iso, key: 'iso' },
             { label: '本地时间', value: result.local, key: 'local' },
           ].map(({ label, value, key }) => (
-            <div key={key} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl p-3">
-              <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
+            <div key={key} className="flex items-center justify-between bg-paper rounded-card p-3">
+              <span className="text-sm text-ink-2">{label}</span>
               <div className="flex items-center gap-2">
-                <code className="text-sm font-mono text-gray-900 dark:text-white">{value}</code>
-                <button onClick={() => copyResult(String(value))} className="text-xs text-blue-500 hover:text-blue-600">复制</button>
+                <code className="text-sm font-mono text-ink">{value}</code>
+                <button onClick={() => copyResult(String(value))} className="act">复制</button>
               </div>
             </div>
           ))}

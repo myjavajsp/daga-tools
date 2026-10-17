@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import Icon from '../Icons';
 const FILTERS = {
   protanopia: { name: '红色盲', color: '#ff6b6b' },
   deuteranopia: { name: '绿色盲', color: '#4ecdc4' },
@@ -59,12 +60,12 @@ export default function ColorBlindSimulator() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('fileInput')?.click()}
       >
         <input id="fileInput" type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">🎨</div>
-        <p className="text-gray-600 dark:text-gray-400">{preview ? '点击更换图片' : '点击上传测试图片'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="palette" /></span></div>
+        <p className="text-ink-2">{preview ? '点击更换图片' : '点击上传测试图片'}</p>
       </div>
 
       {preview && (
@@ -74,22 +75,22 @@ export default function ColorBlindSimulator() {
               <button
                 key={id}
                 onClick={() => { setFilter(id); image && applyFilter(image, id); }}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  filter === id ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                className={`px-4 py-2 rounded-card text-sm font-medium transition-all ${
+                  filter === id ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'
                 }`}
               >
                 {label}
               </button>
             ))}
           </div>
-          <div className="relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div className="relative rounded-card overflow-hidden border border-line">
             <img src={preview} alt="Preview" className="w-full h-auto" />
           </div>
         </>
       )}
 
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-white mb-2">使用说明</div>
+      <div className="bg-accent-soft border border-line rounded-card p-4 text-sm text-ink-2">
+        <div className="font-medium text-ink mb-2">使用说明</div>
         <ul className="space-y-1 text-xs">
           <li>• 上传包含多种颜色的图片进行测试</li>
           <li>• 红色盲难以分辨红色和绿色</li>

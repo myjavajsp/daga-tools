@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Icon from '../components/Icons';
 
 export default function MusicPage() {
   const [songs, setSongs] = useState([]);
@@ -27,74 +28,64 @@ export default function MusicPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-paper">
       <Header />
       
-      <main className="max-w-7xl mx-auto px-4 py-6">
+      <main className="wrap py-8 col-md">
         {/* Page Title */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-1 h-6 rounded-full bg-gradient-to-b from-pink-500 to-rose-500"></div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">音乐搜索</h1>
-          </div>
-          <p className="text-gray-500 dark:text-gray-400 text-sm ml-3">在线搜索和试听全网音乐</p>
+        <div className="phead">
+          <h1>音乐搜索</h1>
+          <span className="note">在线搜索和试听全网音乐</span>
         </div>
 
         {/* Search Box */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
-          <div className="flex gap-3">
-            <div className="flex-1 relative">
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
+        <div className="card p-5 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            <div className="flex-1 relative min-w-0">
+              <Icon name="search" className="sz15 absolute left-3 top-1/2 -translate-y-1/2 text-ink-3" />
               <input
                 type="text"
                 placeholder="输入歌曲名或歌手名..."
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500/30 focus:border-pink-500/50 transition-all"
+                className="input pl-10"
               />
             </div>
-            <button className="px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-              <span className="hidden sm:inline">搜索</span>
+            <button className="btn-a px-6">
+              <Icon name="search" />
+              <span>搜索</span>
             </button>
           </div>
         </div>
 
         {/* Hot Songs */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-1 h-5 rounded-full bg-gradient-to-b from-pink-500 to-rose-500"></div>
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">热门歌曲</h2>
-          </div>
-          
+          <div className="sechead"><h2>热门歌曲</h2></div>
+
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-pink-500"></div>
+              <div className="animate-spin spin" />
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="card overflow-hidden">
               <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-gray-700/50">
+                <thead className="bg-surface-2">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">#</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">歌曲名</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">歌手</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">专辑</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400">时长</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-ink-3">#</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-ink-3">歌曲名</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-ink-3">歌手</th>
+                    <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-ink-3">专辑</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-ink-3">时长</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                <tbody className="divide-y divide-line">
                   {songs.map((song, idx) => (
-                    <tr key={song.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors cursor-pointer">
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{idx + 1}</td>
+                    <tr key={song.id} className="hover:bg-surface-2 transition-colors cursor-pointer">
+                      <td className="px-4 py-3 text-sm text-ink-3">{idx + 1}</td>
                       <td className="px-4 py-3">
-                        <span className="font-medium text-gray-900 dark:text-white">{song.title}</span>
+                        <span className="font-medium text-ink">{song.title}</span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{song.artist}</td>
-                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{song.album}</td>
-                      <td className="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">{song.duration}</td>
+                      <td className="px-4 py-3 text-sm text-ink-2">{song.artist}</td>
+                      <td className="hidden sm:table-cell px-4 py-3 text-sm text-ink-3">{song.album}</td>
+                      <td className="px-4 py-3 text-right text-sm text-ink-3">{song.duration}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -104,23 +95,18 @@ export default function MusicPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-pink-600 dark:text-pink-400">128万</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">热门歌曲</div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">56万</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">歌手数据</div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">89万</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">专辑数量</div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">45万</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">今日播放</div>
-          </div>
+        <div className="statgrid">
+          {[
+            { n: '128万', t: '热门歌曲' },
+            { n: '56万', t: '歌手数据' },
+            { n: '89万', t: '专辑数量' },
+            { n: '45万', t: '今日播放' },
+          ].map((s) => (
+            <div key={s.t} className="card statcard">
+              <div className="n">{s.n}</div>
+              <div className="t">{s.t}</div>
+            </div>
+          ))}
         </div>
       </main>
 

@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import Icon from '../Icons';
+
 export default function PasswordGenerator() {
   const [length, setLength] = useState(16);
   const [uppercase, setUppercase] = useState(true);
@@ -23,10 +25,10 @@ export default function PasswordGenerator() {
   }, [password]);
 
   const strengthLabel = useMemo(() => {
-    if (strength <= 2) return { label: '弱', color: 'text-red-500', bg: 'bg-red-500' };
-    if (strength <= 4) return { label: '中', color: 'text-yellow-500', bg: 'bg-yellow-500' };
-    if (strength <= 5) return { label: '强', color: 'text-blue-500', bg: 'bg-blue-500' };
-    return { label: '极强', color: 'text-green-500', bg: 'bg-green-500' };
+    if (strength <= 2) return { label: '弱', color: 'text-danger', bg: 'bg-danger' };
+    if (strength <= 4) return { label: '中', color: 'text-warning', bg: 'bg-warning' };
+    if (strength <= 5) return { label: '强', color: 'text-accent', bg: 'bg-accent' };
+    return { label: '极强', color: 'text-success', bg: 'bg-success' };
   }, [strength]);
 
   const generate = () => {
@@ -59,8 +61,8 @@ export default function PasswordGenerator() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 text-center">
-        <div className="text-2xl font-mono font-bold text-gray-900 dark:text-white break-all min-h-[2rem]">{password || '点击生成'}</div>
+      <div className="bg-surface-2 rounded-card p-6 text-center">
+        <div className="text-2xl font-mono font-bold text-ink break-all min-h-[2rem]">{password || '点击生成'}</div>
         {password && (
           <div className="flex items-center justify-center gap-2 mt-3">
             <div className={`w-2 h-2 rounded-full ${strengthLabel.bg}`}></div>
@@ -71,11 +73,11 @@ export default function PasswordGenerator() {
 
       <div>
         <div className="flex justify-between text-sm mb-2">
-          <span className="text-gray-600 dark:text-gray-400">密码长度</span>
-          <span className="font-medium text-blue-600 dark:text-blue-400">{length}</span>
+          <span className="text-ink-2">密码长度</span>
+          <span className="font-medium text-accent">{length}</span>
         </div>
-        <input type="range" min="4" max="64" value={length} onChange={(e) => setLength(Number(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
-        <div className="flex justify-between text-xs text-gray-400 mt-1">
+        <input type="range" min="4" max="64" value={length} onChange={(e) => setLength(Number(e.target.value))} className="slider" />
+        <div className="flex justify-between text-xs text-ink-3 mt-1">
           <span>4</span>
           <span>64</span>
         </div>
@@ -91,43 +93,43 @@ export default function PasswordGenerator() {
           <button
             key={label}
             onClick={() => set(!checked)}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
+            className={`flex items-center justify-between px-4 py-3 rounded-card border transition-all ${
               checked
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
-                : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400'
+                ? 'border-accent bg-accent-soft text-accent'
+                : 'border-line text-ink-3'
             }`}
           >
             <span className="text-sm font-medium">{label}</span>
             <span className="text-xs font-mono">{desc}</span>
-            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${checked ? 'border-blue-500 bg-blue-500' : 'border-gray-300'}`}>
-              {checked && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"/></svg>}
+            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${checked ? 'border-accent bg-accent' : 'border-line-2'}`}>
+              {checked && <Icon name="check" className="sz12 text-accent-fg" />}
             </div>
           </button>
         ))}
       </div>
 
-      <label className="flex items-center gap-2 cursor-pointer">
+      <label className="flex items-center gap-2 cursor-pointer min-h-8">
         <input
           type="checkbox"
           checked={excludeAmbiguous}
           onChange={(e) => setExcludeAmbiguous(e.target.checked)}
-          className="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+          className="w-4 h-4 rounded border-line-2 text-accent focus:ring-accent-soft"
         />
-        <span className="text-sm text-gray-600 dark:text-gray-400">排除易混淆字符 (0OIl1)</span>
+        <span className="text-sm text-ink-2">排除易混淆字符 (0OIl1)</span>
       </label>
 
       <div className="flex gap-3">
         <button
           onClick={generate}
-          className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+          className="btn-a flex-1 transition-colors"
         >
           生成密码
         </button>
         {password && (
           <button
             onClick={copyPassword}
-            className={`px-6 py-3 font-semibold rounded-xl transition-all ${
-              copied ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+            className={`px-6 py-3 font-semibold rounded-card transition-all ${
+              copied ? 'bg-success text-accent-fg' : 'bg-surface-2 text-ink-2 hover:bg-surface-3'
             }`}
           >
             {copied ? '已复制' : '复制'}

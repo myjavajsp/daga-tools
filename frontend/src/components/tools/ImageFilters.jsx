@@ -1,4 +1,5 @@
 ﻿import { useState, useRef } from 'react';
+import Icon from '../Icons';
 const FILTERS = [
   { name: '原始', apply: (c) => c },
   { name: ' grayscale', apply: (r, g, b) => { const v = 0.299 * r + 0.587 * g + 0.114 * b; return [v, v, v]; } },
@@ -72,25 +73,25 @@ export default function ImageFilters() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">🎨</div>
-        <p className="text-gray-600 dark:text-gray-400">{preview ? '点击更换图片' : '点击上传图片'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="palette" /></span></div>
+        <p className="text-ink-2">{preview ? '点击更换图片' : '点击上传图片'}</p>
       </div>
 
       {preview && (
         <>
-          <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-xl" />
+          <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-card" />
           
           <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
             {FILTERS.map((f, i) => (
               <button
                 key={i}
                 onClick={() => applyFilter(i)}
-                className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                  activeFilter === i ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                className={`px-3 py-2 rounded-card text-sm font-medium transition-all ${
+                  activeFilter === i ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2 hover:bg-accent-soft'
                 }`}
               >
                 {f.name}
@@ -99,10 +100,10 @@ export default function ImageFilters() {
           </div>
 
           <div className="flex gap-3">
-            <button onClick={download} className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+            <button onClick={download} className="btn-a flex-1 transition-colors">
               下载滤镜图片
             </button>
-            <button onClick={() => { setPreview(null); setImage(null); }} className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl">
+            <button onClick={() => { setPreview(null); setImage(null); }} className="px-6 py-3 bg-surface-2 text-ink-2 font-semibold rounded-card">
               重置
             </button>
           </div>

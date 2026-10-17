@@ -1,12 +1,10 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 // 前台页面
 import HomePage from './pages/HomePage';
-import MusicPage from './pages/MusicPage';
 import MemePage from './pages/MemePage';
 import MakerPage from './pages/MakerPage';
-import HotPage from './pages/HotPage';
 import MbtiTestPage from './pages/MbtiTestPage';
 import ToolsPage from './pages/ToolsPage';
 import ToolDetailPage from './pages/ToolDetailPage';
@@ -57,14 +55,14 @@ export default function App() {
     <Routes>
       {/* 前台页面 */}
       <Route path="/" element={<HomePage />} />
-      <Route path="/music" element={<MusicPage />} />
+      <Route path="/music" element={<Navigate to="/" replace />} />
       <Route path="/meme" element={<MemePage />} />
       <Route path="/maker" element={<MakerPage />} />
       <Route path="/parser" element={<VideoParserPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/m3u8" element={<M3u8PlayerPage />} />
       <Route path="/mp4" element={<Mp4PlayerPage />} />
-      <Route path="/hot" element={<HotPage />} />
+      <Route path="/hot" element={<Navigate to="/" replace />} />
       <Route path="/tools" element={<ToolsPage />} />
       <Route path="/tools/:toolKey" element={<ToolDetailPage />} />
       <Route path="/screen-recorder" element={<ScreenRecorderPage />} />

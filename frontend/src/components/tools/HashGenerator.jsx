@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import SparkMD5 from 'spark-md5';
+import Icon from '../Icons';
 import { fmtSize, BTN_PRIMARY } from '../../lib/file-utils';
 
 /** ArrayBuffer -> 十六进制字符串 */
@@ -76,7 +77,7 @@ export default function HashGenerator() {
     <div className="space-y-6">
       {/* 输入区域 */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="lbl">
           输入文本
         </label>
         <textarea
@@ -86,13 +87,13 @@ export default function HashGenerator() {
             generateHashes(e.target.value);
           }}
           placeholder="请输入要计算哈希值的文本..."
-          className="w-full h-32 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 resize-none"
+          className="w-full h-32 px-4 py-3 bg-paper border border-line rounded-card text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent-soft focus:border-accent resize-none"
         />
       </div>
 
       {/* 文件模式 */}
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-6 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => document.getElementById('hf')?.click()}
       >
         <input
@@ -105,12 +106,12 @@ export default function HashGenerator() {
             if (f) hashFile(f);
           }}
         />
-        <div className="text-3xl mb-2">📁</div>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="file" /></span></div>
+        <p className="text-sm text-ink-2">
           {fileInfo ? `已计算：${fileInfo.name}` : '或点击选择文件，计算文件校验值'}
         </p>
         {fileInfo && (
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-ink-3 mt-1">
             {fmtSize(fileInfo.size)} · {fileInfo.percent}%
           </p>
         )}
@@ -119,23 +120,25 @@ export default function HashGenerator() {
       {/* 哈希结果 */}
       {visible.length > 0 && (
         <div className="space-y-3">
-          {visible.map(({ key, name, color }) => (
-            <div key={key} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
-              <div className={`w-16 text-center text-sm font-medium text-${color}-600 dark:text-${color}-400`}>
+          {/* color 字段原来拼成 text-${color}-600 —— 动态串 Tailwind JIT 扫不到，线上一直是无色；
+              而且四个哈希各分一种颜色本来就是彩虹。统一中性字重，靠 name 区分。 */}
+          {visible.map(({ key, name }) => (
+            <div key={key} className="flex items-center gap-3 bg-paper rounded-card p-3">
+              <div className="w-16 text-center text-sm font-semibold text-ink">
                 {name}
               </div>
-              <code className="flex-1 text-sm text-gray-700 dark:text-gray-300 font-mono break-all">
+              <code className="flex-1 text-sm text-ink-2 font-mono break-all">
                 {results[key]}
               </code>
               <button
                 onClick={() => copyToClipboard(key)}
                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
                   copied === key
-                    ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                    : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500'
+                    ? 'bg-success-soft text-success'
+                    : 'bg-surface-2 text-ink-2 hover:bg-surface-3'
                 }`}
               >
-                {copied === key ? '✓ 已复制' : '复制'}
+                {copied === key ? '已复制' : '复制'}
               </button>
             </div>
           ))}
@@ -143,15 +146,15 @@ export default function HashGenerator() {
       )}
 
       {/* 说明 */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <div className="font-medium text-gray-900 dark:text-gray-200 mb-2">💡 哈希值用途</div>
+      <div className="bg-accent-soft border border-line rounded-card p-4 text-sm text-ink-2">
+        <div className="flex items-center gap-2 font-medium text-ink mb-2 text-sm"><Icon name="bulb" /><span>哈希值用途</span></div>
         <ul className="space-y-1 text-xs">
           <li>• <strong>MD5</strong>: 快速校验文件完整性（128位）</li>
           <li>• <strong>SHA-1</strong>: 版本控制、Git使用（160位）</li>
           <li>• <strong>SHA-256</strong>: 区块链、密码存储（256位，最常用）</li>
           <li>• <strong>SHA-512</strong>: 高安全性需求场景（512位）</li>
         </ul>
-        <p className="text-xs mt-2 text-gray-500">
+        <p className="text-xs mt-2 text-ink-3">
           文本模式实时计算；文件模式在本地分块读取，文件不会上传到服务器。
         </p>
       </div>

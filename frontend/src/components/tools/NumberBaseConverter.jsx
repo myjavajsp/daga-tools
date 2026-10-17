@@ -22,32 +22,32 @@ export default function NumberBaseConverter() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">输入数值</label>
+        <label className="lbl">输入数值</label>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="输入数字..."
-          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink font-mono focus:outline-none focus:ring-2 focus:ring-accent-soft"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">进制</label>
+        <label className="lbl">进制</label>
         <select
           value={fromBase}
           onChange={(e) => setFromBase(Number(e.target.value))}
-          className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="input w-full"
         >
           {[2, 8, 10, 16].map(b => <option key={b} value={b}>{b}进制</option>)}
         </select>
       </div>
-      {error && <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-600 dark:text-red-400 text-sm">{error}</div>}
+      {error && <div className="bg-danger-soft border border-line rounded-card p-4 text-danger text-sm">{error}</div>}
       {Object.keys(results).length > 0 && (
         <div className="grid grid-cols-2 gap-3">
           {Object.entries(results).map(([base, val]) => (
-            <div key={base} className="bg-gray-50 dark:bg-gray-700 rounded-xl p-3">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">{base}进制</div>
-              <code className="text-sm font-mono text-gray-900 dark:text-white break-all">{val}</code>
+            <div key={base} className="bg-paper rounded-card p-3">
+              <div className="text-xs text-ink-3 mb-1">{base}进制</div>
+              <code className="text-sm font-mono text-ink break-all">{val}</code>
             </div>
           ))}
         </div>

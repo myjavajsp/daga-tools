@@ -1,4 +1,5 @@
 ﻿import { useState, useRef } from 'react';
+import Icon from '../Icons';
 export default function ImageCrop() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -82,12 +83,12 @@ export default function ImageCrop() {
   return (
     <div className="space-y-6">
       <div
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-line-2 rounded-card p-8 text-center hover:border-accent transition-colors cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
-        <div className="text-4xl mb-3">✂️</div>
-        <p className="text-gray-600 dark:text-gray-400">{preview ? '点击更换图片' : '点击上传图片'}</p>
+        <div className="flex justify-center mb-3"><span className="chip"><Icon name="scissors" /></span></div>
+        <p className="text-ink-2">{preview ? '点击更换图片' : '点击上传图片'}</p>
       </div>
 
       {preview && image && (
@@ -103,8 +104,8 @@ export default function ImageCrop() {
                     setCrop(prev => ({ ...prev, h: Math.min(h, image.naturalHeight * 0.8) }));
                   }
                 }}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  aspectRatio === value ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                className={`px-4 py-2 rounded-card text-sm font-medium transition-all ${
+                  aspectRatio === value ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-ink-2'
                 }`}
               >
                 {label}
@@ -113,16 +114,16 @@ export default function ImageCrop() {
           </div>
 
           <div className="relative inline-block max-w-full" ref={containerRef} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
-            <img src={preview} alt="Crop" className="max-w-full max-h-96 rounded-xl" style={{ display: 'block' }} />
+            <img src={preview} alt="Crop" className="max-w-full max-h-96 rounded-card" style={{ display: 'block' }} />
             <div
-              className="absolute border-2 border-blue-500 cursor-move"
+              className="absolute border-2 border-accent cursor-move"
               style={{
                 left: crop.x, top: crop.y,
                 width: crop.w, height: crop.h,
               }}
             >
               <div className="absolute inset-0 border-dashed border-white/50" style={{ backgroundImage: 'linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.3) 48%, rgba(255,255,255,0.3) 52%, transparent 52%)', backgroundSize: '10px 10px' }}></div>
-              <div className="absolute -top-6 left-0 text-xs text-blue-500 font-mono">
+              <div className="absolute -top-6 left-0 text-xs text-accent font-mono">
                 {Math.round(crop.w)} x {Math.round(crop.h)}
               </div>
             </div>
@@ -130,7 +131,7 @@ export default function ImageCrop() {
 
           <button
             onClick={cropImage}
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+            className="btn-a w-full transition-colors"
           >
             裁剪并下载
           </button>

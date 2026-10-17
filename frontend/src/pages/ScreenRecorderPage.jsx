@@ -1,65 +1,36 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import ScreenRecorder from '../components/tools/ScreenRecorder';
 
+/* 旧版本有三处坏掉：useState 没有 import（一进页面就白屏）、📹 当图标用、
+   录制按钮只翻状态不录任何东西。现在页面只负责外壳，录制交给 tools/ScreenRecorder。 */
 export default function ScreenRecorderPage() {
-  const [recording, setRecording] = useState(false);
-  const [duration, setDuration] = useState(0);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-paper">
       <Header />
-      
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">
-          屏幕录制
-        </h1>
-        
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-gray-800 rounded-xl p-8 text-center">
-            <div className="text-8xl mb-6">📹</div>
-            
-            <div className="text-4xl font-mono text-white mb-8">
-              {String(Math.floor(duration / 60)).padStart(2, '0')}:
-              {String(duration % 60).padStart(2, '0')}
-            </div>
-            
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setRecording(!recording)}
-                className={`px-8 py-4 rounded-xl font-bold text-lg ${
-                  recording
-                    ? 'bg-red-600 hover:bg-red-700'
-                    : 'bg-blue-600 hover:bg-blue-700'
-                } text-white transition-colors`}
-              >
-                {recording ? '停止录制' : '开始录制'}
-              </button>
-              
-              {recording && (
-                <button
-                  onClick={() => {
-                    setRecording(false);
-                    setDuration(0);
-                  }}
-                  className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-bold text-lg transition-colors"
-                >
-                  取消
-                </button>
-              )}
-            </div>
-          </div>
-          
-          <div className="mt-8 bg-gray-800 rounded-xl p-6">
-            <h3 className="text-white font-medium mb-4">使用说明</h3>
-            <ul className="text-gray-400 space-y-2">
-              <li>• 点击"开始录制"后选择要录制的区域</li>
-              <li>• 支持录制系统音频和麦克风声音</li>
-              <li>• 录制完成后自动保存为MP4格式</li>
-            </ul>
-          </div>
+
+      <main className="wrap py-8 max-w-3xl">
+        <div className="phead">
+          <h1>屏幕录制</h1>
+          <span className="note">录制完成后直接在页面预览并下载</span>
         </div>
-      </div>
-      
+
+        <div className="card p-5 sm:p-6">
+          <ScreenRecorder />
+        </div>
+
+        <div className="article mt-8 text-sm">
+          <h2>使用说明</h2>
+          <ol>
+            <li>点击「开始录制」，在浏览器弹出的窗口里选择整个屏幕、某个窗口或某个标签页。</li>
+            <li>需要同时录声音时，勾选弹窗里的「分享标签页中的音频」。</li>
+            <li>点击本页的「停止录制」，或浏览器顶栏的「停止分享」，录制都会正常收束。</li>
+            <li>录制内容只在你的浏览器里生成和保存，不会上传到服务器。</li>
+          </ol>
+          <p>输出格式为 WebM（由浏览器决定编码）。如果需要 MP4，可以用格式转换工具再转一次。</p>
+        </div>
+      </main>
+
       <Footer />
     </div>
   );

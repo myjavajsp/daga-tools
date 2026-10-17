@@ -40,3 +40,12 @@ export async function fetchAds() {
   const res = await client.get('/public/ads');
   return res.data;
 }
+
+/**
+ * 获取已发布文章（首页「最新推荐」用）
+ * 后端返回 { success, data: { list, total, page, limit } }
+ */
+export async function fetchArticles(limit = 4) {
+  const res = await client.get('/public/articles', { params: { page: 1, limit } });
+  return res.data;
+}

@@ -13,14 +13,14 @@ export default function AiPrompt() {
 
   return (
     <div className="space-y-6">
-      <button onClick={generate} className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">生成占位文本</button>
+      <button onClick={generate} className="btn-a w-full transition-colors">生成占位文本</button>
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">生成结果</label>
-            <button onClick={() => navigator.clipboard.writeText(output)} className="text-xs text-blue-500">复制</button>
+            <label className="lbl">生成结果</label>
+            <button onClick={() => navigator.clipboard.writeText(output)} className="text-xs text-accent">复制</button>
           </div>
-          <textarea value={output} readOnly className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none text-sm" />
+          <textarea value={output} readOnly className="w-full h-48 px-4 py-3 bg-paper border border-line rounded-card text-ink resize-none text-sm" />
         </div>
       )}
     </div>

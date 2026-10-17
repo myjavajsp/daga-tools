@@ -9,12 +9,15 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import LoginIcon from '@mui/icons-material/Login';
+import Icon from '../components/Icons';
 import { login } from '../api/user';
 
 /**
- * LoginPage — 用户登录页（风格对齐 AdminLogin）
+ * LoginPage — 用户登录页
  * 登录成功：令牌存 localStorage['daga_user_token']，用户信息存 'daga_user'
+ *
+ * 材质跟首页同一套：纸底 + 描边卡片 + 图标芯片，
+ * 不再用深蓝渐变背景（那是旧「AI 味」版本，和确认下来的明亮清爽冲突）。
  */
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -61,17 +64,19 @@ export default function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+        bgcolor: 'background.default',
         p: 2,
       }}
     >
       <Paper
         component="form"
         onSubmit={handleSubmit}
-        elevation={8}
+        elevation={0}
         sx={{
           p: { xs: 3, sm: 4 },
-          borderRadius: 4,
+          borderRadius: 1, /* shape.borderRadius=12 → --r 同一档，不要 3 档的 36px 圆角 */
+          border: '1px solid var(--line)',
+          boxShadow: 'var(--sh)',
           maxWidth: 420,
           width: '100%',
           textAlign: 'center',
@@ -82,14 +87,15 @@ export default function LoginPage() {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 64,
-            height: 64,
-            borderRadius: '50%',
-            bgcolor: 'rgba(25,118,210,0.1)',
+            width: 44,
+            height: 44,
+            borderRadius: '9px',
+            bgcolor: 'var(--accent-soft)',
+            color: 'var(--accent-press)',
             mb: 2,
           }}
         >
-          <LoginIcon sx={{ fontSize: 36, color: 'primary.main' }} />
+          <Icon name="user" />
         </Box>
 
         <Typography variant="h5" sx={{ mb: 1, fontWeight: 700 }}>
@@ -138,9 +144,9 @@ export default function LoginPage() {
           {loading ? <CircularProgress size={24} color="inherit" /> : '登 录'}
         </Button>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2, display: 'flex', gap: '6px', justifyContent: 'center', flexWrap: 'wrap' }}>
           还没有账号？
-          <Link to="/register" style={{ marginLeft: 4, fontWeight: 600 }}>
+          <Link to="/register" className="lnk">
             免费注册
           </Link>
         </Typography>

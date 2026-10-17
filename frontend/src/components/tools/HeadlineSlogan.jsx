@@ -23,16 +23,16 @@ export default function HeadlineSlogan() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">关键词</label>
-        <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} placeholder="输入品牌或产品关键词..." className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white" />
+        <label className="lbl">关键词</label>
+        <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} placeholder="输入品牌或产品关键词..." className="w-full px-4 py-3 bg-paper border border-line rounded-card text-ink" />
       </div>
-      <button onClick={generate} disabled={!keyword.trim()} className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-xl hover:shadow-lg disabled:opacity-50">生成标语</button>
+      <button onClick={generate} disabled={!keyword.trim()} className="btn-a w-full">生成标语</button>
       {output.length > 0 && (
         <div className="space-y-2">
           {output.map((s, i) => (
-            <div key={i} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl px-4 py-3">
-              <span className="text-sm text-gray-800 dark:text-gray-200">{s}</span>
-              <button onClick={() => navigator.clipboard.writeText(s)} className="text-xs text-blue-500">复制</button>
+            <div key={i} className="flex items-center justify-between bg-paper rounded-card px-4 py-3">
+              <span className="text-sm text-ink">{s}</span>
+              <button onClick={() => navigator.clipboard.writeText(s)} className="text-xs text-accent">复制</button>
             </div>
           ))}
         </div>

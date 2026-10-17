@@ -2,9 +2,26 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover：刘海/圆角屏下让 .wrap 的 safe-area padding 真正生效 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f8f9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1116" media="(prefers-color-scheme: dark)" />
     <title>全民影视VIP视频解析</title>
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      /* 首屏前就把深色状态挂上 <html>：React 挂载后再切会白闪一下。
+         读的是 Header 一直在写的 localStorage['darkMode']（JSON 布尔），
+         没有记录时跟随系统 —— 与 src/lib/themeMode.js 完全同一套判定。 */
+      (function () {
+        var el = document.documentElement;
+        el.className += ' js';
+        try {
+          var saved = localStorage.getItem('darkMode');
+          var dark = saved !== null ? JSON.parse(saved) : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) el.className += ' dark';
+        } catch (e) { /* 隐私模式读不到 localStorage：按亮色走 */ }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
