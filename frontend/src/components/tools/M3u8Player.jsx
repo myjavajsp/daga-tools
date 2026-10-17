@@ -39,7 +39,9 @@ export default function M3u8Player() {
 
     // 检测是否支持原生 HLS（Safari）
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = url;
+      // Safari 也使用后端代理
+      const proxyUrl = `/api/m3u8/proxy?url=${encodeURIComponent(url)}`;
+      video.src = proxyUrl;
       video.load();
       video.play().catch(err => {
         console.error('播放失败:', err);
@@ -50,26 +52,13 @@ export default function M3u8Player() {
 
     // 使用 hls.js 播放
     if (Hls.isSupported()) {
-      // 从 URL 提取域名作为 Referer
-      let referer = '';
-      try {
-        const urlObj = new URL(url);
-        referer = `${urlObj.protocol}//${urlObj.host}/`;
-      } catch (e) {
-        // 如果 URL解析失败，使用默认值
-      }
+      // 使用后端代理接口绕过防盗链
+      const proxyUrl = `/api/m3u8/proxy?url=${encodeURIComponent(url)}`;
 
       const hls = new Hls({
         debug: false,
         enableWorker: true,
         lowLatencyMode: true,
-        xhrSetup: function(xhr, xhrUrl) {
-          // 设置 Referer 和 User-Agent 以绕过防盗链
-          if (referer) {
-            xhr.setRequestHeader('Referer', referer);
-          }
-          xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-        },
       });
 
       hlsRef.current = hls;
@@ -93,7 +82,7 @@ export default function M3u8Player() {
         }
       });
 
-      hls.loadSource(url);
+      hls.loadSource(proxyUrl);
       hls.attachMedia(video);
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
