@@ -5,9 +5,24 @@ import Reveal from '../Reveal';
 /**
  * FaqSection — 常见问题（左标题 + 右折叠表）
  * 用原生 details/summary：无 JS 也能展开，加减号动画在 index.css 的 .pm 里。
+ * 
+ * 注意：后端可能有重复数据，这里按 question+answer 去重。
  */
 export default function FaqSection({ faqs = [], title = '常见问题', contactPath = '/contact' }) {
   if (faqs.length === 0) return null;
+
+  // 按 question + answer 去重，保留第一条
+  const uniqueFaqs = React.useMemo(() => {
+    const seen = new Set();
+    return faqs.filter((faq) => {
+      const key = `${faq.question}|${faq.answer}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [faqs]);
+
+  if (uniqueFaqs.length === 0) return null;
 
   return (
     <section className="section">
@@ -19,7 +34,7 @@ export default function FaqSection({ faqs = [], title = '常见问题', contactP
           </p>
         </Reveal>
         <Reveal className="faq">
-          {faqs.map((faq, idx) => (
+          {uniqueFaqs.map((faq, idx) => (
             <details key={faq.id ?? idx}>
               <summary>
                 <span>{faq.question}</span>
